@@ -1,15 +1,13 @@
 const notice = {
   state: {
-    noticeNum: 0,
-    noticePageUrl: 'http://localhost:8000/jewelry/noticeBoard/paging'
+    noticeId: 0,
+    noticePageUrl: 'http://localhost:8000/jewelry/noticeBoard/paging',
+    allNotices: 'http://localhost:8000/jewelry/noticeBoard'
   },
   mutations: {
     noticeDetail (state, ob) {
-      state.noticeNum = ob.index
+      state.noticeId = ob.id
       state.noticePageUrl = ob.urlPage
-    },
-    urlBase (state) {
-      state.noticePageUrl = 'http://localhost:8000/jewelry/noticeBoard/paging'
     }
   },
   actions: {
