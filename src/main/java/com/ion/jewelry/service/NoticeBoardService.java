@@ -4,14 +4,18 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ion.jewelry.model.entity.NoticeBoard;
+import com.ion.jewelry.model.entity.NoticeBoardReply;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.NoticeBoardRequest;
+import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
+import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 
 @Service
@@ -19,6 +23,9 @@ public class NoticeBoardService extends
 	AABaseService<NoticeBoardRequest, NoticeBoardResponse, NoticeBoard> {
 	
 	//기본 Repository는 baseRepo!!!!
+	
+	@Autowired
+	private NoticeBoardReplyService replyService;
 	
 	@Override
 	public Header<NoticeBoardResponse> create(Header<NoticeBoardRequest> request) {
@@ -117,7 +124,33 @@ public class NoticeBoardService extends
 		
 		return Header.OK(boardResList, pagination);
 	}
-
+	
+	public Header<NoticeBoardReplyInfoResponse> replyInfo(Long id){
+		// Board를 찾는다.
+		NoticeBoard noticeBoard = baseRepo.getOne(id);
+		NoticeBoardResponse noticeBoardResponse = response(noticeBoard);
+		
+		// 위에서 찾은 Board의 reply를 찾는다.
+		List<NoticeBoardReply> replyList = noticeBoard.getNoticeBoardReplyList();
+		List<NoticeBoardReplyResponse> replyResList = replyList.stream()
+					.map(reply -> {
+						NoticeBoardReplyResponse replyRes = 
+								Header.OK(replyService.response(reply)).getData();
+						return replyRes;
+					})
+					.collect(Collectors.toList());
+		
+		noticeBoardResponse.setNoticeBoardReplyResponseList(replyResList);
+		
+		NoticeBoardReplyInfoResponse noticeBoardReplyInfoResponse
+			= NoticeBoardReplyInfoResponse.builder()
+				.noticeBoardResponse(noticeBoardResponse)
+				.build();
+				
+		return Header.OK(noticeBoardReplyInfoResponse);
+	}
+	
+	
 	public NoticeBoardResponse response(NoticeBoard board) {
 		NoticeBoardResponse res = NoticeBoardResponse.builder()
 				.id(board.getId())

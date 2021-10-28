@@ -2,6 +2,7 @@ package com.ion.jewelry.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.NoticeBoardRequest;
+import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardResponse;
+import com.ion.jewelry.service.NoticeBoardService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +31,10 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin("http://localhost:8080/")
 public class NoticeBoardController extends 
 		AABaseController<NoticeBoardRequest, NoticeBoardResponse, NoticeBoard>{
-
+	
+	@Autowired
+	private NoticeBoardService boardService;
+	
 	@Override
 	@GetMapping("/paging") // http://localhost:8000//jewelry/noticeBoard/paging?page=0
 	public Header<List<NoticeBoardResponse>> pagingRead(
@@ -37,6 +43,12 @@ public class NoticeBoardController extends
 		
 		log.info("{}", pageable);
 		return baseService.pagingRead(pageable);
+	}
+	
+	//공지사항 번호별 댓글 조회
+	@GetMapping("/{id}/replyInfo") //http://localhost:8000/jewelry/noticeBoard/1/replyInfo
+	public Header<NoticeBoardReplyInfoResponse> replyInfo(@PathVariable Long id){
+		return boardService.replyInfo(id);
 	}
 	
 	@PostMapping("/reg")
