@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable()   // rest api이므로 csrf 보안이 필요없으므로 disable처리
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()   // jwt token으로 인증할것이므로 세션필요없음
-			.authorizeRequests()							//팀장님 요청사항으로 현재 전체 연결될수 있게 설정해 놓음.이후 변경될때 @과 이부분에 URL을 추가로 기입해야됨
+			.authorizeRequests().antMatchers("/jewelry/**").permitAll()							//팀장님 요청사항으로 현재 전체 연결될수 있게 설정해 놓음.이후 변경될때 @과 이부분에 URL을 추가로 기입해야됨
 			.antMatchers("/jewelry/auth/**").permitAll()
 			.antMatchers("/jewelry/member/**").permitAll()
 			.anyRequest().authenticated();
