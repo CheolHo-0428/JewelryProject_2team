@@ -119,11 +119,14 @@ export default {
       })
     },
     notice () {
-      return axios.get(this.$store.state.notice.noticePageUrl)
+      return axios.get(this.$store.state.notice.allNotices)
         .then(res => {
-          this.title = res.data.data[this.$store.state.notice.noticeNum].title
-          this.content = res.data.data[this.$store.state.notice.noticeNum].content
-          this.id = res.data.data[this.$store.state.notice.noticeNum].id
+          let notices = res.data.data
+          let index = notices.findIndex(i => i.id === this.$store.state.notice.noticeId)
+          console.log(index)
+          this.title = res.data.data[index].title
+          this.content = res.data.data[index].content
+          this.id = res.data.data[index].id
         })
         .catch(err => {
           console.log(err)

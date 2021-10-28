@@ -45,8 +45,8 @@
       <tbody>
         <tr v-for="(notice, i) in sortedData" :key="i">
           <td class="tdNo">{{notice.id}}</td>
-          <td class="tdTitle" @click="detail(i)">{{notice.title}}</td>
-          <td class="tdDate" style="text-align:center;">{{createdDay[i]}} {{createdTime[i]}}</td>
+          <td class="tdTitle" @click="detail(notice.id)">{{notice.title}}</td>
+          <td class="tdDate" style="text-align:center;">{{createdDay[start + i -1]}} {{createdTime[start + i -1]}}</td>
           <td class="tdWriter">{{notice.writer}}</td>
         </tr>
       </tbody>
@@ -91,35 +91,29 @@ export default {
     }
   },
   methods: {
-    detail (index) {
-      this.$store.commit('noticeDetail', {index: index, urlPage: this.urlPage})
+    detail (id) {
+      this.$store.commit('noticeDetail', {id: id, urlPage: this.urlPage})
       location.href = '/notice_'
     },
     changePage (page) {
       this.urlPage = url + `?page=${page - 1}`
-      this.$store.commit('noticeDetail', {index: 0, urlPage: this.urlPage})
+      this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
       this.notice()
     },
     nextPage () {
       this.urlPage = url + `?page=${this.end}`
-      this.$store.commit('noticeDetail', {index: 0, urlPage: this.urlPage})
+      this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
       this.notice()
     },
     prevPage () {
       this.urlPage = url + `?page=${this.start - 2}`
-      this.$store.commit('noticeDetail', {index: 0, urlPage: this.urlPage})
+      this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
       this.notice()
     },
     notice () {
       return axios.get(this.urlPage)
         .then(res => {
-          for (let i = 0; i < res.data.data.length; i++) {
-            this.createdDay.push(res.data.data[i].created_at.split('T')[0])
-            this.createdTime.push(res.data.data[i].created_at.split('T')[1].split('.')[0])
-          }
           this.notices = res.data.data
-          this.createdDay = this.createdDay
-          this.createdTime = this.createdTime
           this.page = res.data.pagination.current_page + 1
           this.total_pages = res.data.pagination.total_pages
 
@@ -142,6 +136,10 @@ export default {
       axios.get('http://localhost:8000/jewelry/noticeBoard/')
         .then(res => {
           this.allNotices = res.data.data
+          for (let i = 0; i < res.data.data.length; i++) {
+            this.createdDay.push(res.data.data[i].created_at.split('T')[0])
+            this.createdTime.push(res.data.data[i].created_at.split('T')[1].split('.')[0])
+          }
         })
         .catch(err => {
           console.log(err)
