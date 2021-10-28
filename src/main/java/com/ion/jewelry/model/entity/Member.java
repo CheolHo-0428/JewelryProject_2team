@@ -1,7 +1,9 @@
 package com.ion.jewelry.model.entity;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +12,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
@@ -60,7 +65,26 @@ public class Member extends AABaseTimeEntity{
 	
 	private LocalDateTime unregDate; // 해지날짜
 	
+	//user_roles테이블 연관관계
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "user_roles", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
+	
 	@JsonManagedReference
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
 	private List<OrderGroup> orderGroupList;	//OrderGroup 테이블 연관관계 설정(1:N)
+	
+	public Member(String account, String name, String password, String email, String phone, String postCode,	//생성자 다가져오지않고 입력된값만 시큐리티로 넘겨야되서 생성자따로 구현
+			String address, String detailAddress) {
+		this.account = account;
+		this.name = name;
+		this.password = password;
+		this.email = email;
+		this.phone = phone;
+		this.postCode = postCode;
+		this.address = address;
+		this.detailAddress = detailAddress;
+	}
 }
