@@ -53,7 +53,7 @@ public class NoticeBoardReplyService extends AABaseService<NoticeBoardReplyReque
 		return optional
 				.map(reply -> {
 					reply
-						.setWriter(replyRequest.getWriter())
+						//.setWriter(replyRequest.getWriter())
 						.setContent(replyRequest.getContent());
 						//.setNoticeBoard(boardRepo.getOne(replyRequest.getNoticeBoardId()));
 					return reply;

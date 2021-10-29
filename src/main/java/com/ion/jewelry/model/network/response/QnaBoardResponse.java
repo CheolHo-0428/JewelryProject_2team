@@ -1,5 +1,7 @@
 package com.ion.jewelry.model.network.response;
 
+import java.util.List;
+
 import com.ion.jewelry.model.enums.YesNo;
 
 import lombok.AllArgsConstructor;
@@ -33,5 +35,7 @@ public class QnaBoardResponse {
 	
 	private YesNo deleteCheck; //이미지파일삭제여부
 	
-	private Long itemId;
+	private Long itemId; // 상품번호
+	
+	private List<QnaBoardReplyResponse> qnaBoardReplyResponseList; //댓글 리스트
 }

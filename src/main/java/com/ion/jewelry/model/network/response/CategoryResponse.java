@@ -1,5 +1,7 @@
 package com.ion.jewelry.model.network.response;
 
+import java.util.List;
+
 import com.ion.jewelry.model.enums.CategoryType;
 
 import lombok.AllArgsConstructor;
@@ -16,4 +18,6 @@ public class CategoryResponse {
 	private Long id; //카테고리번호
 	
 	private CategoryType categoryType;
+	
+	private List<ItemResponse> itemResponseList; 
 }

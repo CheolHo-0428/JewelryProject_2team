@@ -4,19 +4,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ion.jewelry.model.entity.Category;
+import com.ion.jewelry.model.entity.Item;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.CategoryRequest;
+import com.ion.jewelry.model.network.response.CategoryItemInfoResponse;
 import com.ion.jewelry.model.network.response.CategoryResponse;
+import com.ion.jewelry.model.network.response.ItemResponse;
 
 @Service
 public class CategoryService extends AABaseService<CategoryRequest, CategoryResponse, Category> {
-
+	
+	@Autowired
+	private ItemService itemService;
+	
 	@Override
 	public Header<CategoryResponse> create(Header<CategoryRequest> request) {
 		//1. 생성할 데이터를 요청
@@ -112,6 +119,26 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 		
 		return Header.OK(categoryResList, pagination);
 	}
+	
+	public Header<CategoryItemInfoResponse> itemInfo(Long id){
+		Category category = baseRepo.getOne(id);
+		CategoryResponse categoryResponse = response(category);
+		
+		List<Item> itemList = category.getItemList();
+		List<ItemResponse> itemResList = itemList.stream()
+				.map(item -> {
+					ItemResponse itemRes = Header.OK(itemService.response(item)).getData();
+					return itemRes;
+				})
+				.collect(Collectors.toList());
+				
+		categoryResponse.setItemResponseList(itemResList);
+		CategoryItemInfoResponse categoryItemInfoResponse = CategoryItemInfoResponse.builder()
+				.categoryResponse(categoryResponse).build();
+		
+		return Header.OK(categoryItemInfoResponse);
+	}
+	
 	
 	// 응답 메소드
 	public CategoryResponse response(Category category) {
