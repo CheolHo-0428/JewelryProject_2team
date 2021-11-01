@@ -8,20 +8,20 @@ import store from './store'
 import VueSweetalert2 from 'vue-sweetalert2'
 import 'sweetalert2/dist/sweetalert2.min.css'
 import BootstrapVue from 'bootstrap-vue'
-
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
+import VeeValidate from 'vee-validate'
 Vue.config.productionTip = false
 Vue.use(VueSweetalert2)
 Vue.use(BootstrapVue)
-
+Vue.use(VeeValidate)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   vuetify,
   store,
+  VeeValidate,
   VueSweetalert2,
   components: { App },
   template: '<App/>'

@@ -3,24 +3,29 @@
     <div class="material-icons">search</div>
     <div class="text">
       <p>고객님의 아이디 찾기 결과입니다.</p>
-      <p><input type="text" value="abc123" readonly></p>
+      <p>{{ $route.query.account }}</p>
     </div>
 
     <div class="button">
-      <button type="button" class="btn btn-light" @click="searchpw">비밀번호 찾기</button>
-      <button type="button" class="btn btn-secondary" @click="login">로그인하러 가기</button>
+      <button type="button" class="btn btn-light" @click="searchpw">
+        비밀번호 찾기
+      </button>
+      <button type="button" class="btn btn-secondary" @click="login">
+        로그인하러 가기
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  name: 'FINDID',
   methods: {
     searchpw () {
-      location.href = '/searchpw'
+      this.$router.push('/searchpw')
     },
     login () {
-      location.href = '/login'
+      this.$router.push('/login')
     }
   }
 }
@@ -39,7 +44,7 @@ export default {
   font-size: 3rem;
   margin: 2rem 0;
 }
-.text p{
+.text p {
   font-size: 1.3rem;
   margin-bottom: 2rem;
   font-weight: 700;
@@ -65,5 +70,4 @@ input {
 .button button:focus {
   box-shadow: none;
 }
-
 </style>

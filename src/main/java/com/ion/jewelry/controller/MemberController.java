@@ -7,27 +7,31 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ion.jewelry.model.entity.Member;
-import com.ion.jewelry.model.entity.Role;
-import com.ion.jewelry.model.enums.ERole;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.MemberRequest;
 import com.ion.jewelry.model.network.response.MemberResponse;
 import com.ion.jewelry.repository.RoleRepository;
+import com.ion.jewelry.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Controller
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/jewelry/member")
 public class MemberController extends AABaseController<MemberRequest, MemberResponse, Member> {
-
+	@Autowired
+	MemberService memberService;
+	
 	@Override
 	@GetMapping("/paging") // http://localhost:8000//jewelry/member/paging?page=0
 	public Header<List<MemberResponse>> pagingRead(
@@ -36,6 +40,7 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 		log.info("{}", pageable);
 		return baseService.pagingRead(pageable);
 	}
+
 	//이부분 테스트 해보시라고 만든거라 나중에 제거예정입니다!
 	@Autowired
 	RoleRepository roleRepository;
@@ -44,16 +49,6 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 	public String allAccess() {
 
 		System.out.println("all 권한 들어옴");
-
-		// 이코드 변경하고 싶은데.. data.sql에 넣게되면 ddl옵션을 못써서 문제이고,,
-		// 실행시점 어플리케이션쪽에 실행시키고 싶은데 그방법을 아직모르겠음.. 그래서 repo에 생성자 생성해서 update되는식으로 처리했음.
-		// 이 URL은 초기에 roles테이블에 데이터 넣기위해 처음에만 만들어놓으면 spring.jpa.hibernate.ddl-auto옵션이 create가 아닌이상 그대로 남아있다.
-		
-		Role role1 = new Role(1, ERole.ROLE_USER);
-		Role role2 = new Role(2, ERole.ROLE_ADMIN);
-
-		roleRepository.save(role1);
-		roleRepository.save(role2);
 
 		return "Public Content.";
 	}
