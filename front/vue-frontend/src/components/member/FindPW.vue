@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: 'FINDPW',  
+  name: 'FINDPW',
   methods: {
     login () {
       this.$router.push('/login')
