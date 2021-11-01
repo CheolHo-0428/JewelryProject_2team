@@ -15,8 +15,8 @@
             <div class="d-flex">
               <select name="member" class="op" @change="optionChange($event)">
                 <option value="" selected>-- 선택하세요 --</option>
-                <option value="title">공지번호</option>
-                <option value="id">공지제목</option>
+                <option value="id">공지번호</option>
+                <option value="title">공지제목</option>
               </select>
               <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
               <div class="search">
@@ -43,10 +43,10 @@
       </thead>
 
       <tbody>
-        <tr v-for="(notice, i) in sortedData" :key="i">
+        <tr v-for="(notice, i) in selectData" :key="i">
           <td class="tdNo">{{notice.id}}</td>
           <td class="tdTitle" @click="detail(notice.id)">{{notice.title}}</td>
-          <td class="tdDate" style="text-align:center;">{{createdDay[start + i -1]}} {{createdTime[start + i -1]}}</td>
+          <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
           <td class="tdWriter">{{notice.writer}}</td>
         </tr>
       </tbody>
@@ -75,8 +75,6 @@ export default {
       urlPage: this.$store.state.notice.noticePageUrl,
       notices: [],
       allNotices: [],
-      createdDay: [],
-      createdTime: [],
       end: 0,
       next: false,
       page: 0,
@@ -114,6 +112,7 @@ export default {
       return axios.get(this.urlPage)
         .then(res => {
           this.notices = res.data.data
+
           this.page = res.data.pagination.current_page + 1
           this.total_pages = res.data.pagination.total_pages
 
@@ -136,10 +135,6 @@ export default {
       axios.get('http://localhost:8000/jewelry/noticeBoard/')
         .then(res => {
           this.allNotices = res.data.data
-          for (let i = 0; i < res.data.data.length; i++) {
-            this.createdDay.push(res.data.data[i].created_at.split('T')[0])
-            this.createdTime.push(res.data.data[i].created_at.split('T')[1].split('.')[0])
-          }
         })
         .catch(err => {
           console.log(err)
@@ -147,6 +142,20 @@ export default {
     },
     optionChange (event) {
       this.option = event.target.value
+    },
+    sortedTitle () {
+      this.searchedData = this.allNotices.filter(data => {
+        return data.title.toLowerCase().includes(this.search.toLowerCase())
+      })
+      this.isSearch = true
+      return this.searchedData
+    },
+    sortedId () {
+      this.searchedData = this.allNotices.filter(data => {
+        return data.id.toString().includes(this.search)
+      })
+      this.isSearch = true
+      return this.searchedData
     }
   },
   created () {
@@ -154,16 +163,11 @@ export default {
     this.noticeAll()
   },
   computed: {
-    sortedData () {
-      if (this.search) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.searchedData = this.allNotices.filter(data => {
-          return data.title.toLowerCase().includes(this.search.toLowerCase())
-        }
-        )
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.isSearch = true
-        return this.searchedData
+    selectData () {
+      if (this.search && this.option === 'title') {
+        return this.sortedTitle()
+      } else if (this.search && this.option === 'id') {
+        return this.sortedId()
       } else {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.isSearch = false
@@ -224,7 +228,7 @@ input {
 }
 .form-control {
   margin-left: 1rem;
-  width: 14rem !important;
+  width: 13rem !important;
 }
 .form-control:focus {
   box-shadow: none;
@@ -232,7 +236,7 @@ input {
 }
 .material-icons-outlined {
   vertical-align: middle;
-  margin-left: 1rem;
+  margin-left: -2.8rem;
 }
 
 .list th {

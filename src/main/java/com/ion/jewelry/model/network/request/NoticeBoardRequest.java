@@ -1,5 +1,10 @@
 package com.ion.jewelry.model.network.request;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.ion.jewelry.model.enums.YesNo;
 
 import lombok.AllArgsConstructor;
@@ -32,4 +37,6 @@ public class NoticeBoardRequest {
 	private Long fileSize; //이미지파일크기
 	
 	private YesNo deleteCheck; //이미지파일삭제여부
+	
+	private List<MultipartFile> files;
 }

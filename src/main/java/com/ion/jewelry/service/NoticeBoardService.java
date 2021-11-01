@@ -1,5 +1,6 @@
 package com.ion.jewelry.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,9 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ion.jewelry.component.FileHandler;
 import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.entity.NoticeBoardReply;
+import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.NoticeBoardRequest;
@@ -18,7 +23,10 @@ import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class NoticeBoardService extends 
 	AABaseService<NoticeBoardRequest, NoticeBoardResponse, NoticeBoard> {
 	
@@ -26,6 +34,8 @@ public class NoticeBoardService extends
 	
 	@Autowired
 	private NoticeBoardReplyService replyService;
+	
+	private final FileHandler fileHandler;
 	
 	@Override
 	public Header<NoticeBoardResponse> create(Header<NoticeBoardRequest> request) {
@@ -47,6 +57,16 @@ public class NoticeBoardService extends
 		
 		return Header.OK(response(newNoticeBoard));
 	}
+	
+	@Transactional
+    public Header<NoticeBoardResponse> createImg(Header<NoticeBoardRequest> request, List<MultipartFile> files) throws Exception {
+		NoticeBoardRequest requestDto = request.getData();
+		
+        NoticeBoard board = fileHandler.parseFileInfo(requestDto, files);
+        NoticeBoard newNoticeBoard = baseRepo.save(board);
+        
+        return Header.OK(response(newNoticeBoard));
+    }
 
 	@Override
 	public Header<NoticeBoardResponse> update(Header<NoticeBoardRequest> request) {
@@ -56,16 +76,36 @@ public class NoticeBoardService extends
 		
 		return optional
 			.map(board -> {
+				if(noticeRequest.getDeleteCheck() == YesNo.YES) {
+					System.out.println(noticeRequest.getDeleteCheck());
+					String path = board.getStoredFileName();
+					File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+					
+					if (file.exists()) {
+						if (file.delete()) {
+							System.out.println("파일삭제 성공");
+							noticeRequest.setOriginFileName(null);
+							noticeRequest.setStoredFileName(null);
+							noticeRequest.setFileSize(null);
+							
+							board
+								.setOriginFileName(null)
+								.setStoredFileName(null)
+								.setFileSize(null)
+								.setDeleteCheck(YesNo.YES);
+						} else {
+							System.out.println("파일삭제 실패");
+						}
+					} else {
+						System.out.println("파일이 존재하지 않습니다.");
+					}
+				}
 				board
 					.setTitle(noticeRequest.getTitle())
 					.setContent(noticeRequest.getContent())
 					.setWriter(noticeRequest.getWriter())
 					.setPassword(noticeRequest.getPassword())
-					.setPrivateOk(noticeRequest.getPrivateOk())
-					.setOriginFileName(noticeRequest.getOriginFileName())
-					.setStoredFileName(noticeRequest.getStoredFileName())
-					.setFileSize(noticeRequest.getFileSize())
-					.setDeleteCheck(noticeRequest.getDeleteCheck());
+					.setPrivateOk(noticeRequest.getPrivateOk());
 			return board;
 			})
 			.map(board -> baseRepo.save(board))
@@ -80,6 +120,19 @@ public class NoticeBoardService extends
 		
 		return optional
 				.map(board -> {
+					String path = board.getStoredFileName();
+					File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+					
+					if (file.exists()) {
+						if (file.delete()) {
+							System.out.println("파일삭제 성공");
+						} else {
+							System.out.println("파일삭제 실패");
+						}
+					} else {
+						System.out.println("파일이 존재하지 않습니다.");
+					}
+					
 					baseRepo.delete(board);
 					return Header.OK();
 				})
@@ -102,6 +155,7 @@ public class NoticeBoardService extends
 		
 		List<NoticeBoardResponse> resBoardList = boardList.stream()
 					.map(board -> response(board))
+					.sorted((a, b) -> (int)(b.id - a.id))
 					.collect(Collectors.toList());
 		
 		return Header.OK(resBoardList);
@@ -138,6 +192,7 @@ public class NoticeBoardService extends
 								Header.OK(replyService.response(reply)).getData();
 						return replyRes;
 					})
+					.sorted((a, b) -> (int)(b.id - a.id))
 					.collect(Collectors.toList());
 		
 		noticeBoardResponse.setNoticeBoardReplyResponseList(replyResList);
@@ -152,6 +207,8 @@ public class NoticeBoardService extends
 	
 	
 	public NoticeBoardResponse response(NoticeBoard board) {
+
+		
 		NoticeBoardResponse res = NoticeBoardResponse.builder()
 				.id(board.getId())
 				.title(board.getTitle())
@@ -164,7 +221,6 @@ public class NoticeBoardService extends
 				.fileSize(board.getFileSize())
 				.deleteCheck(board.getDeleteCheck())
 				.createdAt(board.getCreatedAt())
-				.updatedAt(board.getUpdatedAt())
 				.build();
 		
 		return res;

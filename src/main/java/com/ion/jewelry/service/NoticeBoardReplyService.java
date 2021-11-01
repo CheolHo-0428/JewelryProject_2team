@@ -130,6 +130,7 @@ public class NoticeBoardReplyService extends AABaseService<NoticeBoardReplyReque
 					.writer(reply.getWriter())
 					.content(reply.getContent())
 					.noticeBoardId(reply.getNoticeBoard().getId())
+					.updatedAt(reply.getUpdatedAt())
 					.build();
 	
 		return res;

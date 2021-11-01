@@ -17,6 +17,10 @@
           <th>내용</th>
           <td><textarea v-model="content"></textarea></td>
         </tr>
+        <tr>
+          <th>이미지 업로드</th>
+          <td><input type="file" id="file" name="files" /></td>
+        </tr>
       </table>
     </form>
   </div>
@@ -63,20 +67,36 @@ export default {
           confirmButtonColor: '#A9E2F3'
         })
       } else {
-        axios({
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          url: 'http://localhost:8000/jewelry/noticeBoard/reg',
-          data: JSON.stringify({
-            title: this.title,
-            content: this.content,
-            writer: 'testUser'
-          })
-        }).then(res => {
-          console.log(res)
-        }).catch(error => {
+        let frm = new FormData()
+        let photoFile = document.getElementById('file')
+        frm.append('title', this.title)
+        frm.append('content', this.content)
+        frm.append('writer', 'testUser')
+        frm.append('file', photoFile.files[0])
+
+        axios.post('http://localhost:8000/jewelry/noticeBoard/reg', frm, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }).then((response) => {
+          console.log(response)
+        }).catch((error) => {
           console.log(error)
         })
+        // axios({
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   url: 'http://localhost:8000/jewelry/noticeBoard/reg',
+        //   data: JSON.stringify({
+        //     title: this.title,
+        //     content: this.content,
+        //     writer: 'testUser'
+        //   })
+        // }).then(res => {
+        //   console.log(res)
+        // }).catch(error => {
+        //   console.log(error)
+        // })
 
         this.$swal.fire({
           icon: 'success',

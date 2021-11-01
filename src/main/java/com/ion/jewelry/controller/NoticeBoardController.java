@@ -2,19 +2,22 @@ package com.ion.jewelry.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.network.Header;
@@ -52,19 +55,21 @@ public class NoticeBoardController extends
 	}
 	
 	@PostMapping("/reg")
-	public Header<NoticeBoardResponse> create(@RequestBody NoticeBoardRequest request) {
-		
+	public Header<NoticeBoardResponse> create(
+			@Valid @RequestParam("title") String title,
+            @Valid @RequestParam("content") String content,
+            @Valid @RequestParam("writer") String writer,
+            @Valid @RequestParam("file") List<MultipartFile> files
+			) throws Exception {
 		Header<NoticeBoardRequest> result = new Header<NoticeBoardRequest>();
+		NoticeBoardRequest request = NoticeBoardRequest.builder()
+				.title(title)
+				.content(content)
+				.writer(writer)
+				.build();
 		result.setData(request);
 		
-		return baseService.create(result);
-	}
-
-	@Override
-	@DeleteMapping("{id}")
-	public Header delete(@PathVariable Long id) {
-		
-		return baseService.delete(id);
+		return boardService.createImg(result, files);
 	}
 	
 	@PutMapping("/update")
