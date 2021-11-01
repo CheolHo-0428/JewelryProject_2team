@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class NoticeBoardResponse {
 	
-	private Long id; //공지사항 번호
+	public Long id; //공지사항 번호
 	
 	private String title; //공지사항 제목
 	
@@ -36,7 +36,7 @@ public class NoticeBoardResponse {
 	
 	private YesNo deleteCheck; //이미지파일삭제여부
 	
-	private LocalDateTime createdAt, updatedAt;
+	private LocalDateTime createdAt;
 	
 	private List<NoticeBoardReplyResponse> noticeBoardReplyResponseList;
 }
