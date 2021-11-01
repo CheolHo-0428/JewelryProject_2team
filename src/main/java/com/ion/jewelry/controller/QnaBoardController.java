@@ -37,7 +37,7 @@ public class QnaBoardController extends AABaseController<QnaBoardRequest, QnaBoa
 		return baseService.pagingRead(pageable);
 	}
 	
-	@GetMapping("{id}/replyInfo") // http://localhost:8000/jewelry/qnaBoard/1/replyInfo
+	@GetMapping("/{id}/replyInfo") // http://localhost:8000/jewelry/qnaBoard/1/replyInfo
 	public Header<QnaBoardReplyInfoResponse> replyInfo(@PathVariable Long id){
 		log.info("read id : {}", id);
 		return qnaService.replyInfo(id);

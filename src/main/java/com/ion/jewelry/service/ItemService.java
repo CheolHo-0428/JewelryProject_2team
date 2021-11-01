@@ -10,10 +10,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ion.jewelry.model.entity.Item;
+import com.ion.jewelry.model.entity.QnaBoard;
+import com.ion.jewelry.model.entity.ReviewBoard;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.ItemRequest;
+import com.ion.jewelry.model.network.response.ItemInfoResponse;
 import com.ion.jewelry.model.network.response.ItemResponse;
+import com.ion.jewelry.model.network.response.QnaBoardReplyResponse;
+import com.ion.jewelry.model.network.response.QnaBoardResponse;
+import com.ion.jewelry.model.network.response.ReviewBoardReplyResponse;
+import com.ion.jewelry.model.network.response.ReviewBoardResponse;
 import com.ion.jewelry.repository.CategoryRepository;
 
 @Service
@@ -21,6 +28,18 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 	
 	@Autowired
 	private CategoryRepository categoryRepo;
+	
+	@Autowired
+	private QnaBoardService qnaBoardService;
+	
+	@Autowired
+	private QnaBoardReplyService qnaBoardReplyService;
+	
+	@Autowired
+	private ReviewBoardService reviewBoardService;
+	
+	@Autowired
+	private ReviewBoardReplyService reviewBoardReplyService;
 	
 	@Override
 	public Header<ItemResponse> create(Header<ItemRequest> request) {
@@ -121,6 +140,54 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 				.build();
 		
 		return Header.OK(itemResList, pagination);
+	}
+	
+	//특정아이템에 해당되는 QNA, REVIEW 글들 조회(댓글 포함)
+	public Header<ItemInfoResponse> itemInfo(Long id){
+		
+		Item item = baseRepo.getOne(id);
+		ItemResponse itemResponse = response(item);
+		
+		//특정아이템에 해당되는 QNA게시글들 조회(댓글 포함)
+		List<QnaBoard> qnaBoardList = item.getQnaBoardList(); 
+		List<QnaBoardResponse> qnaBoardResponseList = qnaBoardList.stream()
+				.map(qna -> {
+					QnaBoardResponse qnaBoardResponse = qnaBoardService.response(qna);
+					
+					//QnaBoardReply response
+					List<QnaBoardReplyResponse> qnaReplyResList = qna.getQnaBoardReplyList().stream()
+							.map(reply -> qnaBoardReplyService.response(reply))
+							.collect(Collectors.toList());
+					
+					qnaBoardResponse.setQnaBoardReplyResponseList(qnaReplyResList);
+					return qnaBoardResponse;
+				})
+				.collect(Collectors.toList());
+		itemResponse.setQnaBoardResponseList(qnaBoardResponseList);
+		
+		//특정아이템에 해당되는 review게시글들 조회(댓글 포함)
+		List<ReviewBoard> reviewBoardList = item.getReviewBoardList();
+		List<ReviewBoardResponse> reviewBoardResponseList = reviewBoardList.stream()
+				.map(review -> {
+					ReviewBoardResponse reviewBoardResponse = reviewBoardService.response(review);
+					
+					//ReviewBoardReply response
+					List<ReviewBoardReplyResponse> reviewReplyResList = review.getReviewBoardReplyList().stream()
+							.map(reply -> reviewBoardReplyService.response(reply))
+							.collect(Collectors.toList());
+					
+					reviewBoardResponse.setReviewBoardReplyResponseList(reviewReplyResList);
+					return reviewBoardResponse; 
+				})
+				.collect(Collectors.toList());
+		itemResponse.setReviewBoardResponseList(reviewBoardResponseList);
+		
+		
+		//조회된 정보들 붙이기!
+		ItemInfoResponse itemQnaBoardInfoResponse = ItemInfoResponse.builder()
+				.itemResponse(itemResponse).build();
+		
+		return Header.OK(itemQnaBoardInfoResponse);
 	}
 	
 	// 응답 메소드

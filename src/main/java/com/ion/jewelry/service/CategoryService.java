@@ -24,6 +24,18 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 	@Autowired
 	private ItemService itemService;
 	
+	@Autowired
+	private QnaBoardService qnaBoardService;
+	
+	@Autowired
+	private QnaBoardReplyService qnaBoardReplyService;
+	
+	@Autowired
+	private ReviewBoardService reviewBoardService;
+	
+	@Autowired
+	private ReviewBoardReplyService reviewBoardReplyService;
+	
 	@Override
 	public Header<CategoryResponse> create(Header<CategoryRequest> request) {
 		//1. 생성할 데이터를 요청
@@ -120,15 +132,17 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 		return Header.OK(categoryResList, pagination);
 	}
 	
+	//특정카테고리에 해당되는 item정보(qna, review 등등) 조회
 	public Header<CategoryItemInfoResponse> itemInfo(Long id){
+		
 		Category category = baseRepo.getOne(id);
 		CategoryResponse categoryResponse = response(category);
 		
 		List<Item> itemList = category.getItemList();
 		List<ItemResponse> itemResList = itemList.stream()
 				.map(item -> {
-					ItemResponse itemRes = Header.OK(itemService.response(item)).getData();
-					return itemRes;
+					ItemResponse itemResponse = itemService.response(item);
+					return itemResponse;
 				})
 				.collect(Collectors.toList());
 				
