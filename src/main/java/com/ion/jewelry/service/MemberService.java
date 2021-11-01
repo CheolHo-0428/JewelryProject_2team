@@ -4,20 +4,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.ion.jewelry.model.entity.Member;
+import com.ion.jewelry.model.entity.NoticeBoard;
+import com.ion.jewelry.model.entity.NoticeBoardReply;
 import com.ion.jewelry.model.enums.MemberStatus;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.MemberRequest;
 import com.ion.jewelry.model.network.response.MemberResponse;
+import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
+import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
+import com.ion.jewelry.model.network.response.NoticeBoardResponse;
+import com.ion.jewelry.repository.MemberRepository;
 
 @Service
 public class MemberService extends AABaseService<MemberRequest, MemberResponse, Member> {
-
+	@Autowired
+	MemberRepository memberRepository;
+	
 	@Override
 	public Header<MemberResponse> create(Header<MemberRequest> request) {
 		MemberRequest memberRequest = request.getData(); 
@@ -136,5 +145,22 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 		
 		return res;
 	}
-	
+
+	public Header<MemberResponse> findByNameAndEmail(String name,String email) {
+		Optional<Member> optional = memberRepository.findByNameAndEmail(name,email);
+		return optional
+				.map(member -> response(member))
+				.map(member -> Header.OK(member))
+				.orElseGet(() -> Header.ERROR("조회하신 데이터가 없습니다."))
+				;
+	}
+
+	public Header<MemberResponse> findByNameAndAccountAndEmail(String name, String account, String email) {
+		Optional<Member> optional = memberRepository.findByNameAndAccountAndEmail(name,account,email);
+		return optional
+				.map(member -> response(member))
+				.map(member -> Header.OK(member))
+				.orElseGet(() -> Header.ERROR("조회하신 데이터가 없습니다."))
+				;
+	}
 }

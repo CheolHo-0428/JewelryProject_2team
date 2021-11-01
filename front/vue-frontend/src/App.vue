@@ -15,7 +15,6 @@
 <script>
 import HEADER from './components/Header.vue'
 import FOOTER from './components/Footer.vue'
-
 // import axios from 'axios'
 // const url = 'http://localhost:8060/api/employees'
 
@@ -29,23 +28,7 @@ export default {
       employees: []
     }
   }
-  // methods: {
-  //   emp () {
-  //     return axios.get(url)
-  //       .then(res => {
-  //         this.employees = res.data
-  //         console.log(res.data)
-  //       })
-  //       .catch(err => {
-  //         console.log(err)
-  //       })
-  //   }
-  // },
-  // created () {
-  //   this.emp()
-  // }
 }
 </script>
-
 <style scoped>
 </style>

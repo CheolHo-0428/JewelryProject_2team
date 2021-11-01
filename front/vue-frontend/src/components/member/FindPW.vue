@@ -16,9 +16,10 @@
 
 <script>
 export default {
+  name: 'FINDPW',  
   methods: {
     login () {
-      location.href = '/login'
+      this.$router.push('/login')
     }
   }
 }

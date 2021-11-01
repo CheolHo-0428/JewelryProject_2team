@@ -15,9 +15,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ion.jewelry.jwt.JwtUtils;
@@ -26,19 +29,23 @@ import com.ion.jewelry.model.entity.Member;
 import com.ion.jewelry.model.entity.Role;
 import com.ion.jewelry.model.enums.ERole;
 import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.LoginRequest;
 import com.ion.jewelry.model.network.request.MemberRequest;
+import com.ion.jewelry.model.network.request.NoticeBoardRequest;
 import com.ion.jewelry.model.network.request.SignupRequest;
 import com.ion.jewelry.model.network.response.JwtResponse;
 import com.ion.jewelry.model.network.response.MemberResponse;
 import com.ion.jewelry.model.network.response.MessageResponse;
+import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.repository.MemberRepository;
 import com.ion.jewelry.repository.RoleRepository;
+import com.ion.jewelry.service.MemberService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/jewelry/auth")
-public class AuthController extends AABaseController<MemberRequest, MemberResponse, Member>{
+public class AuthController extends AABaseController<MemberRequest, MemberResponse, Member> {
 	@Autowired
 	AuthenticationManager authenticationManager;
 
@@ -50,6 +57,9 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 
 	@Autowired
 	PasswordEncoder encoder;
+
+	@Autowired
+	MemberService memberService;
 
 	@Autowired
 	JwtUtils jwtUtils;
@@ -87,11 +97,11 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (memberRepository.existsByAccount(signUpRequest.getAccount())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: account is already taken!"));
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: 이미존재하는아이디입니다!"));
 		}
 
 		if (memberRepository.existsByEmail(signUpRequest.getEmail())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
+			return ResponseEntity.badRequest().body(new MessageResponse("Error: 이미존재하는 이메일입니다!"));
 		}
 
 		// Create new user's account
@@ -101,23 +111,23 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
-		if (strRoles == null) {
 
+		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					.orElseThrow(() -> new RuntimeException("Error: 권한이 없습니다."));
 			roles.add(userRole);
 		} else {
 			strRoles.forEach(role -> {
 				switch (role) {
 				case "admin":
 					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+							.orElseThrow(() -> new RuntimeException("Error: 권한이 없습니다."));
 					roles.add(adminRole);
 
 					break;
 				default:
 					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+							.orElseThrow(() -> new RuntimeException("Error: 권한이없습니다."));
 					roles.add(userRole);
 				}
 			});
@@ -126,6 +136,27 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 		member.setRoles(roles);
 		memberRepository.save(member);
 
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return ResponseEntity.ok(new MessageResponse("가입에 성공적으로 등록되었습니다."));
 	}
+
+	// 아이디찾기
+	@GetMapping("/findId")
+	public Header<MemberResponse> findByNameAndEmail(String name, String email) {
+		return memberService.findByNameAndEmail(name, email);
+	}
+
+	// 비밀번호찾기
+	@GetMapping("/findPw")
+	public Header<MemberResponse> findByNameAndAccountAndEmail(String name, String account, String email) {
+		return memberService.findByNameAndAccountAndEmail(name, account, email);
+	}
+	//비밀번호변경
+//	@PutMapping("/changePw")
+//	public Header<MemberResponse> changePw(@RequestBody MemberRequest request) {
+//		
+//		Header<MemberRequest> result = new Header<MemberRequest>();
+//		result.setData(request);
+//		
+//		return baseService.update(result);
+//	}
 }
