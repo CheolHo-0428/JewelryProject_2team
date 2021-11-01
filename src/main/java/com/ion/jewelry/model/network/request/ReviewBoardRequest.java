@@ -1,8 +1,9 @@
-package com.ion.jewelry.model.network.response;
+package com.ion.jewelry.model.network.request;
 
 import java.util.List;
 
 import com.ion.jewelry.model.enums.YesNo;
+import com.ion.jewelry.model.network.response.ReviewBoardReplyResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,19 +14,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class QnaBoardResponse {
+public class ReviewBoardRequest {
 	
-	private Long id; //Qna번호
+	private Long id; //리뷰번호
 	
-	private String title; //Qna제목
+	private String title; //리뷰제목
 	
-	private String content; //Qna내용
+	private String content; //리뷰내용
 	
-	private String writer; //Qna작성자
+	private String writer; //작성자
 	
-	private String password; //Qna비밀번호
+	private String password; //리뷰비밀번호
 	
-	private YesNo privateOk; //Qna비밀글설정
+	private YesNo privateOk; //리뷰비밀글설정
 	
 	private String originFileName; //원본이미지파일이름
 	
@@ -35,7 +36,6 @@ public class QnaBoardResponse {
 	
 	private YesNo deleteCheck; //이미지파일삭제여부
 	
-	private Long itemId; // 상품번호
-	
-	private List<QnaBoardReplyResponse> qnaBoardReplyResponseList; //댓글 리스트
+	private Long itemId;
+		
 }
