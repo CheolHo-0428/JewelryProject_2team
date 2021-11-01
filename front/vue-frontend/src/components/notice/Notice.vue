@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <p>공지사항</p>
-    <p class="add"><a class="btn btn-dark" href="/regnotice">공지사항 등록</a></p>
+    <p class="add"><router-link class="btn btn-dark" to="/regnotice">공지사항 등록</router-link></p>
 
     <table class="table">
       <colgroup>
@@ -44,7 +44,7 @@
 
       <tbody>
         <tr v-for="(notice, i) in selectData" :key="i">
-          <td class="tdNo">{{notice.id}}</td>
+          <td class="tdNo">{{total_elements - (page - 1)*10 - i}}</td>
           <td class="tdTitle" @click="detail(notice.id)">{{notice.title}}</td>
           <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
           <td class="tdWriter">{{notice.writer}}</td>
@@ -85,13 +85,14 @@ export default {
       search: '',
       option: '',
       searchedData: [],
-      isSearch: false
+      isSearch: false,
+      total_elements: 0
     }
   },
   methods: {
     detail (id) {
       this.$store.commit('noticeDetail', {id: id, urlPage: this.urlPage})
-      location.href = '/notice_'
+      this.$router.push('/notice_')
     },
     changePage (page) {
       this.urlPage = url + `?page=${page - 1}`
@@ -115,6 +116,7 @@ export default {
 
           this.page = res.data.pagination.current_page + 1
           this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
 
           let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
           this.start = tmpEnd - 4

@@ -5,11 +5,11 @@
     </div>
 
     <div class="boxs">
-      <div v-for="i in 14" :key="i">
-        <div class="img" @click="change"></div>
+      <div v-for="(list, i) in response_list" :key="i">
+        <div class="img" @click="change(list.id)"></div>
         <div class="product">
-          <p class="name">다이아 반지</p>
-          <p class="price">10000 원</p>
+          <p class="name">{{list.name}}</p>
+          <p class="price">{{list.price}}원</p>
         </div>
       </div>
     </div>
@@ -17,14 +17,32 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default {
-  methods: {
-    change () {
-      location.href = '/detail'
+  data () {
+    return {
+      response_list: []
     }
+  },
+  methods: {
+    change (id) {
+      this.$store.commit('itemDetail', {id: id})
+      this.$router.push('/detail')
+    },
+    ring () {
+      axios.get('http://localhost:8000/jewelry/category/4/itemInfo')
+        .then(res => {
+          this.response_list = res.data.data.category_response.item_response_list
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  created () {
+    this.ring()
   }
-
 }
 </script>
 

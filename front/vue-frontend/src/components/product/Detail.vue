@@ -5,8 +5,8 @@
         <div class="imageBox"></div>
       </div>
       <div class="topBox right">
-        <div class="name">다이아 반지</div>
-        <div class="price">PRICE - 10000원</div>
+        <div class="name">{{this.name}}</div>
+        <div class="price">PRICE - {{this.price}}원</div>
         <div class="trans">
           <p>배송 : 국내배송</p>
           <p>배송 방법 : 택배</p>
@@ -55,6 +55,7 @@
 import CONTENT from './Content'
 import REVIEW from './Review'
 import QNA from './Qna'
+import axios from 'axios'
 
 export default {
   components: {
@@ -62,19 +63,36 @@ export default {
   },
   data () {
     return {
-      version: 0
+      version: 0,
+      name: '',
+      price: ''
     }
   },
   methods: {
     cart () {
-      location.href = '/cart'
+      this.$router.push('/cart')
     },
     order () {
-      location.href = '/order'
+      this.$router.push('/order')
     },
     changeVersion (index) {
       this.version = index
+    },
+    detail () {
+      axios.get(`http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}`)
+        .then(res => {
+          let info = res.data.data
+
+          this.name = info.name
+          this.price = info.price
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  created () {
+    this.detail()
   }
 }
 </script>

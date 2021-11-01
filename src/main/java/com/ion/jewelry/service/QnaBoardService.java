@@ -1,5 +1,6 @@
 package com.ion.jewelry.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,15 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ion.jewelry.component.QnaFileHandler;
 import com.ion.jewelry.model.entity.QnaBoard;
 import com.ion.jewelry.model.entity.QnaBoardReply;
+import com.ion.jewelry.model.entity.ReviewBoard;
+import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.QnaBoardRequest;
+import com.ion.jewelry.model.network.request.ReviewBoardRequest;
 import com.ion.jewelry.model.network.response.QnaBoardReplyInfoResponse;
 import com.ion.jewelry.model.network.response.QnaBoardReplyResponse;
 import com.ion.jewelry.model.network.response.QnaBoardResponse;
+import com.ion.jewelry.model.network.response.ReviewBoardResponse;
 import com.ion.jewelry.repository.ItemRepository;
 
 @Service
@@ -27,6 +35,8 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 	
 	@Autowired
 	private QnaBoardReplyService replyService;
+	
+	private final QnaFileHandler fileHandler = new QnaFileHandler();
 	
 	@Override
 	public Header<QnaBoardResponse> create(Header<QnaBoardRequest> request) {
@@ -52,6 +62,17 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 		QnaBoardResponse res = response(newQna);
 		return Header.OK(res);
 	}
+	
+	@Transactional
+    public Header<QnaBoardResponse> createImg(Header<QnaBoardRequest> request, List<MultipartFile> files) throws Exception {
+		QnaBoardRequest requestDto = request.getData();
+		 
+		QnaBoard board = fileHandler.parseFileInfo(requestDto, files);
+		board.setItem(itemRepo.getOne(requestDto.getItemId()));
+		QnaBoard newReviewBoard = baseRepo.save(board);
+        
+        return Header.OK(response(newReviewBoard));
+    }
 
 	@Override
 	public Header<QnaBoardResponse> update(Header<QnaBoardRequest> request) {
@@ -64,16 +85,36 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 		//3. 업데이트한 데이터 -> DB저장 -> 업데이트한 데이터 응답 
 		return optional
 				.map(qnaBoard -> {
+					if(qnaRequest.getDeleteCheck() == YesNo.YES) {
+						System.out.println(qnaBoard.getStoredFileName());
+						String path = qnaBoard.getStoredFileName();
+						File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+						
+						if (file.exists()) {
+							if (file.delete()) {
+								System.out.println("파일삭제 성공");
+								qnaRequest.setOriginFileName(null);
+								qnaRequest.setStoredFileName(null);
+								qnaRequest.setFileSize(null);
+								
+								qnaBoard
+									.setOriginFileName(null)
+									.setStoredFileName(null)
+									.setFileSize(null)
+									.setDeleteCheck(YesNo.YES);
+							} else {
+								System.out.println("파일삭제 실패");
+							}
+						} else {
+							System.out.println("파일이 존재하지 않습니다.");
+						}
+					}
 					qnaBoard
 					.setTitle(qnaRequest.getTitle())
 					.setContent(qnaRequest.getContent())
 					.setWriter(qnaRequest.getWriter())
 					.setPassword(qnaRequest.getPassword())
 					.setPrivateOk(qnaRequest.getPrivateOk())
-					.setOriginFileName(qnaRequest.getOriginFileName())
-					.setStoredFileName(qnaRequest.getStoredFileName())
-					.setFileSize(qnaRequest.getFileSize())
-					.setDeleteCheck(qnaRequest.getDeleteCheck())
 					.setItem(itemRepo.getOne(qnaRequest.getItemId()));
 					
 					return qnaBoard;
@@ -92,6 +133,19 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 		// 2. 데이터 삭제 -> 삭제완료 메세지 응답
 		return optional
 				.map(qnaBoard -> {
+					String path = qnaBoard.getStoredFileName();
+					File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+					
+					if (file.exists()) {
+						if (file.delete()) {
+							System.out.println("파일삭제 성공");
+						} else {
+							System.out.println("파일삭제 실패");
+						}
+					} else {
+						System.out.println("파일이 존재하지 않습니다.");
+					}
+					
 					baseRepo.delete(qnaBoard);
 					return Header.OK();
 					})
@@ -176,6 +230,7 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 				.storedFileName(board.getStoredFileName())
 				.fileSize(board.getFileSize())
 				.deleteCheck(board.getDeleteCheck())
+				.createdAt(board.getCreatedAt())
 				.itemId(board.getItem().getId())
 				.build();
 				

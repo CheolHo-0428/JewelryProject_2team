@@ -1,5 +1,6 @@
 package com.ion.jewelry.model.network.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ion.jewelry.model.enums.YesNo;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ReviewBoardResponse {
 	
-	private Long id; //리뷰번호
+	public Long id; //리뷰번호
 	
 	private String title; //리뷰제목
 	
@@ -36,6 +37,8 @@ public class ReviewBoardResponse {
 	private YesNo deleteCheck; //이미지파일삭제여부
 	
 	private Long itemId; //해당상품 번호 아이디
+	
+	private LocalDateTime createdAt;
 	
 	private List<ReviewBoardReplyResponse> reviewBoardReplyResponseList; //댓글 리스트
 }

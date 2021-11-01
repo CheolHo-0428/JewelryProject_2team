@@ -1,5 +1,6 @@
 package com.ion.jewelry.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,9 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ion.jewelry.component.ReviewFileHandler;
+import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.entity.ReviewBoard;
 import com.ion.jewelry.model.entity.ReviewBoardReply;
+import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.ReviewBoardReplyInfoResponse;
@@ -28,6 +34,8 @@ public class ReviewBoardService extends
 	
 	@Autowired
 	private ReviewBoardReplyService replyService;
+	
+	private final ReviewFileHandler fileHandler = new ReviewFileHandler();
 	
 	@Override
 	public Header<ReviewBoardResponse> create(Header<ReviewBoardRequest> request) {
@@ -51,6 +59,17 @@ public class ReviewBoardService extends
 		
 		return Header.OK(reviewResponse);
 	}
+	
+	@Transactional
+    public Header<ReviewBoardResponse> createImg(Header<ReviewBoardRequest> request, List<MultipartFile> files) throws Exception {
+		ReviewBoardRequest requestDto = request.getData();
+		
+		ReviewBoard board = fileHandler.parseFileInfo(requestDto, files);
+		board.setItem(itemRepo.getOne(requestDto.getItemId()));
+		ReviewBoard newReviewBoard = baseRepo.save(board);
+        
+        return Header.OK(response(newReviewBoard));
+    }
 
 	@Override
 	public Header<ReviewBoardResponse> update(Header<ReviewBoardRequest> request) {
@@ -59,16 +78,36 @@ public class ReviewBoardService extends
 		
 		return optional
 				.map(review -> {
+					if(reviewRequest.getDeleteCheck() == YesNo.YES) {
+						System.out.println(review.getStoredFileName());
+						String path = review.getStoredFileName();
+						File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+						
+						if (file.exists()) {
+							if (file.delete()) {
+								System.out.println("파일삭제 성공");
+								reviewRequest.setOriginFileName(null);
+								reviewRequest.setStoredFileName(null);
+								reviewRequest.setFileSize(null);
+								
+								review
+									.setOriginFileName(null)
+									.setStoredFileName(null)
+									.setFileSize(null)
+									.setDeleteCheck(YesNo.YES);
+							} else {
+								System.out.println("파일삭제 실패");
+							}
+						} else {
+							System.out.println("파일이 존재하지 않습니다.");
+						}
+					}
 					review
 					.setTitle(reviewRequest.getTitle())
 					.setContent(reviewRequest.getContent())
 					.setWriter(reviewRequest.getWriter())
 					.setPassword(reviewRequest.getPassword())
 					.setPrivateOk(reviewRequest.getPrivateOk())
-					.setOriginFileName(reviewRequest.getOriginFileName())
-					.setStoredFileName(reviewRequest.getStoredFileName())
-					.setFileSize(reviewRequest.getFileSize())
-					.setDeleteCheck(reviewRequest.getDeleteCheck())
 					.setItem(itemRepo.getOne(reviewRequest.getItemId()));
 					
 					return review;
@@ -85,6 +124,19 @@ public class ReviewBoardService extends
 		
 		return optional
 				.map(review -> {
+					String path = review.getStoredFileName();
+					File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+					
+					if (file.exists()) {
+						if (file.delete()) {
+							System.out.println("파일삭제 성공");
+						} else {
+							System.out.println("파일삭제 실패");
+						}
+					} else {
+						System.out.println("파일이 존재하지 않습니다.");
+					}
+					
 					baseRepo.delete(review);
 					return Header.OK();
 					})
@@ -161,6 +213,7 @@ public class ReviewBoardService extends
 				.storedFileName(board.getStoredFileName())
 				.fileSize(board.getFileSize())
 				.deleteCheck(board.getDeleteCheck())
+				.createdAt(board.getCreatedAt())
 				.itemId(board.getItem().getId())
 				.build();
 

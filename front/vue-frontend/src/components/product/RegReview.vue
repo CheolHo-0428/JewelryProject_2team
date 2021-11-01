@@ -10,16 +10,16 @@
       <tbody>
         <tr>
           <th scope="col">리뷰제목</th>
-          <td><input type="text"></td>
+          <td><input type="text" v-model="title"></td>
         </tr>
         <tr>
           <th scope="col">리뷰내용</th>
-          <td><textarea type="text" placeholder="리뷰를 작성해주세요."></textarea></td>
+          <td><textarea type="text" placeholder="리뷰를 작성해주세요."  v-model="content"></textarea></td>
         </tr>
         <tr>
           <th scope="col">이미지</th>
           <td class="img" colspan="3">
-            <input type="file" multiple>
+            <input type="file" id="file" name="files" />
           </td>
         </tr>
       </tbody>
@@ -33,7 +33,15 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
+  data () {
+    return {
+      title: '',
+      content: ''
+    }
+  },
   methods: {
     detail () {
       this.$swal.fire({
@@ -47,18 +55,60 @@ export default {
         cancelButtonText: 'No'
       }).then((result) => {
         if (result.isConfirmed) {
-          location.href = '/detail'
+          this.$router.push('/detail')
         }
       })
     },
     save () {
-      this.$swal.fire({
-        icon: 'success',
-        title: '리뷰가 등록되었습니다.',
-        confirmButtonColor: '#CEF6CE'
-      }).then(() => {
-        location.href = '/detail'
-      })
+      if (!this.title) {
+        this.$swal.fire({
+          icon: 'info',
+          title: '제목을 적어주세요.',
+          confirmButtonColor: '#A9E2F3'
+        })
+      } else {
+        let frm = new FormData()
+        let photoFile = document.getElementById('file')
+        frm.append('title', this.title)
+        frm.append('content', this.content)
+        frm.append('writer', 'testUser')
+        frm.append('file', photoFile.files[0])
+        frm.append('item', this.$store.state.item.itemId)
+        if (photoFile.files[0]) {
+          axios.post('http://localhost:8000/jewelry/reviewBoard/regImg', frm, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then((response) => {
+            console.log(response)
+          }).catch((error) => {
+            console.log(error)
+          })
+        } else {
+          axios({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            url: 'http://localhost:8000/jewelry/reviewBoard/reg',
+            data: JSON.stringify({
+              title: this.title,
+              content: this.content,
+              writer: 'testUser',
+              item_id: this.$store.state.item.itemId
+            })
+          }).then(res => {
+            console.log(res)
+          }).catch(error => {
+            console.log(error)
+          })
+        }
+        this.$swal.fire({
+          icon: 'success',
+          title: '리뷰가 등록되었습니다.',
+          confirmButtonColor: '#CEF6CE'
+        }).then(() => {
+          this.$router.push('/detail')
+        })
+      }
     }
   }
 }
