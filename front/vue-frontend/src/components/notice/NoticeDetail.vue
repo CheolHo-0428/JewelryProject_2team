@@ -226,6 +226,7 @@ export default {
           this.content = res.data.data[index].content
           this.id = res.data.data[index].id
           this.stored_file_name = res.data.data[index].stored_file_name
+          console.log(this.stored_file_name)
         })
         .catch(err => {
           console.log(err)

@@ -97,6 +97,6 @@ export const auth = {
     findPwFailure (state) {
       state.status.loggedIn = false
       state.user = null
-    }    
+    }
   }
 }
