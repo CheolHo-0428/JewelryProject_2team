@@ -173,6 +173,7 @@ h3 {
 }
 input {
   font-family: Dotum, "돋움", Helvetica, sans-serif;
+  outline:none;
 }
 
 /* 버튼 */

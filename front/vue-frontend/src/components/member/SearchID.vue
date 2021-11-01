@@ -157,6 +157,7 @@ h3 {
 input {
   font-family: Dotum, "돋움", Helvetica, sans-serif;
   width: 100%;
+  outline:none;
 }
 
 /* 버튼 */
