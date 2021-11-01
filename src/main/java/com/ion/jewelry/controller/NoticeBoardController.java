@@ -32,28 +32,26 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/jewelry/noticeBoard")
 @CrossOrigin("http://localhost:8080/")
-public class NoticeBoardController extends 
-		AABaseController<NoticeBoardRequest, NoticeBoardResponse, NoticeBoard>{
-	
+public class NoticeBoardController extends AABaseController<NoticeBoardRequest, NoticeBoardResponse, NoticeBoard> {
+
 	@Autowired
 	private NoticeBoardService boardService;
-	
+
 	@Override
 	@GetMapping("/paging") // http://localhost:8000//jewelry/noticeBoard/paging?page=0
 	public Header<List<NoticeBoardResponse>> pagingRead(
-			@PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10)
-			Pageable pageable) {
-		
+			@PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
+
 		log.info("{}", pageable);
 		return baseService.pagingRead(pageable);
 	}
-	
-	//공지사항 번호별 댓글 조회
-	@GetMapping("/{id}/replyInfo") //http://localhost:8000/jewelry/noticeBoard/1/replyInfo
-	public Header<NoticeBoardReplyInfoResponse> replyInfo(@PathVariable Long id){
+
+	// 공지사항 번호별 댓글 조회
+	@GetMapping("/{id}/replyInfo") // http://localhost:8000/jewelry/noticeBoard/1/replyInfo
+	public Header<NoticeBoardReplyInfoResponse> replyInfo(@PathVariable Long id) {
 		return boardService.replyInfo(id);
 	}
-	
+
 	@PostMapping("/reg")
 	public Header<NoticeBoardResponse> create(
 			@Valid @RequestParam("title") String title,
@@ -67,17 +65,22 @@ public class NoticeBoardController extends
 				.content(content)
 				.writer(writer)
 				.build();
-		result.setData(request);
-		
+		result.setData(request);	
 		return boardService.createImg(result, files);
 	}
-	
+
+	@Override
+	@DeleteMapping("{id}")
+	public Header delete(@PathVariable Long id) {
+		return baseService.delete(id);
+	}
+
 	@PutMapping("/update")
 	public Header<NoticeBoardResponse> update(@RequestBody NoticeBoardRequest request) {
-		
+
 		Header<NoticeBoardRequest> result = new Header<NoticeBoardRequest>();
 		result.setData(request);
-		
+
 		return baseService.update(result);
 	}
 
