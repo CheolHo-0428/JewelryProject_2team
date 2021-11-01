@@ -27,4 +27,10 @@ public class ItemResponse {
 	private List<QnaBoardResponse> qnaBoardResponseList; // qnaboard 리스트;
 	
 	private List<ReviewBoardResponse> reviewBoardResponseList; // qnaboard 리스트;
+	
+	private List<ImageFileResponse> imageFileResponseList; // 이미지파일 리스트;
+	
+	private List<CartResponse> cartResponseList; // 장바구니 리스트;
+	
+	private List<OrderDetailResponse> orderDetailResponseList; // 주문상세 리스트;
 }

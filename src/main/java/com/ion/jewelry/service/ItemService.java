@@ -9,14 +9,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ion.jewelry.model.entity.Cart;
+import com.ion.jewelry.model.entity.ImageFile;
 import com.ion.jewelry.model.entity.Item;
+import com.ion.jewelry.model.entity.OrderDetail;
 import com.ion.jewelry.model.entity.QnaBoard;
 import com.ion.jewelry.model.entity.ReviewBoard;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.ItemRequest;
+import com.ion.jewelry.model.network.response.CartResponse;
+import com.ion.jewelry.model.network.response.ImageFileResponse;
 import com.ion.jewelry.model.network.response.ItemInfoResponse;
 import com.ion.jewelry.model.network.response.ItemResponse;
+import com.ion.jewelry.model.network.response.OrderDetailResponse;
 import com.ion.jewelry.model.network.response.QnaBoardReplyResponse;
 import com.ion.jewelry.model.network.response.QnaBoardResponse;
 import com.ion.jewelry.model.network.response.ReviewBoardReplyResponse;
@@ -40,6 +46,15 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 	
 	@Autowired
 	private ReviewBoardReplyService reviewBoardReplyService;
+	
+	@Autowired
+	private ImageFileService imageFileService;
+	
+	@Autowired
+	private CartService cartService;
+	
+	@Autowired
+	private OrderDetailService orderDetailService;
 	
 	@Override
 	public Header<ItemResponse> create(Header<ItemRequest> request) {
@@ -142,7 +157,7 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 		return Header.OK(itemResList, pagination);
 	}
 	
-	//특정아이템에 해당되는 QNA, REVIEW 글들 조회(댓글 포함)
+	//특정아이템에 해당되는 QNA, REVIEW 글들 조회(댓글 포함)---------------------------------------------------------------------------------
 	public Header<ItemInfoResponse> itemInfo(Long id){
 		
 		Item item = baseRepo.getOne(id);
@@ -182,6 +197,26 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 				.collect(Collectors.toList());
 		itemResponse.setReviewBoardResponseList(reviewBoardResponseList);
 		
+		//특정아이템에 해당되는 이미지파일들 조회
+		List<ImageFile> imageFileList = item.getImageFileList();
+		List<ImageFileResponse> imageFileResponseList = imageFileList.stream()
+				.map(imageFile -> imageFileService.response(imageFile))
+				.collect(Collectors.toList());
+		itemResponse.setImageFileResponseList(imageFileResponseList);
+		
+		//특정아이템에 해당되는 장바구니 조회
+		List<Cart> cartList = item.getCartList();
+		List<CartResponse> cartResponseList = cartList.stream()
+				.map(cart -> cartService.response(cart))
+				.collect(Collectors.toList());
+		itemResponse.setCartResponseList(cartResponseList);
+		
+		//특정아이템에 해당되는 주문상세 조회
+		List<OrderDetail> orderDetailList = item.getOrderDetailList();
+		List<OrderDetailResponse> orderDetailResponseList = orderDetailList.stream()
+				.map(orderDetail -> orderDetailService.response(orderDetail))
+				.collect(Collectors.toList());
+		itemResponse.setOrderDetailResponseList(orderDetailResponseList);
 		
 		//조회된 정보들 붙이기!
 		ItemInfoResponse itemQnaBoardInfoResponse = ItemInfoResponse.builder()
@@ -189,6 +224,7 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 		
 		return Header.OK(itemQnaBoardInfoResponse);
 	}
+	//--------------------------------------------------------------------------------------------------------------------------------------
 	
 	// 응답 메소드
 	public ItemResponse response(Item item) {
