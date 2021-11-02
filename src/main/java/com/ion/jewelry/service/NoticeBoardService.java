@@ -67,6 +67,57 @@ public class NoticeBoardService extends
         
         return Header.OK(response(newNoticeBoard));
     }
+	
+	@Transactional
+    public Header<NoticeBoardResponse> updateImg(Header<NoticeBoardRequest> request, List<MultipartFile> files) throws Exception {
+		NoticeBoardRequest noticeRequest = request.getData();
+		Optional<NoticeBoard> optional = baseRepo.findById(noticeRequest.getId());
+		
+        NoticeBoard noticeBoard = fileHandler.parseFileInfo(noticeRequest, files);
+        
+        return optional
+    			.map(board -> {
+    				System.out.println("!!!" + noticeRequest.getDeleteCheck());
+    				if(noticeRequest.getDeleteCheck() == YesNo.YES) {
+    					String path = board.getStoredFileName();
+    					
+    					File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+    					System.out.println("!!!" + path);
+    					if (file.exists()) {
+    						if (file.delete()) {
+    							System.out.println("파일삭제 성공");
+    							noticeRequest.setOriginFileName(null);
+    							noticeRequest.setStoredFileName(null);
+    							noticeRequest.setFileSize(null);
+    							
+    							board
+    								.setOriginFileName(null)
+    								.setStoredFileName(null)
+    								.setFileSize(null)
+    								.setDeleteCheck(YesNo.YES);
+    						} else {
+    							System.out.println("파일삭제 실패");
+    						}
+    					} else {
+    						System.out.println("파일이 존재하지 않습니다.");
+    					}
+    				}
+    				board
+    					.setTitle(noticeRequest.getTitle())
+    					.setContent(noticeRequest.getContent())
+    					.setWriter(noticeRequest.getWriter())
+    					.setPassword(noticeRequest.getPassword())
+    					.setPrivateOk(noticeRequest.getPrivateOk())
+    					.setOriginFileName(noticeBoard.getOriginFileName())
+    					.setStoredFileName(noticeBoard.getStoredFileName())
+    					.setFileSize(noticeBoard.getFileSize());
+    			return board;
+    			})
+    			.map(board -> baseRepo.save(board))
+    			.map(board -> response(board))
+    			.map(board -> Header.OK(board))
+    			.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
+    }
 
 	@Override
 	public Header<NoticeBoardResponse> update(Header<NoticeBoardRequest> request) {

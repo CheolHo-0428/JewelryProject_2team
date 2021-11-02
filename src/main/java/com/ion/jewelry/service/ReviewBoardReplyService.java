@@ -115,6 +115,7 @@ public class ReviewBoardReplyService extends
 				.writer(reply.getWriter())
 				.content(reply.getContent())
 				.reviewBoardId(reply.getReviewBoard().getId())
+				.updatedAt(reply.getUpdatedAt())
 				.build();
 
 		return res;

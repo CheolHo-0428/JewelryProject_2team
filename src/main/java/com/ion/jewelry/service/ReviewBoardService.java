@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ion.jewelry.component.ReviewFileHandler;
-import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.entity.ReviewBoard;
 import com.ion.jewelry.model.entity.ReviewBoardReply;
 import com.ion.jewelry.model.enums.YesNo;
@@ -69,6 +68,57 @@ public class ReviewBoardService extends
 		ReviewBoard newReviewBoard = baseRepo.save(board);
         
         return Header.OK(response(newReviewBoard));
+    }
+	
+	@Transactional
+    public Header<ReviewBoardResponse> updateImg(Header<ReviewBoardRequest> request, List<MultipartFile> files) throws Exception {
+		ReviewBoardRequest reviewRequest = request.getData();
+		Optional<ReviewBoard> optional = baseRepo.findById(reviewRequest.getId());
+		
+		ReviewBoard reviewBoard = fileHandler.parseFileInfo(reviewRequest, files);
+        
+        return optional
+    			.map(board -> {
+    				System.out.println("!!!" + reviewRequest.getDeleteCheck());
+    				if(reviewRequest.getDeleteCheck() == YesNo.YES) {
+    					String path = board.getStoredFileName();
+    					
+    					File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+    					System.out.println("!!!" + path);
+    					if (file.exists()) {
+    						if (file.delete()) {
+    							System.out.println("파일삭제 성공");
+    							reviewRequest.setOriginFileName(null);
+    							reviewRequest.setStoredFileName(null);
+    							reviewRequest.setFileSize(null);
+    							
+    							board
+    								.setOriginFileName(null)
+    								.setStoredFileName(null)
+    								.setFileSize(null)
+    								.setDeleteCheck(YesNo.YES);
+    						} else {
+    							System.out.println("파일삭제 실패");
+    						}
+    					} else {
+    						System.out.println("파일이 존재하지 않습니다.");
+    					}
+    				}
+    				board
+    					.setTitle(reviewRequest.getTitle())
+    					.setContent(reviewRequest.getContent())
+    					.setWriter(reviewRequest.getWriter())
+    					.setPassword(reviewRequest.getPassword())
+    					.setPrivateOk(reviewRequest.getPrivateOk())
+    					.setOriginFileName(reviewBoard.getOriginFileName())
+    					.setStoredFileName(reviewBoard.getStoredFileName())
+    					.setFileSize(reviewBoard.getFileSize());
+    			return board;
+    			})
+    			.map(board -> baseRepo.save(board))
+    			.map(board -> response(board))
+    			.map(board -> Header.OK(board))
+    			.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
     }
 
 	@Override
@@ -191,6 +241,7 @@ public class ReviewBoardService extends
 		List<ReviewBoardReply> reviewBoardList = reviewBoard.getReviewBoardReplyList();
 		List<ReviewBoardReplyResponse> reviewBoardResponseList = reviewBoardList.stream()
 				.map(reply -> replyService.response(reply))
+				.sorted((a, b) -> (int)(b.id - a.id))
 				.collect(Collectors.toList());
 		
 		reviewBoardResponse.setReviewBoardReplyResponseList(reviewBoardResponseList);

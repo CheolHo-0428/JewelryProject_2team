@@ -5,7 +5,11 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/jewelry/qnaBoardReply")
+@CrossOrigin("http://localhost:8080/")
 public class QnaBoardReplyController extends AABaseController<QnaBoardReplyRquest, QnaBoardReplyResponse, QnaBoardReply> {
 	
 	@Override
@@ -29,5 +34,23 @@ public class QnaBoardReplyController extends AABaseController<QnaBoardReplyRques
 		
 		log.info("페이징 정보 : {}", pageable);
 		return baseService.pagingRead(pageable);
+	}
+	
+	@PostMapping("/reg")
+	public Header<QnaBoardReplyResponse> create(@RequestBody QnaBoardReplyRquest request) {
+		
+		Header<QnaBoardReplyRquest> result = new Header<QnaBoardReplyRquest>();
+		result.setData(request);
+		
+		return baseService.create(result);
+	}
+	
+	@PutMapping("/update")
+	public Header<QnaBoardReplyResponse> update(@RequestBody QnaBoardReplyRquest request) {
+		
+		Header<QnaBoardReplyRquest> result = new Header<QnaBoardReplyRquest>();
+		result.setData(request);
+		
+		return baseService.update(result);
 	}
 }
