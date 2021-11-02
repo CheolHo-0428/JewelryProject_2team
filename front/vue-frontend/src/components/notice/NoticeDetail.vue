@@ -108,7 +108,7 @@ export default {
         cancelButtonText: 'No'
       }).then((result) => {
         if (result.isConfirmed) {
-          location.href = '/notice'
+          this.$router.push('/notice')
         }
       })
     },
@@ -156,7 +156,7 @@ export default {
           text: '목록으로 이동합니다.',
           confirmButtonColor: '#CEF6CE'
         }).then(() => {
-          location.href = '/notice'
+          this.$router.push('/notice')
         })
       }
     },
@@ -226,7 +226,6 @@ export default {
           this.content = res.data.data[index].content
           this.id = res.data.data[index].id
           this.stored_file_name = res.data.data[index].stored_file_name
-          console.log(this.stored_file_name)
         })
         .catch(err => {
           console.log(err)

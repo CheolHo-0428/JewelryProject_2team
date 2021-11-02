@@ -10,18 +10,18 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ion.jewelry.model.entity.NoticeBoard;
+import com.ion.jewelry.model.entity.QnaBoard;
+import com.ion.jewelry.model.entity.ReviewBoard;
 import com.ion.jewelry.model.enums.YesNo;
-import com.ion.jewelry.model.network.request.NoticeBoardRequest;
+import com.ion.jewelry.model.network.request.QnaBoardRequest;
 
 @Component
-public class FileHandler {
+public class QnaFileHandler {
 
-	private NoticeBoard board;
+	private QnaBoard board;
 	
-	
-	public NoticeBoard parseFileInfo(
-			NoticeBoardRequest requestDto,
+	public QnaBoard parseFileInfo(
+			QnaBoardRequest requestDto,
 			List<MultipartFile> multipartFiles
 	) throws Exception {
 		
@@ -33,7 +33,7 @@ public class FileHandler {
 		
             String absolutePath = new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator;
             System.out.println(absolutePath);
-            String path = "static\\images" + File.separator + current_date;
+            String path = "static\\qna\\images" + File.separator + current_date;
             File file = new File(absolutePath + File.separator + path);
             
          // 디렉터리가 존재하지 않을 경우
@@ -64,8 +64,7 @@ public class FileHandler {
                 
              // 파일명 중복 피하고자 나노초까지 얻어와 지정
                 String new_file_name = System.nanoTime() + originalFileExtension;
-                
-                board = NoticeBoard.builder()
+                board = QnaBoard.builder()
         				.title(requestDto.getTitle())
         				.content(requestDto.getContent())
         				.writer(requestDto.getWriter())

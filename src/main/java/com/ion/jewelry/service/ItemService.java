@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.ion.jewelry.model.entity.Cart;
 import com.ion.jewelry.model.entity.ImageFile;
+import com.ion.jewelry.model.entity.Category;
 import com.ion.jewelry.model.entity.Item;
 import com.ion.jewelry.model.entity.OrderDetail;
 import com.ion.jewelry.model.entity.QnaBoard;
@@ -28,6 +29,7 @@ import com.ion.jewelry.model.network.response.QnaBoardResponse;
 import com.ion.jewelry.model.network.response.ReviewBoardReplyResponse;
 import com.ion.jewelry.model.network.response.ReviewBoardResponse;
 import com.ion.jewelry.repository.CategoryRepository;
+import com.ion.jewelry.repository.ItemRepository;
 
 @Service
 public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> {
@@ -177,6 +179,7 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 					qnaBoardResponse.setQnaBoardReplyResponseList(qnaReplyResList);
 					return qnaBoardResponse;
 				})
+				.sorted((a, b) -> (int)(b.id - a.id))
 				.collect(Collectors.toList());
 		itemResponse.setQnaBoardResponseList(qnaBoardResponseList);
 		
@@ -194,6 +197,7 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 					reviewBoardResponse.setReviewBoardReplyResponseList(reviewReplyResList);
 					return reviewBoardResponse; 
 				})
+				.sorted((a, b) -> (int)(b.id - a.id))
 				.collect(Collectors.toList());
 		itemResponse.setReviewBoardResponseList(reviewBoardResponseList);
 		

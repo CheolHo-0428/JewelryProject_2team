@@ -1,30 +1,52 @@
 <template>
   <div class="outer">
-    <div class="box" v-for="i in 5" :key="i">
-      <div class="img">
+    <div class="button">
+      <v-btn color="#F4F2E7" to="/regreview">리뷰작성</v-btn>
+    </div>
+    <div class="box" v-for="(list, i) in response_list" :key="i">
+      <div class="img" v-if="list.stored_file_name">
+        <div><img :src="list.stored_file_name"></div>
+      </div>
+      <div class="img" v-if="!list.stored_file_name">
         <div></div>
       </div>
-      <div class="content" @click="detail">
-        리뷰 제목
+      <div class="content" @click="detail(list.id)">
+        {{list.title}}
       </div>
       <div class="innerBox">
-        <div class="writer">작성자 : 홍길동</div>
-        <div class="date">2021-10-20</div>
+        <div class="writer">작성자 : {{list.writer}}</div>
+        <div class="date">{{list.created_at.split('T')[0]}}</div>
       </div>
-    </div>
-
-    <div class="button">
-      <v-btn color="#F4F2E7" href="/regreview">리뷰작성</v-btn>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  methods: {
-    detail () {
-      location.href = './review_'
+  data () {
+    return {
+      response_list: []
     }
+  },
+  methods: {
+    detail (id) {
+      this.$store.commit('reviewDetail', {id: id})
+      this.$router.push('/review_')
+    },
+    review () {
+      axios.get(`http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}/itemInfo`)
+        .then(res => {
+          this.response_list = res.data.data.item_response.review_board_response_list
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  created () {
+    this.review()
   }
 }
 </script>
@@ -47,12 +69,12 @@ export default {
 .img {
   width: 25%;
 }
-.img div {
+.img div,
+.img img {
   width: 90px;
   height: 90px;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
-  margin-left: 45px;
+  margin-left: 20px;
 }
 .content {
   width: 51%;
