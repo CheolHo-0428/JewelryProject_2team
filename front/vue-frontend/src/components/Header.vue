@@ -38,7 +38,7 @@
               <router-link to="/signup" class="nav-link">SIGNUP</router-link>
             </li>
             <li v-if="!currentUser" class="nav-item login">
-              <router-link to="/login" class="nav-link" href="/login">LOGIN</router-link>
+              <router-link to="/login" class="nav-link" >LOGIN</router-link>
             </li>
             <li v-if="currentUser" class="nav-item mypage">
               <router-link to="/mypage" class="nav-link" >MYPAGE</router-link>

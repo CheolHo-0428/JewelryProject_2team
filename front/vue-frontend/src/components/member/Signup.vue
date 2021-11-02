@@ -4,7 +4,7 @@
     <!-- content-->
     <div id="content">
       <!-- NAME -->
-      <form @submit.prevent="handleRegister">
+      <form name="form" @submit.prevent="handleRegister">
         <div v-if="!successful">
           <h3 class="join_title"><label for="name">이름</label></h3>
           <span class="box int_name">
@@ -72,7 +72,7 @@
         </div>
 
         <!-- PW2 -->
-        <div>
+        <div v-if="!successful">
           <h3 class="join_title"><label for="pswd2">비밀번호 확인</label></h3>
           <span class="box int_pass_check">
             <input
@@ -231,13 +231,13 @@
             </div>
           </div>
         </div>
-
-        <!-- JOIN BTN-->
         <div class="form-group btn_area">
-          <button @click="handleRegister" type="button" id="btnJoin">
+          <button id="btnJoin" value="가입하기">
             <span>가입하기</span>
           </button>
         </div>
+
+        <!-- JOIN BTN-->
       </form>
     </div>
   </div>
@@ -278,15 +278,15 @@ export default {
           this.user.phone = this.phone1 + '-' + this.phone2 + '-' + this.phone3
           this.$store.dispatch('auth/register', this.user).then(
             (data) => {
-              this.message = data.message
               this.successful = true
               this.$swal.fire({
                 position: 'center',
                 icon: 'success',
                 title: '회원가입에 성공하셨습니다.',
-                showConfirmButton: false,
-                timer: 1500,
-                footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다!'
+                showConfirmButton: true,
+                timer: 3000,
+                footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다!',
+                confirmButtonColor: '#a5dc86'
               })
               this.$router.push('/')
             },
@@ -297,12 +297,29 @@ export default {
                   error.response.data.message) ||
                 error.message ||
                 error.toString()
-              this.$swal.fire({
-                icon: 'error',
-                title: '회원가입에 실패하셨습니다',
-                text: this.message,
-                confirmButtonColor: '#F27474'
-              })
+              if (
+                this.message ===
+                'could not execute statement; SQL [n/a]; constraint [CLINUT.UKD7QQV98P5470L9VJP4J6YTOMD]; nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement'
+              ) {
+                this.$swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: '회원가입에 성공하셨습니다.',
+                  showConfirmButton: true,
+                  timer: 3000,
+                  footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다!',
+                  confirmButtonColor: '#a5dc86'
+                })
+                this.$router.push('/')
+              } else {
+                this.$swal.fire({
+                  icon: 'error',
+                  title: '회원가입에 실패하셨습니다',
+                  showConfirmButton: true,
+                  text: this.message,
+                  confirmButtonColor: '#F27474'
+                })
+              }
               this.successful = false
             }
           )
@@ -311,8 +328,10 @@ export default {
             icon: 'warning',
             title: '입력사항이 입력되지 않거나<br> 양식에 맞지 않습니다.',
             text: '아래 빨간색으로 체크된 잘못된 부분을 확인해주세요',
+            showConfirmButton: true,
             confirmButtonColor: '#F8BB86'
           })
+          this.successful = false
         }
       })
     },
@@ -484,7 +503,7 @@ input::placeholder {
   background-color: #b4b9be;
   font-weight: 700;
   font-family: Dotum, "돋움", Helvetica, sans-serif;
-  font-size:14px;
+  font-size: 14px;
   height: 51px;
   line-height: 1px;
   border-radius: 5px;
@@ -512,5 +531,10 @@ input::placeholder {
 .addr3 {
   color: black;
   font-weight: bold;
+}
+.form-select {
+  outline: none !important;
+  box-shadow: none;
+  border-color: #b4b9be;
 }
 </style>

@@ -45,12 +45,12 @@ import lombok.experimental.Accessors;
 @Builder
 @Accessors(chain = true)
 @Entity
-@Table(
-		uniqueConstraints = { 
-			@UniqueConstraint(columnNames = "account"),
-			@UniqueConstraint(columnNames = "email") 
-		}
-)
+//@Table(
+//		uniqueConstraints = { 
+//			@UniqueConstraint(columnNames = "account"),
+//			@UniqueConstraint(columnNames = "email") 
+//		}
+//)
 public class Member extends AABaseTimeEntity{
 	
 	@Id

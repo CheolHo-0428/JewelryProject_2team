@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,10 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ion.jewelry.jwt.JwtUtils;
@@ -32,12 +32,10 @@ import com.ion.jewelry.model.enums.MemberStatus;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.LoginRequest;
 import com.ion.jewelry.model.network.request.MemberRequest;
-import com.ion.jewelry.model.network.request.NoticeBoardRequest;
 import com.ion.jewelry.model.network.request.SignupRequest;
 import com.ion.jewelry.model.network.response.JwtResponse;
 import com.ion.jewelry.model.network.response.MemberResponse;
 import com.ion.jewelry.model.network.response.MessageResponse;
-import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.repository.MemberRepository;
 import com.ion.jewelry.repository.RoleRepository;
 import com.ion.jewelry.service.MemberService;
@@ -95,7 +93,7 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 	// AuthTokenFilter가 Request로 넘어온 정보를 가지고 로그인 여부를 검사했으면,
 	// Authentication Manager에서는 입력된 Request 정보가 올바른지를 검사하는 것으로 볼 수 있음
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest){
 		if (memberRepository.existsByAccount(signUpRequest.getAccount())) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: 이미존재하는아이디입니다!"));
 		}
@@ -135,7 +133,6 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 		member.setStatus(MemberStatus.REGISTERED);
 		member.setRoles(roles);
 		memberRepository.save(member);
-
 		return ResponseEntity.ok(new MessageResponse("가입에 성공적으로 등록되었습니다."));
 	}
 
