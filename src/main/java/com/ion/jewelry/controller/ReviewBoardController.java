@@ -71,6 +71,7 @@ public class ReviewBoardController extends
             @Valid @RequestParam("content") String content,
             @Valid @RequestParam("writer") String writer,
             @Valid @RequestParam("item") Long itemId,
+            @Valid @RequestParam("password") String password,
             @Valid @RequestParam("file") List<MultipartFile> files
 			) throws Exception {
 		Header<ReviewBoardRequest> result = new Header<ReviewBoardRequest>();
@@ -79,6 +80,7 @@ public class ReviewBoardController extends
 				.content(content)
 				.writer(writer)
 				.itemId(itemId)
+				.password(password)
 				.build();
 		result.setData(request);
 		return reviewService.createImg(result, files);
@@ -92,6 +94,7 @@ public class ReviewBoardController extends
             @Valid @RequestParam("delete_check") YesNo delete_check,
             @Valid @RequestParam("id") Long id,
             @Valid @RequestParam("item_id") Long itemId,
+            @Valid @RequestParam("password") String password,
             @Valid @RequestParam("file") List<MultipartFile> files
 			) throws Exception {
 		Header<ReviewBoardRequest> result = new Header<ReviewBoardRequest>();
@@ -102,6 +105,7 @@ public class ReviewBoardController extends
 				.id(id)
 				.deleteCheck(delete_check)
 				.itemId(itemId)
+				.password(password)
 				.build();
 		result.setData(request);	
 		return reviewService.updateImg(result, files);
