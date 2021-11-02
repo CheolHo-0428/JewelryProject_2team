@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.ion.jewelry.JewelryProjectApplicationTests;
 import com.ion.jewelry.model.entity.Member;
-import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.enums.ObjectStatus;
 
 public class MemberRepoTest extends JewelryProjectApplicationTests {
 	
@@ -40,7 +40,7 @@ public class MemberRepoTest extends JewelryProjectApplicationTests {
 				member.setPostCode("0003");
 				member.setAddress("서울특별시 송파구 중대로 135");
 				member.setDetailAddress("IT벤처타워 서관 12층");
-				member.setStatus(MemberStatus.REGISTERED);
+				member.setStatus(ObjectStatus.REGISTERED);
 				
 		System.out.println("계정: " + member.getAccount() );
 		

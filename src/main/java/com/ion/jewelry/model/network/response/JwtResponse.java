@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.enums.ObjectStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,12 +32,12 @@ public class JwtResponse {
 	private List<String> roles;
 	
 	@Enumerated(EnumType.STRING)
-	private MemberStatus status; // 가입상태(등록OR미등록)
+	private ObjectStatus status; // 가입상태(등록OR미등록)
 	
 	private LocalDateTime unregDate; // 해지날짜
 	//JWT 생성자 생성
 	public JwtResponse(String token, Long id, String account, String name, String email, String phone, String postCode,
-			String address, String detailAddress,MemberStatus status, List<String> roles, LocalDateTime unregDate) {
+			String address, String detailAddress,ObjectStatus status, List<String> roles) {
 		
 		this.token = token;
 		this.id = id;
@@ -50,7 +50,7 @@ public class JwtResponse {
 		this.detailAddress = detailAddress;
 		this.status= status;
 		this.roles = roles;
-		this.unregDate = unregDate;
+		//this.unregDate = unregDate;
 		
 	}
 }

@@ -28,7 +28,7 @@ import com.ion.jewelry.jwt.MemberSecurity;
 import com.ion.jewelry.model.entity.Member;
 import com.ion.jewelry.model.entity.Role;
 import com.ion.jewelry.model.enums.ERole;
-import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.enums.ObjectStatus;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.LoginRequest;
 import com.ion.jewelry.model.network.request.MemberRequest;
@@ -81,7 +81,7 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 		return ResponseEntity.ok(new JwtResponse(jwt, memberDetails.getId(), memberDetails.getAccount(),
 				memberDetails.getName(), memberDetails.getEmail(), memberDetails.getPhone(),
 				memberDetails.getPostCode(), memberDetails.getAddress(), memberDetails.getDetailAddress(),
-				memberDetails.getStatus(), roles, memberDetails.getUnregDate()));
+				memberDetails.getStatus(), roles));
 	}
 
 	/*
@@ -130,7 +130,7 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 				}
 			});
 		}
-		member.setStatus(MemberStatus.REGISTERED);
+		member.setStatus(ObjectStatus.REGISTERED);
 		member.setRoles(roles);
 		memberRepository.save(member);
 		return ResponseEntity.ok(new MessageResponse("가입에 성공적으로 등록되었습니다."));

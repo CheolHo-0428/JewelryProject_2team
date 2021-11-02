@@ -3,6 +3,8 @@ package com.ion.jewelry.model.network.response;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.ion.jewelry.model.enums.ObjectStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +23,8 @@ public class ItemResponse {
 	private BigDecimal price; //상품가격
 	
 	private Integer stock; //상품재고
+	
+	private ObjectStatus status; // 상품등록상태
 	
 	private Long categoryId; //카테고리 번호
 	

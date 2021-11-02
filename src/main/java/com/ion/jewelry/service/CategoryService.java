@@ -14,9 +14,17 @@ import com.ion.jewelry.model.entity.Item;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.CategoryRequest;
+import com.ion.jewelry.model.network.response.CartResponse;
 import com.ion.jewelry.model.network.response.CategoryItemInfoResponse;
 import com.ion.jewelry.model.network.response.CategoryResponse;
+import com.ion.jewelry.model.network.response.ImageFileResponse;
 import com.ion.jewelry.model.network.response.ItemResponse;
+import com.ion.jewelry.model.network.response.OrderDetailResponse;
+import com.ion.jewelry.model.network.response.QnaBoardReplyInfoResponse;
+import com.ion.jewelry.model.network.response.QnaBoardReplyResponse;
+import com.ion.jewelry.model.network.response.QnaBoardResponse;
+import com.ion.jewelry.model.network.response.ReviewBoardReplyResponse;
+import com.ion.jewelry.model.network.response.ReviewBoardResponse;
 
 @Service
 public class CategoryService extends AABaseService<CategoryRequest, CategoryResponse, Category> {
@@ -35,6 +43,15 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 	
 	@Autowired
 	private ReviewBoardReplyService reviewBoardReplyService;
+	
+	@Autowired
+	private ImageFileService imageFileService;
+	
+	@Autowired
+	private CartService cartService;
+	
+	@Autowired
+	private OrderDetailService orderDetailService;
 	
 	@Override
 	public Header<CategoryResponse> create(Header<CategoryRequest> request) {
@@ -142,11 +159,61 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 		List<ItemResponse> itemResList = itemList.stream()
 				.map(item -> {
 					ItemResponse itemResponse = itemService.response(item);
+					
+					//해당 아이템 QNA게시판 정보가져오기
+					List<QnaBoardResponse> qnaBoardResList = item.getQnaBoardList().stream()
+							.map(qnaBoard -> {
+								QnaBoardResponse qnaBoardRes = qnaBoardService.response(qnaBoard);
+								
+								//해당 QNA댓글 정보가져오기
+								List<QnaBoardReplyResponse> qnaBoardReplyResList = qnaBoard.getQnaBoardReplyList().stream()
+										.map(qnaBoardReply -> qnaBoardReplyService.response(qnaBoardReply))
+										.collect(Collectors.toList());
+								qnaBoardRes.setQnaBoardReplyResponseList(qnaBoardReplyResList);
+								return qnaBoardRes; 
+								})
+							.collect(Collectors.toList());
+					itemResponse.setQnaBoardResponseList(qnaBoardResList);
+					
+					//해당 아이템 리뷰게시판 정보 가져오기
+					List<ReviewBoardResponse> reviewBoardResList = item.getReviewBoardList().stream()
+							.map(reviewBoard -> {
+								ReviewBoardResponse reviewBoardRes = reviewBoardService.response(reviewBoard);
+								
+								//해당 리뷰댓글 정보 가져오기
+								List<ReviewBoardReplyResponse> reviewBoardReplyResList = reviewBoard.getReviewBoardReplyList().stream()
+										.map(reviewBoareReply -> reviewBoardReplyService.response(reviewBoareReply))
+										.collect(Collectors.toList());
+								reviewBoardRes.setReviewBoardReplyResponseList(reviewBoardReplyResList);
+								return reviewBoardRes;
+							})
+							.collect(Collectors.toList());
+					itemResponse.setReviewBoardResponseList(reviewBoardResList);
+					
+					//해당 아이템 이미지파일 정보 가져오기
+					List<ImageFileResponse> imageFileResList = item.getImageFileList().stream()
+							.map(imageFile -> imageFileService.response(imageFile))
+							.collect(Collectors.toList());
+					itemResponse.setImageFileResponseList(imageFileResList);
+					
+					//해당 아이템 주문상세내역 정보 가져오기
+					List<OrderDetailResponse> orderDetailResList = item.getOrderDetailList().stream()
+							.map(orderDetail -> orderDetailService.response(orderDetail))
+							.collect(Collectors.toList());
+					itemResponse.setOrderDetailResponseList(orderDetailResList);
+					
+					//해당 아이템 장바구니 정보 가져오기
+					List<CartResponse> cartResList = item.getCartList().stream()
+							.map(cart -> cartService.response(cart))
+							.collect(Collectors.toList());
+					itemResponse.setCartResponseList(cartResList);
+					
 					return itemResponse;
 				})
-				.collect(Collectors.toList());
-				
+				.collect(Collectors.toList());				
 		categoryResponse.setItemResponseList(itemResList);
+		
+		//조회된 정보들 붙이기!
 		CategoryItemInfoResponse categoryItemInfoResponse = CategoryItemInfoResponse.builder()
 				.categoryResponse(categoryResponse).build();
 		

@@ -2,6 +2,7 @@ package com.ion.jewelry.model.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -59,7 +60,7 @@ public class NoticeBoard extends AABaseTimeEntity {
 	private YesNo deleteCheck; //이미지파일삭제여부
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "noticeBoard")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "noticeBoard", cascade = CascadeType.ALL)
 	private List<NoticeBoardReply> noticeBoardReplyList;
 	
 }

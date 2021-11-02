@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -78,7 +79,7 @@ public class OrderGroup extends AABaseTimeEntity {
 	private Member member; // 회원번호(fk), Member 테이블 연관관계 설정(N:1)
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orderGroup")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "orderGroup", cascade = CascadeType.ALL)
 	private List<OrderDetail> orderDetailList; // OrderDetail 테이블 연관관계 설정(1:N)
 	
 }
