@@ -17,19 +17,27 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <router-link to="/" class="nav-link" aria-current="page" >HOME</router-link>
+              <router-link to="/" class="nav-link" aria-current="page"
+                >HOME</router-link
+              >
             </li>
             <li class="nav-item">
-             <router-link to="/ring" class="nav-link">RING</router-link>
+              <router-link to="/ring" class="nav-link">RING</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="/earrings" class="nav-link">EARRINGS</router-link>
+              <router-link to="/earrings" class="nav-link"
+                >EARRINGS</router-link
+              >
             </li>
             <li class="nav-item">
-              <router-link to="/bracelet" class="nav-link">BRACELET</router-link>
+              <router-link to="/bracelet" class="nav-link"
+                >BRACELET</router-link
+              >
             </li>
             <li class="nav-item">
-              <router-link to="/necklace" class="nav-link">NECKLACE</router-link>
+              <router-link to="/necklace" class="nav-link"
+                >NECKLACE</router-link
+              >
             </li>
             <li class="nav-item notice">
               <router-link to="/notice" class="nav-link">NOTICE</router-link>
@@ -38,14 +46,15 @@
               <router-link to="/signup" class="nav-link">SIGNUP</router-link>
             </li>
             <li v-if="!currentUser" class="nav-item login">
-              <router-link to="/login" class="nav-link" >LOGIN</router-link>
+              <router-link to="/login" class="nav-link">LOGIN</router-link>
             </li>
             <li v-if="currentUser" class="nav-item mypage">
-              <router-link to="/mypage" class="nav-link" >MYPAGE</router-link>
+              <router-link to="/mypage" class="nav-link">MYPAGE</router-link>
             </li>
             <li v-if="currentUser" class="nav-item name">
               <router-link to="/mypage" class="nav-link"
-                >{{ currentUser.name }}님</router-link>
+                >{{ currentUser.name }}님</router-link
+              >
             </li>
             <li v-if="currentUser" class="nav-item logout">
               <a class="nav-link" href @click.prevent="logOut">LOGOUT</a>
@@ -73,12 +82,6 @@ export default {
   computed: {
     currentUser () {
       return this.$store.state.auth.user
-    },
-    showAdminBoard () {
-      if (this.currentUser && this.currentUser.roles) {
-        return this.currentUser.roles.includes('ROLE_ADMIN')
-      }
-      return false
     }
   },
   methods: {

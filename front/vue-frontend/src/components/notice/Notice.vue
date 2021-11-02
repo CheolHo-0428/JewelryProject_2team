@@ -1,8 +1,7 @@
 <template>
   <div class="outer">
     <p>공지사항</p>
-    <p class="add"><router-link class="btn btn-dark" to="/regnotice">공지사항 등록</router-link></p>
-
+    <p  v-if="findRole === true" class="add"><router-link class="btn btn-dark" to="/regnotice">공지사항 등록</router-link></p>
     <table class="table">
       <colgroup>
         <col width="20%">
@@ -175,6 +174,15 @@ export default {
         this.isSearch = false
         return this.notices
       }
+    },
+    currentUser () {
+      return this.$store.state.auth.user
+    },
+    findRole () {
+      if (this.currentUser) {
+        return this.currentUser.roles.includes('ROLE_ADMIN')
+      }
+      return false
     }
   },
   mounted () {
