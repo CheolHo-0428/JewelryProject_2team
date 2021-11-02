@@ -15,16 +15,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ion.jewelry.component.QnaFileHandler;
 import com.ion.jewelry.model.entity.QnaBoard;
 import com.ion.jewelry.model.entity.QnaBoardReply;
-import com.ion.jewelry.model.entity.ReviewBoard;
 import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.QnaBoardRequest;
-import com.ion.jewelry.model.network.request.ReviewBoardRequest;
 import com.ion.jewelry.model.network.response.QnaBoardReplyInfoResponse;
 import com.ion.jewelry.model.network.response.QnaBoardReplyResponse;
 import com.ion.jewelry.model.network.response.QnaBoardResponse;
-import com.ion.jewelry.model.network.response.ReviewBoardResponse;
 import com.ion.jewelry.repository.ItemRepository;
 
 @Service
@@ -72,6 +69,57 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 		QnaBoard newReviewBoard = baseRepo.save(board);
         
         return Header.OK(response(newReviewBoard));
+    }
+	
+	@Transactional
+    public Header<QnaBoardResponse> updateImg(Header<QnaBoardRequest> request, List<MultipartFile> files) throws Exception {
+		QnaBoardRequest qnaRequest = request.getData();
+		Optional<QnaBoard> optional = baseRepo.findById(qnaRequest.getId());
+		
+		QnaBoard qnaBoard = fileHandler.parseFileInfo(qnaRequest, files);
+        
+        return optional
+    			.map(board -> {
+    				System.out.println("!!!" + qnaRequest.getDeleteCheck());
+    				if(qnaRequest.getDeleteCheck() == YesNo.YES) {
+    					String path = board.getStoredFileName();
+    					
+    					File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+    					System.out.println("!!!" + path);
+    					if (file.exists()) {
+    						if (file.delete()) {
+    							System.out.println("파일삭제 성공");
+    							qnaRequest.setOriginFileName(null);
+    							qnaRequest.setStoredFileName(null);
+    							qnaRequest.setFileSize(null);
+    							
+    							board
+    								.setOriginFileName(null)
+    								.setStoredFileName(null)
+    								.setFileSize(null)
+    								.setDeleteCheck(YesNo.YES);
+    						} else {
+    							System.out.println("파일삭제 실패");
+    						}
+    					} else {
+    						System.out.println("파일이 존재하지 않습니다.");
+    					}
+    				}
+    				board
+    					.setTitle(qnaRequest.getTitle())
+    					.setContent(qnaRequest.getContent())
+    					.setWriter(qnaRequest.getWriter())
+    					.setPassword(qnaRequest.getPassword())
+    					.setPrivateOk(qnaRequest.getPrivateOk())
+    					.setOriginFileName(qnaBoard.getOriginFileName())
+    					.setStoredFileName(qnaBoard.getStoredFileName())
+    					.setFileSize(qnaBoard.getFileSize());
+    			return board;
+    			})
+    			.map(board -> baseRepo.save(board))
+    			.map(board -> response(board))
+    			.map(board -> Header.OK(board))
+    			.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
     }
 
 	@Override
@@ -207,6 +255,7 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 					QnaBoardReplyResponse replyRes = replyService.response(reply); 
 					return replyRes;
 				})
+				.sorted((a, b) -> (int)(b.id - a.id))
 				.collect(Collectors.toList());
 		
 		qnaBoardResponse.setQnaBoardReplyResponseList(replyResList);

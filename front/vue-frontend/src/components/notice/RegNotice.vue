@@ -104,7 +104,7 @@ export default {
           text: '목록으로 이동합니다.',
           confirmButtonColor: '#CEF6CE'
         }).then(() => {
-          location.href = '/notice'
+          this.$router.push('/notice')
         })
       }
     }

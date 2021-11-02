@@ -176,6 +176,9 @@ export default {
         return this.notices
       }
     }
+  },
+  mounted () {
+    window.scrollTo(0, 0)
   }
 }
 </script>

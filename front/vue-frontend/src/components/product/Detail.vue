@@ -93,6 +93,9 @@ export default {
   },
   created () {
     this.detail()
+  },
+  mounted () {
+    window.scrollTo(0, 0)
   }
 }
 </script>

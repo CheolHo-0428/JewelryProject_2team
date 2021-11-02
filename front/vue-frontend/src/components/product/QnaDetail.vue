@@ -22,8 +22,52 @@
           <th>내용</th>
           <td><textarea v-model="content"></textarea></td>
         </tr>
+        <tr v-if="!stored_file_name">
+          <th>이미지 업로드</th>
+          <td><input type="file" id="file" name="files" /></td>
+        </tr>
       </table>
     </form>
+  </div>
+
+  <div class="input">
+    <p>댓글</p>
+
+    <table>
+      <colgroup>
+        <col width="85%">
+        <col width="15%">
+      </colgroup>
+
+      <tbody>
+        <tr>
+          <td><textarea v-model="inputReply" class="inputReply"></textarea></td>
+          <td><v-btn color="#F4F2E7" x-large class="v_btn" @click="regReply" >등록</v-btn></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="reply">
+    <table class="table">
+      <colgroup>
+        <col width="53%">
+        <col width="12%">
+        <col width="20%">
+        <col width="15%">
+      </colgroup>
+
+      <tbody>
+        <tr v-for="(reply, i) in response_list" :key="i">
+          <td class="cont"><v-textarea v-model="replyContent[i]" @input="reply.content = replyContent[i]" :readonly="modify[i]" :class="{'mod' : modify[i]}" auto-grow rows="1" row-height="18"></v-textarea></td>
+          <td class="s">{{reply.writer}}</td>
+          <td class="s">{{reply.updated_at.split('T')[0]}} {{reply.updated_at.split('T')[1].split('.')[0]}}</td>
+          <td><a @click="changeModify(i)" v-if="modify[i]">수정</a><a @click="saveReply(i)" v-if="!modify[i]">적용</a>
+              <a @click="removeReply(reply.id)" v-if="modify[i]">삭제</a><a @click="changeModify(i)" v-if="!modify[i]">취소</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="btnWrap">
@@ -44,7 +88,11 @@ export default {
       content: '',
       stored_file_name: '',
       id: 0,
-      deleteImg: false
+      deleteImg: false,
+      response_list: [],
+      modify: [],
+      replyContent: [],
+      inputReply: ''
     }
   },
   methods: {
@@ -77,46 +125,91 @@ export default {
         })
       } else {
         if (this.deleteImg) {
-          axios.put(
-            'http://localhost:8000/jewelry/qnaBoard/update',
-            {
-              title: this.title,
-              content: this.content,
-              id: this.id,
-              writer: 'testUser',
-              delete_check: 'YES',
-              item_id: this.$store.state.item.itemId
-            }
-          ).then(res => {
-            console.log(res)
-          }).catch(error => {
-            console.log(error)
-          })
+          let frm = new FormData()
+          let photoFile = document.getElementById('file')
+          if (photoFile.files[0]) {
+            frm.append('title', this.title)
+            frm.append('content', this.content)
+            frm.append('id', this.id)
+            frm.append('writer', 'testUser')
+            frm.append('file', photoFile.files[0])
+            frm.append('delete_check', 'YES')
+            frm.append('item_id', this.$store.state.item.itemId)
+
+            axios.put('http://localhost:8000/jewelry/qnaBoard/updateImg', frm, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then((response) => {
+              console.log(response)
+            }).catch((error) => {
+              console.log(error)
+            })
+          } else {
+            axios.put(
+              'http://localhost:8000/jewelry/qnaBoard/update',
+              {
+                title: this.title,
+                content: this.content,
+                id: this.id,
+                writer: 'testUser',
+                delete_check: 'YES',
+                item_id: this.$store.state.item.itemId
+              }
+            ).then(res => {
+              console.log(res)
+            }).catch(error => {
+              console.log(error)
+            })
+          }
         } else {
-          axios.put(
-            'http://localhost:8000/jewelry/qnaBoard/update',
-            {
-              title: this.title,
-              content: this.content,
-              id: this.id,
-              writer: 'testUser',
-              item_id: this.$store.state.item.itemId
-            }
-          ).then(res => {
-            console.log(res)
-          }).catch(error => {
-            console.log(error)
-          })
+          if (document.getElementById('file') && document.getElementById('file').files[0]) {
+            let frm = new FormData()
+            let photoFile = document.getElementById('file')
+
+            frm.append('title', this.title)
+            frm.append('content', this.content)
+            frm.append('id', this.id)
+            frm.append('writer', 'testUser')
+            frm.append('delete_check', 'NO')
+            frm.append('file', photoFile.files[0])
+            frm.append('item_id', this.$store.state.item.itemId)
+
+            axios.put('http://localhost:8000/jewelry/qnaBoard/updateImg', frm, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then((response) => {
+              console.log(response)
+            }).catch((error) => {
+              console.log(error)
+            })
+          } else {
+            axios.put(
+              'http://localhost:8000/jewelry/qnaBoard/update',
+              {
+                title: this.title,
+                content: this.content,
+                id: this.id,
+                writer: 'testUser',
+                item_id: this.$store.state.item.itemId
+              }
+            ).then(res => {
+              console.log(res)
+            }).catch(error => {
+              console.log(error)
+            })
+          }
         }
-        this.$swal.fire({
-          icon: 'success',
-          title: 'Q&A가 수정되었습니다.',
-          text: '목록으로 이동합니다.',
-          confirmButtonColor: '#CEF6CE'
-        }).then(() => {
-          this.$router.push('/detail')
-        })
       }
+      this.$swal.fire({
+        icon: 'success',
+        title: 'Q&A가 수정되었습니다.',
+        text: '목록으로 이동합니다.',
+        confirmButtonColor: '#CEF6CE'
+      }).then(() => {
+        this.$router.push('/detail')
+      })
     },
     remove () {
       this.$swal.fire({
@@ -148,8 +241,96 @@ export default {
         console.log(err)
       })
     },
-    qna () {
-      axios.get(`http://localhost:8000/jewelry/qnaBoard/${this.$store.state.item.qnaId}`)
+    saveReply (i) {
+      axios.put(
+        'http://localhost:8000/jewelry/qnaBoardReply/update',
+        {
+          content: this.response_list[i].content,
+          id: this.response_list[i].id,
+          writer: 'testUser',
+          qna_board_id: this.$store.state.item.qnaId
+        }
+      ).then(res => {
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
+
+      this.$swal.fire({
+        icon: 'success',
+        title: '댓글이 수정되었습니다.',
+        confirmButtonColor: '#CEF6CE'
+      }).then(() => {
+        this.modify = []
+        this.replyContent = []
+        this.qna()
+      })
+    },
+    changeModify (i) {
+      this.$set(this.modify, i, !this.modify[i])
+    },
+    regReply () {
+      axios({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        url: 'http://localhost:8000/jewelry/qnaBoardReply/reg',
+        data: JSON.stringify({
+          content: this.inputReply,
+          writer: 'testUser',
+          qna_board_id: this.id
+        })
+      }).then(res => {
+        console.log(res)
+        this.$swal.fire({
+          icon: 'success',
+          title: '댓글이 등록되었습니다.',
+          confirmButtonColor: '#CEF6CE'
+        }).then(() => {
+          this.modify = []
+          this.replyContent = []
+          this.qna()
+          this.inputReply = ''
+        }).catch(error => {
+          console.log(error)
+        })
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    async removeReply (id) {
+      await this.$swal.fire({
+        icon: 'warning',
+        title: '해당댓글이 삭제됩니다.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        confirmButtonColor: '#FE9A2E',
+        cancelButtonColor: '#BDBDBD',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.delete(
+            `http://localhost:8000/jewelry/qnaBoardReply/${id}`,
+            {
+              data: {
+                id: id
+              }
+            }
+          ).then(function (response) {
+            console.log(response)
+            this.modify = []
+            this.replyContent = []
+          }).catch(function (error) {
+            console.log(error)
+          })
+        } else {
+          this.modify = []
+          this.replyContent = []
+        }
+      })
+      await this.qna()
+    },
+    async qna () {
+      await axios.get(`http://localhost:8000/jewelry/qnaBoard/${this.$store.state.item.qnaId}`)
         .then(res => {
           let qna = res.data.data
 
@@ -157,6 +338,17 @@ export default {
           this.content = qna.content
           this.stored_file_name = qna.stored_file_name
           this.id = qna.id
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      await axios.get(`http://localhost:8000/jewelry/qnaBoard/${this.$store.state.item.qnaId}/replyInfo`)
+        .then(res => {
+          this.response_list = res.data.data.qna_board_response.qna_board_reply_response_list
+          for (let i = 0; i < this.response_list.length; i++) {
+            this.modify.push(true)
+            this.replyContent.push(this.response_list[i].content)
+          }
         })
         .catch(err => {
           console.log(err)
@@ -183,6 +375,49 @@ p {
 }
 input {
   outline: none;
+}
+
+.inputReply {
+  min-height: 120px;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.input {
+  margin-bottom: 2rem;
+}
+.v_btn {
+  height: 70px !important;
+  font-weight: 700;
+}
+.input p {
+  margin-top: 2.5rem;
+  text-align: left;
+  cursor: pointer;
+  font-weight: 700;
+}
+.reply {
+  margin-bottom: 5rem;
+}
+.reply input {
+  width: 100%;
+  height: 100%;
+}
+textarea {
+  width: 100%;
+}
+.mod {
+  outline: none;
+}
+.cont {
+  padding-left: 2rem !important;
+}
+
+.table td {
+  padding: 0.5rem;
+  vertical-align: middle;
+}
+.s {
+  font-size: small;
 }
 
 a {

@@ -1,5 +1,7 @@
 package com.ion.jewelry.model.network.request;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +19,6 @@ public class ReviewBoardReplyRequest {
 	private String content; //댓글내용
 	
 	private Long reviewBoardId; // 리뷰게시판번호
+	
+	private LocalDateTime updatedAt;
 }

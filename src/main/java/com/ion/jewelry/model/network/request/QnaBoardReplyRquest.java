@@ -1,5 +1,7 @@
 package com.ion.jewelry.model.network.request;
 
+import java.time.LocalDateTime;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,4 +19,6 @@ public class QnaBoardReplyRquest {
 	private String content; // Qna댓글내용
 	
 	private Long qnaBoardId; // Qna게시판 번호
+	
+	private LocalDateTime updatedAt;
 }

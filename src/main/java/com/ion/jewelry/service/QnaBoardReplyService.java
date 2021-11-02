@@ -112,6 +112,7 @@ public class QnaBoardReplyService extends AABaseService<QnaBoardReplyRquest, Qna
 				.writer(reply.getWriter())
 				.content(reply.getContent())
 				.qnaBoardId(reply.getQnaBoard().getId())
+				.updatedAt(reply.getUpdatedAt())
 				.build();
 		
 		return res;

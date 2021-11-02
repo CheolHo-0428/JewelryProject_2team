@@ -20,12 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ion.jewelry.model.entity.QnaBoard;
+import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.QnaBoardRequest;
-import com.ion.jewelry.model.network.request.ReviewBoardRequest;
 import com.ion.jewelry.model.network.response.QnaBoardReplyInfoResponse;
 import com.ion.jewelry.model.network.response.QnaBoardResponse;
-import com.ion.jewelry.model.network.response.ReviewBoardResponse;
 import com.ion.jewelry.service.QnaBoardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -82,6 +81,28 @@ public class QnaBoardController extends AABaseController<QnaBoardRequest, QnaBoa
 		return qnaService.createImg(result, files);
 	}
 	
+	@PutMapping("/updateImg")
+	public Header<QnaBoardResponse> updateImg(
+			@Valid @RequestParam("title") String title,
+            @Valid @RequestParam("content") String content,
+            @Valid @RequestParam("writer") String writer,
+            @Valid @RequestParam("delete_check") YesNo delete_check,
+            @Valid @RequestParam("id") Long id,
+            @Valid @RequestParam("item_id") Long itemId,
+            @Valid @RequestParam("file") List<MultipartFile> files
+			) throws Exception {
+		Header<QnaBoardRequest> result = new Header<QnaBoardRequest>();
+		QnaBoardRequest request = QnaBoardRequest.builder()
+				.title(title)
+				.content(content)
+				.writer(writer)
+				.id(id)
+				.deleteCheck(delete_check)
+				.itemId(itemId)
+				.build();
+		result.setData(request);	
+		return qnaService.updateImg(result, files);
+	}
 	@PutMapping("/update")
 	public Header<QnaBoardResponse> update(@RequestBody QnaBoardRequest request) {
 

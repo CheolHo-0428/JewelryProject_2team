@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ion.jewelry.model.entity.NoticeBoardReply;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.NoticeBoardReplyRequest;
-import com.ion.jewelry.model.network.request.NoticeBoardRequest;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
-import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -22,6 +22,10 @@
           <th>내용</th>
           <td><textarea v-model="content"></textarea></td>
         </tr>
+        <tr v-if="!stored_file_name">
+          <th>이미지 업로드</th>
+          <td><input type="file" id="file" name="files" /></td>
+        </tr>
       </table>
     </form>
   </div>
@@ -121,44 +125,87 @@ export default {
         })
       } else {
         if (this.deleteImg) {
-          axios.put(
-            'http://localhost:8000/jewelry/noticeBoard/update',
-            {
-              title: this.title,
-              content: this.content,
-              id: this.id,
-              writer: 'testUser',
-              delete_check: 'YES'
-            }
-          ).then(res => {
-            console.log(res)
-          }).catch(error => {
-            console.log(error)
-          })
+          let frm = new FormData()
+          let photoFile = document.getElementById('file')
+          if (photoFile.files[0]) {
+            frm.append('title', this.title)
+            frm.append('content', this.content)
+            frm.append('id', this.id)
+            frm.append('writer', 'testUser')
+            frm.append('file', photoFile.files[0])
+            frm.append('delete_check', 'YES')
+
+            axios.put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then((response) => {
+              console.log(response)
+            }).catch((error) => {
+              console.log(error)
+            })
+          } else {
+            axios.put(
+              'http://localhost:8000/jewelry/noticeBoard/update',
+              {
+                title: this.title,
+                content: this.content,
+                id: this.id,
+                writer: 'testUser',
+                delete_check: 'YES'
+              }
+            ).then(res => {
+              console.log(res)
+            }).catch(error => {
+              console.log(error)
+            })
+          }
         } else {
-          axios.put(
-            'http://localhost:8000/jewelry/noticeBoard/update',
-            {
-              title: this.title,
-              content: this.content,
-              id: this.id,
-              writer: 'testUser'
-            }
-          ).then(res => {
-            console.log(res)
-          }).catch(error => {
-            console.log(error)
-          })
+          if (document.getElementById('file') && document.getElementById('file').files[0]) {
+            let frm = new FormData()
+            let photoFile = document.getElementById('file')
+
+            frm.append('title', this.title)
+            frm.append('content', this.content)
+            frm.append('id', this.id)
+            frm.append('writer', 'testUser')
+            frm.append('delete_check', 'NO')
+            frm.append('file', photoFile.files[0])
+
+            axios.put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }).then((response) => {
+              console.log(response)
+            }).catch((error) => {
+              console.log(error)
+            })
+          } else {
+            axios.put(
+              'http://localhost:8000/jewelry/noticeBoard/update',
+              {
+                title: this.title,
+                content: this.content,
+                id: this.id,
+                writer: 'testUser'
+              }
+            ).then(res => {
+              console.log(res)
+            }).catch(error => {
+              console.log(error)
+            })
+          }
         }
-        this.$swal.fire({
-          icon: 'success',
-          title: '공지사항이 수정되었습니다.',
-          text: '목록으로 이동합니다.',
-          confirmButtonColor: '#CEF6CE'
-        }).then(() => {
-          this.$router.push('/notice')
-        })
       }
+      this.$swal.fire({
+        icon: 'success',
+        title: '공지사항이 수정되었습니다.',
+        text: '목록으로 이동합니다.',
+        confirmButtonColor: '#CEF6CE'
+      }).then(() => {
+        this.$router.push('/notice')
+      })
     },
     remove () {
       this.$swal.fire({
@@ -184,8 +231,8 @@ export default {
           }).catch(function (error) {
             console.log(error)
           })
-          this.$store.commit('noticeDetail', {id: 0, url: 'http://localhost:8000/jewelry/noticeBoard/paging'})
-          location.href = '/notice'
+          this.$store.commit('noticeDetail', {id: 0, urlPage: 'http://localhost:8000/jewelry/noticeBoard/paging'})
+          this.$router.push('/notice')
         }
       })
     },
@@ -295,6 +342,9 @@ export default {
           }).catch(function (error) {
             console.log(error)
           })
+        } else {
+          this.modify = []
+          this.replyContent = []
         }
       })
       await this.notice()

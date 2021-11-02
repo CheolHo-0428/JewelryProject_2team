@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ion.jewelry.model.entity.NoticeBoard;
+import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.NoticeBoardReplyRequest;
 import com.ion.jewelry.model.network.request.NoticeBoardRequest;
@@ -86,6 +87,26 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 		return baseService.delete(id);
 	}
 
+	@PutMapping("/updateImg")
+	public Header<NoticeBoardResponse> update(
+			@Valid @RequestParam("title") String title,
+            @Valid @RequestParam("content") String content,
+            @Valid @RequestParam("writer") String writer,
+            @Valid @RequestParam("delete_check") YesNo delete_check,
+            @Valid @RequestParam("id") Long id,
+            @Valid @RequestParam("file") List<MultipartFile> files
+			) throws Exception {
+		Header<NoticeBoardRequest> result = new Header<NoticeBoardRequest>();
+		NoticeBoardRequest request = NoticeBoardRequest.builder()
+				.title(title)
+				.content(content)
+				.writer(writer)
+				.id(id)
+				.deleteCheck(delete_check)
+				.build();
+		result.setData(request);	
+		return boardService.updateImg(result, files);
+	}
 	@PutMapping("/update")
 	public Header<NoticeBoardResponse> update(@RequestBody NoticeBoardRequest request) {
 
