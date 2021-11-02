@@ -11,18 +11,18 @@
         </colgroup>
         <tr>
           <th>제목</th>
-          <td><input type="text" v-model="title" ref="subject" /></td>
+          <td><input type="text" v-model="title" ref="subject" :readonly="!account" /></td>
         </tr>
         <tr v-if="stored_file_name">
           <th>이미지</th>
           <td><img :src="stored_file_name"></td>
-          <td style="width:120px;"><a @click="imgfun">이미지 삭제</a></td>
+          <td style="width:120px;"><a @click="imgfun" v-if="account">이미지 삭제</a></td>
         </tr>
         <tr>
           <th>내용</th>
-          <td><textarea v-model="content"></textarea></td>
+          <td><textarea v-model="content" :readonly="!account"></textarea></td>
         </tr>
-        <tr v-if="!stored_file_name">
+        <tr v-if="(!stored_file_name) && account">
           <th>이미지 업로드</th>
           <td><input type="file" id="file" name="files" /></td>
         </tr>
@@ -71,9 +71,11 @@
   </div>
 
   <div class="btnWrap">
-    <a @click="List" class="btn">목록</a>
-    <a @click="mod" class="btn">수정</a>
-    <a @click="remove" class="btn">삭제</a>
+    <a @click="List" class="btn" v-if="!account">목록</a>
+    <a @click="inputPwd" class="btn" v-if="!account">Q&A관리</a>
+    <a @click="mod" class="btn" v-if="account">수정</a>
+    <a @click="remove" class="btn" v-if="account">삭제</a>
+    <a @click="account = false" class="btn" v-if="account">취소</a>
   </div>
 </div>
 </template>
@@ -92,7 +94,9 @@ export default {
       response_list: [],
       modify: [],
       replyContent: [],
-      inputReply: ''
+      inputReply: '',
+      password: '',
+      account: false
     }
   },
   methods: {
@@ -116,6 +120,28 @@ export default {
         }
       })
     },
+    async inputPwd () {
+      const { value: pwd } = await this.$swal.fire({
+        title: 'Enter your password',
+        input: 'password',
+        inputLabel: 'Password',
+        inputPlaceholder: 'Enter your password',
+        inputAttributes: {
+          maxlength: 10,
+          autocapitalize: 'off',
+          autocorrect: 'off'
+        }
+      })
+      if (pwd === this.password) {
+        this.account = true
+      } else {
+        this.$swal.fire({
+          icon: 'error',
+          title: '비밀번호가 틀렸습니다.',
+          confirmButtonColor: '#F27474'
+        })
+      }
+    },
     mod () {
       if (!this.title) {
         this.$swal.fire({
@@ -134,6 +160,7 @@ export default {
             frm.append('writer', 'testUser')
             frm.append('file', photoFile.files[0])
             frm.append('delete_check', 'YES')
+            frm.append('password', this.password)
             frm.append('item_id', this.$store.state.item.itemId)
 
             axios.put('http://localhost:8000/jewelry/qnaBoard/updateImg', frm, {
@@ -154,6 +181,7 @@ export default {
                 id: this.id,
                 writer: 'testUser',
                 delete_check: 'YES',
+                password: this.password,
                 item_id: this.$store.state.item.itemId
               }
             ).then(res => {
@@ -172,6 +200,7 @@ export default {
             frm.append('id', this.id)
             frm.append('writer', 'testUser')
             frm.append('delete_check', 'NO')
+            frm.append('password', this.password)
             frm.append('file', photoFile.files[0])
             frm.append('item_id', this.$store.state.item.itemId)
 
@@ -192,6 +221,7 @@ export default {
                 content: this.content,
                 id: this.id,
                 writer: 'testUser',
+                password: this.password,
                 item_id: this.$store.state.item.itemId
               }
             ).then(res => {
@@ -201,15 +231,15 @@ export default {
             })
           }
         }
+        this.$swal.fire({
+          icon: 'success',
+          title: 'Q&A가 수정되었습니다.',
+          text: '목록으로 이동합니다.',
+          confirmButtonColor: '#CEF6CE'
+        }).then(() => {
+          this.$router.push('/detail')
+        })
       }
-      this.$swal.fire({
-        icon: 'success',
-        title: 'Q&A가 수정되었습니다.',
-        text: '목록으로 이동합니다.',
-        confirmButtonColor: '#CEF6CE'
-      }).then(() => {
-        this.$router.push('/detail')
-      })
     },
     remove () {
       this.$swal.fire({
@@ -338,6 +368,7 @@ export default {
           this.content = qna.content
           this.stored_file_name = qna.stored_file_name
           this.id = qna.id
+          this.password = qna.password
         })
         .catch(err => {
           console.log(err)
@@ -404,6 +435,7 @@ input {
 }
 textarea {
   width: 100%;
+  outline: none;
 }
 .mod {
   outline: none;

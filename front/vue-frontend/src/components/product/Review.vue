@@ -57,29 +57,36 @@ export default {
 }
 .box {
   display: flex;
-  margin: 2rem;
-  border-bottom: 1px solid black;;
+  margin: 0.6rem;
+  border-bottom: 1px solid black;
 }
 .img, .content {
-  height: 100px;
+  height: fit-content;
+  margin: auto 0;
 }
 .innerBox {
   width : 24%;
+  height: fit-content;
+  margin: auto 0;
 }
 .img {
-  width: 25%;
+  width: 16%;
 }
-.img div,
 .img img {
   width: 90px;
   height: 90px;
   background-size: cover;
-  margin-left: 20px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+.img div {
+  width: 90px;
+  background-size: cover;
+  margin-left: 10px;
 }
 .content {
   width: 51%;
   word-break: break-all;
-  padding-top: 10px;
   overflow: hidden;
   cursor: pointer;
 }
@@ -91,8 +98,9 @@ export default {
   text-align: center;
   font-size: 0.7rem;
 }
-.writer {
-  margin-top: 30px;
+.writer,
+.date {
+  margin: 10px 0;
 }
 
 .button {
