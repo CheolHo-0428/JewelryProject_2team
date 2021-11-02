@@ -46,5 +46,4 @@ public class ItemController extends AABaseController<ItemRequest, ItemResponse, 
 		log.info("read id: {}", id);
 		return itemService.itemInfo(id);
 	}
-
 }
