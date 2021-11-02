@@ -1,5 +1,6 @@
 package com.ion.jewelry.model.network.response;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ion.jewelry.model.enums.YesNo;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class QnaBoardResponse {
 	
-	private Long id; //Qna번호
+	public Long id; //Qna번호
 	
 	private String title; //Qna제목
 	
@@ -36,6 +37,8 @@ public class QnaBoardResponse {
 	private YesNo deleteCheck; //이미지파일삭제여부
 	
 	private Long itemId; // 상품번호
+	
+	private LocalDateTime createdAt;
 	
 	private List<QnaBoardReplyResponse> qnaBoardReplyResponseList; //댓글 리스트
 }

@@ -3,17 +3,19 @@ import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 import notice from './notice'
 import { auth } from './auth.module'
+import item from './item'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
     notice,
-    auth
+    auth,
+    item
   },
   plugins: [
     createPersistedState({
-      paths: ['notice']
+      paths: ['notice', 'item']
     })
   ],
   state: {

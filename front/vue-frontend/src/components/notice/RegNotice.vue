@@ -34,7 +34,6 @@
 
 <script>
 import axios from 'axios'
-
 export default {
   data () {
     return {
@@ -55,7 +54,7 @@ export default {
         cancelButtonText: 'No'
       }).then((result) => {
         if (result.isConfirmed) {
-          location.href = '/notice'
+          this.$router.push('/notice')
         }
       })
     },
@@ -73,31 +72,32 @@ export default {
         frm.append('content', this.content)
         frm.append('writer', 'testUser')
         frm.append('file', photoFile.files[0])
-
-        axios.post('http://localhost:8000/jewelry/noticeBoard/reg', frm, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        }).then((response) => {
-          console.log(response)
-        }).catch((error) => {
-          console.log(error)
-        })
-        // axios({
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   url: 'http://localhost:8000/jewelry/noticeBoard/reg',
-        //   data: JSON.stringify({
-        //     title: this.title,
-        //     content: this.content,
-        //     writer: 'testUser'
-        //   })
-        // }).then(res => {
-        //   console.log(res)
-        // }).catch(error => {
-        //   console.log(error)
-        // })
-
+        if (photoFile.files[0]) {
+          axios.post('http://localhost:8000/jewelry/noticeBoard/regImg', frm, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then((response) => {
+            console.log(response)
+          }).catch((error) => {
+            console.log(error)
+          })
+        } else {
+          axios({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            url: 'http://localhost:8000/jewelry/noticeBoard/reg',
+            data: JSON.stringify({
+              title: this.title,
+              content: this.content,
+              writer: 'testUser'
+            })
+          }).then(res => {
+            console.log(res)
+          }).catch(error => {
+            console.log(error)
+          })
+        }
         this.$swal.fire({
           icon: 'success',
           title: '공지사항이 등록되었습니다.',

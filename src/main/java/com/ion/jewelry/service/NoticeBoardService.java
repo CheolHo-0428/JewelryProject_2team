@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ion.jewelry.component.FileHandler;
+import com.ion.jewelry.component.NoticeBoardFileHandler;
 import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.entity.NoticeBoardReply;
 import com.ion.jewelry.model.enums.YesNo;
@@ -35,7 +35,7 @@ public class NoticeBoardService extends
 	@Autowired
 	private NoticeBoardReplyService replyService;
 	
-	private final FileHandler fileHandler;
+	private final NoticeBoardFileHandler fileHandler;
 	
 	@Override
 	public Header<NoticeBoardResponse> create(Header<NoticeBoardRequest> request) {

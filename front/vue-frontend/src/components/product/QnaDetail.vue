@@ -11,11 +11,16 @@
         </colgroup>
         <tr>
           <th>제목</th>
-          <td><input type="text" v-model="subject" ref="subject" readonly /></td>
+          <td><input type="text" v-model="title" ref="subject" /></td>
+        </tr>
+        <tr v-if="stored_file_name">
+          <th>이미지</th>
+          <td><img :src="stored_file_name"></td>
+          <td style="width:120px;"><a @click="imgfun">이미지 삭제</a></td>
         </tr>
         <tr>
           <th>내용</th>
-          <td><textarea v-model="cont" ref="cont" readonly></textarea></td>
+          <td><textarea v-model="content"></textarea></td>
         </tr>
       </table>
     </form>
@@ -23,23 +28,143 @@
 
   <div class="btnWrap">
     <a @click="List" class="btn">목록</a>
-    <a class="btn">답글달기</a>
+    <a @click="mod" class="btn">수정</a>
+    <a @click="remove" class="btn">삭제</a>
   </div>
 </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data () {
     return {
-      subject: '제목입니다.',
-      cont: '큐앤에이 내용'
+      title: '',
+      content: '',
+      stored_file_name: '',
+      id: 0,
+      deleteImg: false
     }
   },
   methods: {
+    imgfun () {
+      this.deleteImg = true
+      this.stored_file_name = false
+    },
     List () {
-      location.href = '/detail'
+      this.$swal.fire({
+        icon: 'warning',
+        title: '원본으로 유지됩니다.',
+        text: '목록으로 이동하시겠습니까?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        confirmButtonColor: '#FE9A2E',
+        cancelButtonColor: '#BDBDBD',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.$router.push('/detail')
+        }
+      })
+    },
+    mod () {
+      if (!this.title) {
+        this.$swal.fire({
+          icon: 'info',
+          title: '제목을 적어주세요.',
+          confirmButtonColor: '#A9E2F3'
+        })
+      } else {
+        if (this.deleteImg) {
+          axios.put(
+            'http://localhost:8000/jewelry/qnaBoard/update',
+            {
+              title: this.title,
+              content: this.content,
+              id: this.id,
+              writer: 'testUser',
+              delete_check: 'YES',
+              item_id: this.$store.state.item.itemId
+            }
+          ).then(res => {
+            console.log(res)
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          axios.put(
+            'http://localhost:8000/jewelry/qnaBoard/update',
+            {
+              title: this.title,
+              content: this.content,
+              id: this.id,
+              writer: 'testUser',
+              item_id: this.$store.state.item.itemId
+            }
+          ).then(res => {
+            console.log(res)
+          }).catch(error => {
+            console.log(error)
+          })
+        }
+        this.$swal.fire({
+          icon: 'success',
+          title: 'Q&A가 수정되었습니다.',
+          text: '목록으로 이동합니다.',
+          confirmButtonColor: '#CEF6CE'
+        }).then(() => {
+          this.$router.push('/detail')
+        })
+      }
+    },
+    remove () {
+      this.$swal.fire({
+        icon: 'warning',
+        title: '해당 Q&A가 삭제됩니다.',
+        text: '목록으로 이동하시겠습니까?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        confirmButtonColor: '#FE9A2E',
+        cancelButtonColor: '#BDBDBD',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.delete(
+            `http://localhost:8000/jewelry/qnaBoard/${this.$store.state.item.qnaId}`,
+            {
+              data: {
+                id: this.id
+              }
+            }
+          ).then(function (response) {
+            console.log(response)
+          }).catch(function (error) {
+            console.log(error)
+          })
+          this.$router.push('/detail')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    qna () {
+      axios.get(`http://localhost:8000/jewelry/qnaBoard/${this.$store.state.item.qnaId}`)
+        .then(res => {
+          let qna = res.data.data
+
+          this.title = qna.title
+          this.content = qna.content
+          this.stored_file_name = qna.stored_file_name
+          this.id = qna.id
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
+  },
+  created () {
+    this.qna()
   }
 }
 </script>
@@ -59,6 +184,26 @@ p {
 input {
   outline: none;
 }
+
+a {
+  text-decoration: none;
+  color: black;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-color: #fefff2;
+  box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5);
+  margin-left: 0.3rem;
+  cursor: pointer;
+}
+a:active {
+  box-shadow: 1px 0px 0 rgb(0,0,0,0.5);
+  position: relative;
+  top: 0.5px;
+}
+
 .tbAdd{border-top:1px solid #888;}
 .tbAdd th, .tbAdd td{border-bottom:1px solid #eee; padding:5px 0;}
 .tbAdd td{padding:10px 10px; box-sizing:border-box;}
