@@ -1,5 +1,6 @@
 package com.ion.jewelry.model.network.request;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ion.jewelry.model.enums.YesNo;
@@ -35,6 +36,8 @@ public class ReviewBoardRequest {
 	private Long fileSize; //이미지파일크기
 	
 	private YesNo deleteCheck; //이미지파일삭제여부
+	
+	private LocalDateTime createdAt;
 	
 	private Long itemId;
 		

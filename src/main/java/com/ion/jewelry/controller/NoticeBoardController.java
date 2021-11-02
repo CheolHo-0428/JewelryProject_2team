@@ -18,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.network.Header;
+import com.ion.jewelry.model.network.request.NoticeBoardReplyRequest;
 import com.ion.jewelry.model.network.request.NoticeBoardRequest;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
+import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.service.NoticeBoardService;
 
@@ -50,7 +52,19 @@ public class NoticeBoardController extends
 	public Header<NoticeBoardReplyInfoResponse> replyInfo(@PathVariable Long id){
 		return boardService.replyInfo(id);
 	}
-	
+
+	@PostMapping("/regImg")
+	public Header<NoticeBoardResponse> create(
+			@Valid @RequestParam("title") String title,
+            @Valid @RequestParam("content") String content,
+            @Valid @RequestParam("writer") String writer,
+            @Valid @RequestParam("file") List<MultipartFile> files
+			) throws Exception {
+		Header<NoticeBoardRequest> result = new Header<NoticeBoardRequest>();
+		result.setData(request);
+		
+		return baseService.create(result);
+	}
 	@PostMapping("/reg")
 	public Header<NoticeBoardResponse> create(@RequestBody NoticeBoardRequest request) {
 		

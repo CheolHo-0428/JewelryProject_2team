@@ -32,10 +32,10 @@
               <router-link to="/necklace" class="nav-link">NECKLACE</router-link>
             </li>
             <li class="nav-item notice">
-               <router-link to="/notice" class="nav-link">NOTICE</router-link>
+              <router-link to="/notice" class="nav-link">NOTICE</router-link>
             </li>
             <li v-if="!currentUser" class="nav-item signup">
-               <router-link to="/signup" class="nav-link">SIGNUP</router-link>
+              <router-link to="/signup" class="nav-link">SIGNUP</router-link>
             </li>
             <li v-if="!currentUser" class="nav-item login">
               <router-link to="/login" class="nav-link" >LOGIN</router-link>
