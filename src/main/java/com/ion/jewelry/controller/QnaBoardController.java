@@ -68,6 +68,7 @@ public class QnaBoardController extends AABaseController<QnaBoardRequest, QnaBoa
             @Valid @RequestParam("content") String content,
             @Valid @RequestParam("writer") String writer,
             @Valid @RequestParam("item") Long itemId,
+            @Valid @RequestParam("password") String password,
             @Valid @RequestParam("file") List<MultipartFile> files
 			) throws Exception {
 		Header<QnaBoardRequest> result = new Header<QnaBoardRequest>();
@@ -76,6 +77,7 @@ public class QnaBoardController extends AABaseController<QnaBoardRequest, QnaBoa
 				.content(content)
 				.writer(writer)
 				.itemId(itemId)
+				.password(password)
 				.build();
 		result.setData(request);
 		return qnaService.createImg(result, files);
@@ -89,6 +91,7 @@ public class QnaBoardController extends AABaseController<QnaBoardRequest, QnaBoa
             @Valid @RequestParam("delete_check") YesNo delete_check,
             @Valid @RequestParam("id") Long id,
             @Valid @RequestParam("item_id") Long itemId,
+            @Valid @RequestParam("password") String password,
             @Valid @RequestParam("file") List<MultipartFile> files
 			) throws Exception {
 		Header<QnaBoardRequest> result = new Header<QnaBoardRequest>();
@@ -99,6 +102,7 @@ public class QnaBoardController extends AABaseController<QnaBoardRequest, QnaBoa
 				.id(id)
 				.deleteCheck(delete_check)
 				.itemId(itemId)
+				.password(password)
 				.build();
 		result.setData(request);	
 		return qnaService.updateImg(result, files);

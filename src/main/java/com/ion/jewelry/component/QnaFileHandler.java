@@ -68,6 +68,7 @@ public class QnaFileHandler {
         				.title(requestDto.getTitle())
         				.content(requestDto.getContent())
         				.writer(requestDto.getWriter())
+        				.password(requestDto.getPassword())
         				.originFileName(multipartFile.getOriginalFilename())
         				.storedFileName(path + File.separator + new_file_name)
         				.fileSize(multipartFile.getSize())

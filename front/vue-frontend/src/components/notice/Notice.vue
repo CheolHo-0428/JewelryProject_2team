@@ -14,7 +14,7 @@
             <div class="d-flex">
               <select name="member" class="op" @change="optionChange($event)">
                 <option value="" selected>-- 선택하세요 --</option>
-                <option value="id">공지번호</option>
+                <option value="writer">작성자</option>
                 <option value="title">공지제목</option>
               </select>
               <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
@@ -151,9 +151,9 @@ export default {
       this.isSearch = true
       return this.searchedData
     },
-    sortedId () {
+    sortedWriter () {
       this.searchedData = this.allNotices.filter(data => {
-        return data.id.toString().includes(this.search)
+        return data.writer.toLowerCase().includes(this.search.toLowerCase())
       })
       this.isSearch = true
       return this.searchedData
@@ -167,8 +167,8 @@ export default {
     selectData () {
       if (this.search && this.option === 'title') {
         return this.sortedTitle()
-      } else if (this.search && this.option === 'id') {
-        return this.sortedId()
+      } else if (this.search && this.option === 'writer') {
+        return this.sortedWriter()
       } else {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.isSearch = false

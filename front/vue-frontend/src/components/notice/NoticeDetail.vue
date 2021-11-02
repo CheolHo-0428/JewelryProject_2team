@@ -92,7 +92,8 @@ export default {
       modify: [],
       inputReply: '',
       deleteImg: false,
-      replyContent: []
+      replyContent: [],
+      password: ''
     }
   },
   methods: {
@@ -197,15 +198,15 @@ export default {
             })
           }
         }
+        this.$swal.fire({
+          icon: 'success',
+          title: '공지사항이 수정되었습니다.',
+          text: '목록으로 이동합니다.',
+          confirmButtonColor: '#CEF6CE'
+        }).then(() => {
+          this.$router.push('/notice')
+        })
       }
-      this.$swal.fire({
-        icon: 'success',
-        title: '공지사항이 수정되었습니다.',
-        text: '목록으로 이동합니다.',
-        confirmButtonColor: '#CEF6CE'
-      }).then(() => {
-        this.$router.push('/notice')
-      })
     },
     remove () {
       this.$swal.fire({

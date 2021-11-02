@@ -25,9 +25,17 @@
       </tbody>
     </table>
 
+    <div class="private" style="display:flex;">
+      <p>비밀번호 설정</p>
+      <span class="material-icons-outlined">lock</span>
+      <div>
+        <input type="password" id="pwd" v-model="password">
+      </div>
+    </div>
+
     <div class="button">
       <v-btn color="#D1CFC4" x-large @click="detail">취소</v-btn>
-      <v-btn color="#FBEF97" x-large @click="save">리뷰등록</v-btn>
+      <v-btn color="#FBEF97" x-large @click="save" :disabled="!password">리뷰등록</v-btn>
     </div>
   </div>
 </template>
@@ -39,7 +47,8 @@ export default {
   data () {
     return {
       title: '',
-      content: ''
+      content: '',
+      password: ''
     }
   },
   methods: {
@@ -73,6 +82,7 @@ export default {
         frm.append('content', this.content)
         frm.append('writer', 'testUser')
         frm.append('file', photoFile.files[0])
+        frm.append('password', this.password)
         frm.append('item', this.$store.state.item.itemId)
         if (photoFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/reviewBoard/regImg', frm, {
@@ -93,6 +103,7 @@ export default {
               title: this.title,
               content: this.content,
               writer: 'testUser',
+              password: this.password,
               item_id: this.$store.state.item.itemId
             })
           }).then(res => {
@@ -130,7 +141,7 @@ p.top {
   width: 50rem;
   border-top: 0.2rem solid black;
   border-bottom: 0.2rem solid black;
-  margin-bottom: 5rem;
+  margin-bottom: 2rem;
 }
 input {
   text-align: center;
@@ -153,6 +164,18 @@ textarea {
   width: 100%;
   min-height: 7rem;
   font-size: 0.8rem;
+}
+
+.check {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  padding-left: 6px;
+}
+#pwd {
+  border: 1px solid black;
+  width: 200px !important;
+  margin-left: 20px;
+  border-radius: 4px;
 }
 
 .button button {
