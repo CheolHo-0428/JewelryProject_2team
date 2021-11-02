@@ -45,7 +45,7 @@
             </li>
             <li v-if="currentUser" class="nav-item name">
               <router-link to="/mypage" class="nav-link"
-                >{{ currentUser.name }}님 환영합니다!</router-link>
+                >{{ currentUser.name }}님</router-link>
             </li>
             <li v-if="currentUser" class="nav-item logout">
               <a class="nav-link" href @click.prevent="logOut">LOGOUT</a>
