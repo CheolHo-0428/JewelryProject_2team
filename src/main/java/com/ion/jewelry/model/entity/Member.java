@@ -27,7 +27,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.enums.ObjectStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -75,9 +75,9 @@ public class Member extends AABaseTimeEntity{
 	private String detailAddress; // 주소2(상세주소)
 	
 	@Enumerated(EnumType.STRING)
-	private MemberStatus status; // 가입상태(등록OR미동르고)
+	private ObjectStatus status; // 가입상태(등록OR미동르고)
 	
-	private LocalDateTime unregDate; // 해지날짜
+	//private LocalDateTime unregDate; // 해지날짜
 	
 	//user_roles테이블 연관관계
 	@ManyToMany(fetch = FetchType.LAZY)

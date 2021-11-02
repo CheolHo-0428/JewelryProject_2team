@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ion.jewelry.model.enums.ObjectStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +46,9 @@ public class Item extends AABaseTimeEntity {
 	private BigDecimal price; //상품가격
 	
 	private Integer stock; //상품재고
+	
+	@Enumerated(EnumType.STRING)
+	private ObjectStatus status; // 상품등록상태
 	
 	@JsonBackReference
 	@ManyToOne

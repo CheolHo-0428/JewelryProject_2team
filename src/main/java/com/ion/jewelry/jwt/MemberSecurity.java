@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ion.jewelry.model.entity.Member;
-import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.enums.ObjectStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,9 +39,9 @@ public class MemberSecurity implements UserDetails  {  // UserDetails - Security
 	private String detailAddress;
 	
 	@Enumerated(EnumType.STRING)
-	private MemberStatus status; // 가입상태(등록OR미등록)
+	private ObjectStatus status; // 가입상태(등록OR미등록)
 	
-	private LocalDateTime unregDate; // 해지날짜
+	//private LocalDateTime unregDate; // 해지날짜
 
 	@JsonIgnore
 	private String password;			//비밀번호는 보이면 안되므로 JsonIgnore로 막음
@@ -49,7 +49,7 @@ public class MemberSecurity implements UserDetails  {  // UserDetails - Security
 	private Collection<? extends GrantedAuthority> authorities;
 	//생성자생성(필요한 데이터만)
 	public MemberSecurity(Long id, String account, String name, String email, String phone, String postCode,
-			String address, String detailAddress, MemberStatus status, LocalDateTime unregDate,
+			String address, String detailAddress, ObjectStatus status,
 			List<GrantedAuthority> authorities,String password) {
 			this.id = id;
 			this.account = account;
@@ -79,7 +79,7 @@ public class MemberSecurity implements UserDetails  {  // UserDetails - Security
 				member.getAddress(),
 				member.getDetailAddress(),
 				member.getStatus(),
-				member.getUnregDate(),
+				//member.getUnregDate(),
 				authorities,
 				member.getPassword());
 	}

@@ -12,20 +12,30 @@ import org.springframework.stereotype.Service;
 import com.ion.jewelry.model.entity.Member;
 import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.entity.NoticeBoardReply;
-import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.entity.OrderGroup;
+import com.ion.jewelry.model.enums.ObjectStatus;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.MemberRequest;
+import com.ion.jewelry.model.network.response.MemberGroupOrderInfoResponse;
 import com.ion.jewelry.model.network.response.MemberResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardResponse;
+import com.ion.jewelry.model.network.response.OrderDetailResponse;
+import com.ion.jewelry.model.network.response.OrderGroupResponse;
 import com.ion.jewelry.repository.MemberRepository;
 
 @Service
 public class MemberService extends AABaseService<MemberRequest, MemberResponse, Member> {
 	@Autowired
 	MemberRepository memberRepository;
+	
+	@Autowired
+	private OrderGroupService orderGroupService;
+	
+	@Autowired
+	private OrderDetailService orderDetailService;
 	
 	@Override
 	public Header<MemberResponse> create(Header<MemberRequest> request) {
@@ -40,8 +50,8 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 				.postCode(memberRequest.getPostCode())
 				.address(memberRequest.getAddress())
 				.detailAddress(memberRequest.getDetailAddress())
-				.status(MemberStatus.REGISTERED)
-				.unregDate(null)
+				.status(ObjectStatus.REGISTERED)
+				//.unregDate(null)
 				.build();
 		
 		Member newMember = baseRepo.save(member);
@@ -128,6 +138,34 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 		return Header.OK(memberResList, pagination);
 	}
 	
+	//특정회원에 해당되는 주문정보들 조회
+	public Header<MemberGroupOrderInfoResponse> orderGroupInfo(Long id){
+		Member member = baseRepo.getOne(id);
+		MemberResponse memberResponse = response(member);
+		
+		List<OrderGroup> orderGroupList = member.getOrderGroupList(); 
+		List<OrderGroupResponse> orderGroupResList = orderGroupList.stream()
+				.map(orderGroup -> {
+					OrderGroupResponse orderGroupResponse = orderGroupService.response(orderGroup);
+					
+					//OrderDetail response
+					List<OrderDetailResponse> orderDetailResList = orderGroup.getOrderDetailList().stream()
+							.map(orderDetail -> orderDetailService.response(orderDetail))
+							.collect(Collectors.toList());
+					
+					orderGroupResponse.setOrderDetailResponseList(orderDetailResList);
+					return orderGroupResponse;
+					})
+				.collect(Collectors.toList());
+		
+		memberResponse.setOrderGroupList(orderGroupResList);
+		
+		MemberGroupOrderInfoResponse memberGroupOrderInfoResponse = MemberGroupOrderInfoResponse.builder()
+				.memberResponse(memberResponse).build();
+		
+		return Header.OK(memberGroupOrderInfoResponse);
+	}
+	
 	public MemberResponse response(Member member) {
 		MemberResponse res = MemberResponse.builder()
 				.id(member.getId())
@@ -140,7 +178,7 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 				.address(member.getAddress())
 				.detailAddress(member.getDetailAddress())
 				.status(member.getStatus())
-				.unregDate(member.getUnregDate())
+				//.unregDate(member.getUnregDate())
 				.build();
 		
 		return res;

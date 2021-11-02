@@ -16,6 +16,7 @@ import com.ion.jewelry.model.entity.Item;
 import com.ion.jewelry.model.entity.OrderDetail;
 import com.ion.jewelry.model.entity.QnaBoard;
 import com.ion.jewelry.model.entity.ReviewBoard;
+import com.ion.jewelry.model.enums.ObjectStatus;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.ItemRequest;
@@ -68,6 +69,7 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 				.name(itemRequest.getName())
 				.price(itemRequest.getPrice())
 				.stock(itemRequest.getStock())
+				.status(ObjectStatus.REGISTERED)
 				.category(categoryRepo.getOne(itemRequest.getCategoryId()))
 				.build();
 		Item newItem = baseRepo.save(item);
@@ -92,6 +94,7 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 						.setName(itemRequest.getName())
 						.setPrice(itemRequest.getPrice())
 						.setStock(itemRequest.getStock())
+						.setStatus(itemRequest.getStatus())
 						.setCategory(categoryRepo.getOne(itemRequest.getCategoryId()));
 					return item;
 				})
@@ -237,6 +240,7 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 				.name(item.getName())
 				.price(item.getPrice())
 				.stock(item.getStock())
+				.status(item.getStatus())
 				.categoryId(item.getCategory().getId())
 				.build();
 		

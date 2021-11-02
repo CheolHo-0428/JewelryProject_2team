@@ -2,6 +2,7 @@ package com.ion.jewelry.model.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -65,6 +66,6 @@ public class ReviewBoard extends AABaseTimeEntity {
 	private Item item; //상품번호(fk), item 테이블 연관관계 설정(N:1)
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reviewBoard")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "reviewBoard", cascade = CascadeType.ALL)
 	private List<ReviewBoardReply> reviewBoardReplyList;
 }

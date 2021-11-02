@@ -2,6 +2,8 @@ package com.ion.jewelry.model.network.request;
 
 import java.math.BigDecimal;
 
+import com.ion.jewelry.model.enums.ObjectStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +22,8 @@ public class ItemRequest {
 	private BigDecimal price; //상품가격
 	
 	private Integer stock; //상품재고
+	
+	private ObjectStatus status; // 상품등록상태
 	
 	private Long categoryId; //카테고리 번호
 }

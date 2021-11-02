@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum MemberStatus {
+public enum ObjectStatus {
 	//enum(id, title, description)
-	REGISTERED(0, "등록", "회원등록상태"),
-	UNREGISTERED(1, "등록해지", "회원등록해지");
+	REGISTERED(0, "REGISTERED", "등록 및 활성화"),
+	UNREGISTERED(1, "UNREGISTERED", "등록해지 및 비활성화");
 	
 	private Integer id;
 	

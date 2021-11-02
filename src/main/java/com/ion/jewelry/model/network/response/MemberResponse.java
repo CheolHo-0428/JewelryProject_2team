@@ -1,8 +1,8 @@
 package com.ion.jewelry.model.network.response;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
-import com.ion.jewelry.model.enums.MemberStatus;
+import com.ion.jewelry.model.enums.ObjectStatus;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,7 +33,9 @@ public class MemberResponse {
 	
 	private String detailAddress; // 주소2(상세주소)
 	
-	private MemberStatus status; // 가입상태(등록OR미동르고)
+	private ObjectStatus status; // 가입상태(등록OR미동르고)
 	
-	private LocalDateTime unregDate; // 해지날짜
+	//private LocalDateTime unregDate; // 해지날짜
+	
+	private List<OrderGroupResponse> orderGroupList; //회원별 주문정보 리스트
 }

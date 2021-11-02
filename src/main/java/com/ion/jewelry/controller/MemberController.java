@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ion.jewelry.model.entity.Member;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.MemberRequest;
+import com.ion.jewelry.model.network.response.MemberGroupOrderInfoResponse;
 import com.ion.jewelry.model.network.response.MemberResponse;
 import com.ion.jewelry.repository.RoleRepository;
 import com.ion.jewelry.service.MemberService;
@@ -40,7 +42,19 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 		log.info("{}", pageable);
 		return baseService.pagingRead(pageable);
 	}
-
+	
+	//특정회원에 해당되는 주문정보들 조회
+	@GetMapping("/{id}/orderGroupInfo") // http://localhost:8000/jewelry/member/1/orderGroupInfo
+	public Header<MemberGroupOrderInfoResponse> orderGroupInfo(@PathVariable Long id){
+		log.info("read id: {}", id);
+		return memberService.orderGroupInfo(id);
+	}
+	
+	
+	
+	
+	
+	
 	//이부분 테스트 해보시라고 만든거라 나중에 제거예정입니다!
 	@Autowired
 	RoleRepository roleRepository;
