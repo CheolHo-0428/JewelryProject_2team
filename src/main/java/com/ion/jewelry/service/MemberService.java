@@ -218,4 +218,13 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 				.map(member -> Header.OK(member))
 				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
 	}
+
+	public Header<MemberResponse> findByAccount(String account) {
+		Optional<Member> optional = memberRepository.findByAccount(account);
+		return optional
+				.map(member -> response(member))
+				.map(member -> Header.OK(member))
+				.orElseGet(() -> Header.ERROR("조회하신 데이터가 없습니다."))
+				;
+	}
 }

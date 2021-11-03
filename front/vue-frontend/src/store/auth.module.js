@@ -73,6 +73,18 @@ export const auth = {
           return Promise.reject(error)
         }
       )
+    },
+    findMember ({ commit }, user) {
+      return AuthService.findMember(user).then(
+        user => {
+          commit('findMemberSuccess', user)
+          return Promise.resolve(user)
+        },
+        error => {
+          commit('findMemberFailure')
+          return Promise.reject(error)
+        }
+      )
     }
   },
   mutations: {

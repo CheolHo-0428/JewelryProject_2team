@@ -75,9 +75,7 @@ export default {
         frm.append('file', photoFile.files[0])
         if (photoFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/noticeBoard/regImg', frm, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
+            headers: {'Content-Type': 'multipart/form-data'}
           }).then((response) => {
             console.log(response)
           }).catch((error) => {
@@ -86,7 +84,7 @@ export default {
         } else {
           axios({
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {'Content-Type': 'application/json'},
             url: 'http://localhost:8000/jewelry/noticeBoard/reg',
             data: JSON.stringify({
               title: this.title,

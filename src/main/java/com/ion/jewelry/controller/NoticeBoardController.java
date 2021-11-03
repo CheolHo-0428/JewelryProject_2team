@@ -56,6 +56,7 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 	public Header<NoticeBoardReplyInfoResponse> replyInfo(@PathVariable Long id) {
 		return boardService.replyInfo(id);
 	}
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/regImg")
 	public Header<NoticeBoardResponse> create(
 			@Valid @RequestParam("title") String title,
@@ -72,9 +73,9 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 		result.setData(request);	
 		return boardService.createImg(result, files);
 	}
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/reg")
 	public Header<NoticeBoardResponse> create(@RequestBody NoticeBoardRequest request) {
-		System.out.println("등록진입");
 		Header<NoticeBoardRequest> result = new Header<NoticeBoardRequest>();
 		result.setData(request);
 		
@@ -82,10 +83,12 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 	}
 
 	@Override
+	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("{id}")
 	public Header delete(@PathVariable Long id) {
 		return baseService.delete(id);
 	}
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/updateImg")
 	public Header<NoticeBoardResponse> update(
 			@Valid @RequestParam("title") String title,
@@ -106,6 +109,7 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 		result.setData(request);	
 		return boardService.updateImg(result, files);
 	}	
+	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update")
 	public Header<NoticeBoardResponse> update(@RequestBody NoticeBoardRequest request) {
 

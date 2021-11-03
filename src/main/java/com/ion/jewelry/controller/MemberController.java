@@ -67,7 +67,7 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 		return "Public Content.";
 	}
 
-	@GetMapping("/user")						//유저권한을 넣을 경우 
+	@PostMapping("/user")						//유저권한을 넣을 경우 
 	@PreAuthorize("hasRole('USER')")			//USER가아닌 권한의 이용자 들어올시 forbidden 호출
 	public String userAccess() {				//이런식으로 화면 연결되는  URL호출하면 됩니다.
 												//enum의 ROLE_USER인데 왜 USER만 적은 이유는 hasRole()자체에서 ROLE이 들어가 있기때문에 이렇게 명명해서 데이터 가져옵니다.
