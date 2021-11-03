@@ -62,8 +62,11 @@
           <td class="cont"><v-textarea v-model="replyContent[i]" @input="reply.content = replyContent[i]" :readonly="modify[i]" :class="{'mod' : modify[i]}" auto-grow rows="1" row-height="18"></v-textarea></td>
           <td class="s">{{reply.writer}}</td>
           <td class="s">{{reply.updated_at.split('T')[0]}} {{reply.updated_at.split('T')[1].split('.')[0]}}</td>
-          <td><a @click="changeModify(i)" v-if="modify[i]">수정</a><a @click="saveReply(i)" v-if="!modify[i]">적용</a>
-              <a @click="removeReply(reply.id)" v-if="modify[i]">삭제</a><a @click="changeModify(i)" v-if="!modify[i]">취소</a>
+          <td>
+            <a @click="changeModify(i)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">수정</a>
+            <a @click="saveReply(i)" v-if="!modify[i]">적용</a>
+            <a @click="removeReply(reply.id)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">삭제</a>
+            <a @click="changeModify(i)" v-if="!modify[i]">취소</a>
           </td>
         </tr>
       </tbody>
@@ -71,11 +74,11 @@
   </div>
 
   <div class="btnWrap">
-    <a @click="List" class="btn" v-if="!account">목록</a>
+    <router-link to="/detail" class="btn" v-if="!account">목록</router-link>
     <a @click="inputPwd" class="btn" v-if="!account">리뷰관리</a>
     <a @click="mod" class="btn" v-if="account">수정</a>
     <a @click="remove" class="btn" v-if="account">삭제</a>
-    <a @click="account = false" class="btn" v-if="account">취소</a>
+    <a @click="review" class="btn" v-if="account">취소</a>
   </div>
 </div>
 </template>
@@ -99,26 +102,15 @@ export default {
       account: false
     }
   },
+  computed: {
+    currentUser () {
+      return this.$store.state.auth.user
+    }
+  },
   methods: {
     imgfun () {
       this.deleteImg = true
       this.stored_file_name = false
-    },
-    List () {
-      this.$swal.fire({
-        icon: 'warning',
-        title: '원본으로 유지됩니다.',
-        text: '목록으로 이동하시겠습니까?',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        confirmButtonColor: '#FE9A2E',
-        cancelButtonColor: '#BDBDBD',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.$router.push('/detail')
-        }
-      })
     },
     async inputPwd () {
       const { value: pwd } = await this.$swal.fire({
@@ -158,7 +150,7 @@ export default {
             frm.append('title', this.title)
             frm.append('content', this.content)
             frm.append('id', this.id)
-            frm.append('writer', 'testUser')
+            frm.append('writer', this.$store.state.auth.user.account)
             frm.append('file', photoFile.files[0])
             frm.append('delete_check', 'YES')
             frm.append('password', this.password)
@@ -180,7 +172,7 @@ export default {
                 title: this.title,
                 content: this.content,
                 id: this.id,
-                writer: 'testUser',
+                writer: this.$store.state.auth.user.account,
                 delete_check: 'YES',
                 password: this.password,
                 item_id: this.$store.state.item.itemId
@@ -199,7 +191,7 @@ export default {
             frm.append('title', this.title)
             frm.append('content', this.content)
             frm.append('id', this.id)
-            frm.append('writer', 'testUser')
+            frm.append('writer', this.$store.state.auth.user.account)
             frm.append('delete_check', 'NO')
             frm.append('file', photoFile.files[0])
             frm.append('password', this.password)
@@ -221,7 +213,7 @@ export default {
                 title: this.title,
                 content: this.content,
                 id: this.id,
-                writer: 'testUser',
+                writer: this.$store.state.auth.user.account,
                 password: this.password,
                 item_id: this.$store.state.item.itemId
               }
@@ -278,7 +270,7 @@ export default {
         {
           content: this.response_list[i].content,
           id: this.response_list[i].id,
-          writer: 'testUser',
+          writer: this.$store.state.auth.user.account,
           review_board_id: this.$store.state.item.reviewId
         }
       ).then(res => {
@@ -307,7 +299,7 @@ export default {
         url: 'http://localhost:8000/jewelry/reviewBoardReply/reg',
         data: JSON.stringify({
           content: this.inputReply,
-          writer: 'testUser',
+          writer: this.$store.state.auth.user.account,
           review_board_id: this.id
         })
       }).then(res => {
@@ -370,6 +362,8 @@ export default {
           this.stored_file_name = review.stored_file_name
           this.id = review.id
           this.password = review.password
+
+          this.account = false
         })
         .catch(err => {
           console.log(err)

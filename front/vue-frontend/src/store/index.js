@@ -31,7 +31,8 @@ export default new Vuex.Store({
       {
         src: 'http://www.rurugold.com/design/rurugold/2018wiz/main02.jpg'
       }
-    ]
+    ],
+    detail_version: 0
   },
   mutations: {
     plus (state) {
@@ -41,6 +42,9 @@ export default new Vuex.Store({
     minus (state) {
       if (state.count !== 1) state.count--
       this.totalPrice = 10000 * state.count
+    },
+    changeVersion (state, index) {
+      state.detail_version = index
     }
   },
   actions: {

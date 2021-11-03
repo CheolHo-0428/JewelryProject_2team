@@ -33,19 +33,19 @@
     <div class="tab">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" @click="changeVersion(0)" :class="{'active' : version == 0}">상세정보</a>
+          <a class="nav-link" aria-current="page" @click="changeVersion(0)" :class="{'active' : $store.state.detail_version == 0}">상세정보</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"  @click="changeVersion(1)" :class="{'active' : version == 1}">리뷰</a>
+          <a class="nav-link"  @click="changeVersion(1)" :class="{'active' : $store.state.detail_version  == 1}">리뷰</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"  @click="changeVersion(2)" :class="{'active' : version == 2}">Q&A</a>
+          <a class="nav-link"  @click="changeVersion(2)" :class="{'active' : $store.state.detail_version  == 2}">Q&A</a>
         </li>
       </ul>
       <div class="tab-content">
-        <CONTENT v-if="version == 0"></CONTENT>
-        <REVIEW v-if="version == 1"></REVIEW>
-        <QNA v-if="version == 2"></QNA>
+        <CONTENT v-if="$store.state.detail_version  == 0"></CONTENT>
+        <REVIEW v-if="$store.state.detail_version  == 1"></REVIEW>
+        <QNA v-if="$store.state.detail_version  == 2"></QNA>
       </div>
     </div>
   </div>
@@ -63,7 +63,6 @@ export default {
   },
   data () {
     return {
-      version: 0,
       name: '',
       price: ''
     }
@@ -76,7 +75,7 @@ export default {
       this.$router.push('/order')
     },
     changeVersion (index) {
-      this.version = index
+      this.$store.commit('changeVersion', index)
     },
     detail () {
       axios.get(`http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}`)
