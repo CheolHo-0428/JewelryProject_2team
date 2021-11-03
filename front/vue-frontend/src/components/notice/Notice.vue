@@ -58,7 +58,6 @@
         <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
         <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
       </div>
-
     </div>
 
   </div>

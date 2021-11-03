@@ -5,11 +5,22 @@
     </div>
 
     <div class="boxs">
-      <div v-for="(list, i) in response_list" :key="i">
+      <div v-for="(list, i) in response_list" :key="i" class="list">
         <div class="img" @click="change(list.id)"></div>
         <div class="product">
           <p class="name">{{list.name}}</p>
           <p class="price">{{list.price}}원</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- pagination -->
+    <div class="outer">
+      <div class="page">
+        <div class="box">
+          <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
+          <a @click="changePage(p)" v-for="i in 4" class="pageNum" :key="i" :class="{'active' : page + 1 == i}">{{i}}</a>
+          <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
         </div>
       </div>
     </div>
@@ -22,7 +33,15 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      response_list: []
+      response_list: [],
+      end: 0,
+      next: false,
+      page: 0,
+      prev: false,
+      start: 0,
+      page_list: [],
+      total_pages: 0,
+      total_elements: 0
     }
   },
   methods: {
@@ -56,6 +75,7 @@ export default {
   font-weight: 700;
   font-size: 1.4rem;
   margin-bottom: 1rem;
+  text-decoration-line: underline;
 }
 
 .boxs {
@@ -66,7 +86,11 @@ export default {
   text-align: center;
   width: fit-content;
   max-width: 1340px;
+  min-width: 1110px;
   margin: 0 auto;
+}
+.list {
+  width: 25%;
 }
 .img {
   width: 230px;
@@ -85,6 +109,38 @@ export default {
 }
 .name {
   font-weight: 700;
+  cursor: pointer;
+}
+
+.outer {
+  width: 750px;
+  margin: 4rem auto;
+}
+.page {
+  display: inline-block;
+  width: 750px;
+  margin-top: 2rem;
+}
+.box {
+  margin: 0 auto;
+  width: fit-content;
+}
+.page a {
+  color: black;
+  float: left;
+  padding: 4px 12px;
+  text-decoration: none;
+  border-radius:50%;
+  margin: 0 0.5rem;
+}
+.page a.active {
+  background-color: #fde8b9;
+  color: white;
+}
+.page a:hover:not(.active) {
+  background-color: silver;
+}
+.pageNum {
   cursor: pointer;
 }
 </style>

@@ -19,7 +19,7 @@
         </tr>
         <tr>
           <th>이미지 업로드</th>
-          <td><input type="file" id="file" name="files" /></td>
+          <td><v-file-input id="file" name="files" label="File input" style="width: 200px;"></v-file-input></td>
         </tr>
       </table>
     </form>
@@ -45,7 +45,6 @@ export default {
   },
   methods: {
     List () {
-      console.log(authHeader().Authorization)
       this.$swal.fire({
         icon: 'warning',
         title: '해당내용이 지워집니다.',
