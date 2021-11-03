@@ -112,11 +112,18 @@
       </table>
     </div>
 
+<<<<<<< Updated upstream
     <div class="btnWrap">
       <a @click="List" class="btn">목록</a>
       <a v-if="findRole === true" @click="mod" class="btn">수정</a>
       <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
     </div>
+=======
+  <div class="btnWrap">
+    <router-link to="/notice" class="btn">목록</router-link>
+    <a v-if="findRole === true" @click="mod" class="btn">수정</a>
+    <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
+>>>>>>> Stashed changes
   </div>
 </template>
 
@@ -154,6 +161,7 @@ export default {
       this.deleteImg = true
       this.stored_file_name = false
     },
+<<<<<<< Updated upstream
     List () {
       this.$swal
         .fire({
@@ -172,6 +180,8 @@ export default {
           }
         })
     },
+=======
+>>>>>>> Stashed changes
     mod () {
       if (!this.title) {
         this.$swal.fire({
@@ -381,6 +391,7 @@ export default {
           url: 'http://localhost:8000/jewelry/noticeBoardReply/reg',
           data: JSON.stringify({
             content: this.inputReply,
+<<<<<<< Updated upstream
             writer: this.$store.state.auth.user,
             notice_board_id: this.id
           })
@@ -406,6 +417,28 @@ export default {
           .catch((error) => {
             console.log(error)
           })
+=======
+            writer: this.$store.state.auth.user.account,
+            notice_board_id: this.id
+          })
+        }).then(res => {
+          console.log(res)
+          this.$swal.fire({
+            icon: 'success',
+            title: '댓글이 등록되었습니다.',
+            confirmButtonColor: '#CEF6CE'
+          }).then(() => {
+            this.modify = []
+            this.replyContent = []
+            this.notice()
+            this.inputReply = ''
+          }).catch(error => {
+            console.log(error)
+          })
+        }).catch(error => {
+          console.log(error)
+        })
+>>>>>>> Stashed changes
       }
     },
     async removeReply (id) {
