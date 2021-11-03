@@ -74,19 +74,20 @@ export const auth = {
         }
       )
     },
-    findMember ({ commit }, user) {
-      return AuthService.findMember(user).then(
-        user => {
-          commit('findMemberSuccess', user)
-          return Promise.resolve(user)
+    mypage ({ commit }, user) {
+      return AuthService.mypage(user).then(
+        response => {
+          commit('mypageSuccess')
+          return Promise.resolve(response.data)
         },
         error => {
-          commit('findMemberFailure')
+          commit('mypageFailure')
           return Promise.reject(error)
         }
       )
     },
     modify ({ commit }, user) {
+      console.log('3')
       return AuthService.modify(user).then(
         response => {
           commit('modifySuccess')
@@ -140,11 +141,11 @@ export const auth = {
     changePwFailure (state) {
       state.status.loggedIn = false
     },
-    findMemberSuccess (state) {
+    mypageSuccess (state) {
       state.status.loggedIn = true
     },
-    findMemberFailure (state) {
-      state.status.loggedIn = false
+    mypageFailure (state) {
+      state.status.loggedIn = true
     },
     modifySuccess (state) {
       state.status.loggedIn = true

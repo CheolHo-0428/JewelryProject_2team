@@ -15,7 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -158,18 +160,23 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 		return memberService.updatePassword(result);
 	}
 	//회원정보조회
-	@PostMapping("/findMember")
-	public Header<MemberResponse> findByID(String id) {
-		return memberService.findById(id);
+	@GetMapping("/mypage")
+	public Header<MemberResponse> findByAccount(String account) {
+		return memberService.findByAccount(account);
 	}
 	//회원수정
 	@PutMapping("/modify")
 	public Header<MemberResponse> updateModify(@RequestBody MemberRequest request) {
 
 		Header<MemberRequest> result = new Header<MemberRequest>();
-		request.setPassword(encoder.encode(request.getPassword()));
 		result.setData(request);
 
 		return memberService.updateModify(result);
+	}
+	//회원삭제
+	@Override
+	@DeleteMapping("{id}")
+	public Header delete(@PathVariable Long id) {
+		return baseService.delete(id);
 	}
 }

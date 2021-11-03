@@ -75,17 +75,12 @@ class AuthService {
         return response.data
       })
   }
-  findMember (user) {
-    return axios
-      .post(API_URL + 'findMember', {
-        params: {
-          account: user.account
-        }
-      })
-      .then(response => {
-        console.log(response.data)
-        return response.data
-      })
+  mypage (user) {
+    return axios.get(API_URL + 'mypage', {
+      params: {
+        account: user.account
+      }
+    })
   }
   modify (user) {
     console.log('1')
@@ -99,6 +94,7 @@ class AuthService {
       address: user.address,
       detail_address: user.detailAddress
     }).then(response => {
+      console.log('2')
       return response.data
     })
   }
