@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ItemResponse {
 	
-	private Long id; //상품번호
+	public Long id; //상품번호
 	
 	private String name; //상품명
 	

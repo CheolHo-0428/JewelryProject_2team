@@ -230,6 +230,7 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 			CategoryResponse categoryResponse = response(category);
 			
 			List<Item> totalItemList = category.getItemList();
+			totalItemList.sort((a, b) -> (int)(b.id - a.id));
 			int getSize = totalItemList.size();		
 			int start = (int)pageable.getOffset();
 			//int end = (start + pageable.getPageSize()) > getSize ? getSize : (start + pageable.getPageSize());
@@ -290,7 +291,6 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 						
 						return itemResponse;
 					})
-					.sorted((a, b) -> b.createdAt.compareTo(a.createdAt))
 					.collect(Collectors.toList());				
 			categoryResponse.setItemResponseList(itemResList);
 						

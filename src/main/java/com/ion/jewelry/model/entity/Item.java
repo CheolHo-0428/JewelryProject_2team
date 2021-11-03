@@ -39,7 +39,7 @@ public class Item extends AABaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ItemSequenceGenerator")
 	@SequenceGenerator(name="ItemSequenceGenerator", sequenceName = "ItemSequence", initialValue = 1, allocationSize = 1)
-	private Long id; //상품번호
+	public Long id; //상품번호
 	
 	private String name; //상품명
 	
