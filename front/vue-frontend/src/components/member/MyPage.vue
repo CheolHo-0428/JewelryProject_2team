@@ -56,9 +56,13 @@ export default {
     modify () {
       this.user.account = this.$store.state.auth.user.account
       this.$store.dispatch('auth/findMember', this.user).then(
-        () => {
-          console.log(this.user.account)
-          this.$router.push(this.$router.push('/modify'))
+        (data) => {
+          this.$router.push({
+            name: 'findMember',
+            query: {
+              account: data.data.account
+            }
+          })
         },
         (error) => {
           console.log(error)

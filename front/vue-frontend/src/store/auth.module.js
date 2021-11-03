@@ -85,6 +85,18 @@ export const auth = {
           return Promise.reject(error)
         }
       )
+    },
+    modify ({ commit }, user) {
+      return AuthService.modify(user).then(
+        response => {
+          commit('modifySuccess')
+          return Promise.resolve(response.data)
+        },
+        error => {
+          commit('modifyFailure')
+          return Promise.reject(error)
+        }
+      )
     }
   },
   mutations: {
@@ -127,6 +139,18 @@ export const auth = {
     },
     changePwFailure (state) {
       state.status.loggedIn = false
+    },
+    findMemberSuccess (state) {
+      state.status.loggedIn = true
+    },
+    findMemberFailure (state) {
+      state.status.loggedIn = false
+    },
+    modifySuccess (state) {
+      state.status.loggedIn = true
+    },
+    modifyFailure (state) {
+      state.status.loggedIn = true
     }
   }
 }

@@ -14,6 +14,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	
 	Optional<Member> findByAccount(String account);
 	
+	Optional<Member> findById(String id);
+
 	//아이디존재여부
 	Boolean existsByAccount(String account);
 	
@@ -27,6 +29,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	//비밀번호찾기
 	@Query("select m from Member m where m.name = :name and m.account = :account and m.email = :email")
 	Optional<Member> findByNameAndAccountAndEmail(@Param("name")String name,@Param("account") String account,@Param("email") String email);
+
 	
 	
 }

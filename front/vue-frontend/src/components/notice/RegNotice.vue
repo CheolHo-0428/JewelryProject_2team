@@ -34,7 +34,6 @@
 
 <script>
 import axios from 'axios'
-import authHeader from '../../services/auth-header'
 
 export default {
   data () {
@@ -45,7 +44,6 @@ export default {
   },
   methods: {
     List () {
-      console.log(authHeader().Authorization)
       this.$swal.fire({
         icon: 'warning',
         title: '해당내용이 지워집니다.',
@@ -69,9 +67,9 @@ export default {
           confirmButtonColor: '#A9E2F3'
         })
       } else {
+        console.log(this.$store.state.auth.user.token)
         let frm = new FormData()
         let photoFile = document.getElementById('file')
-        console.log(this.$store.state.auth.user.account)
         frm.append('title', this.title)
         frm.append('content', this.content)
         frm.append('writer', this.$store.state.auth.user.account)
@@ -79,7 +77,7 @@ export default {
         if (photoFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/noticeBoard/regImg', frm, {
             headers: {
-              'Authorization': authHeader().Authorization,
+              'Authorization': 'Bearer ' + this.$store.state.auth.user.token,
               'Content-Type': 'multipart/form-data'
             }
           }).then((response) => {
@@ -90,7 +88,7 @@ export default {
         } else {
           axios({
             method: 'POST',
-            headers: { 'Authorization': authHeader().Authorization, 'Content-Type': 'application/json' },
+            headers: { 'Authorization': 'Bearer ' + this.$store.state.auth.user.token, 'Content-Type': 'application/json' },
             url: 'http://localhost:8000/jewelry/noticeBoard/reg',
             data: JSON.stringify({
               title: this.title,
