@@ -6,26 +6,46 @@
         <p>ORDER</p>
         <p>주문내역조회</p>
         <p class="material-icons-outlined">list_alt</p>
-        <p>주문하신 상품 내역을 <br> 확인하실 수 있습니다</p>
+        <p>
+          주문하신 상품 내역을 <br />
+          확인하실 수 있습니다
+        </p>
       </div>
       <div @click="modify">
         <p>MODIFY</p>
         <p>회원정보수정</p>
         <p class="material-icons-outlined">settings</p>
-        <p>고객님의 개인정보를 수정하고 <br> 관리할 수 있습니다</p>
+        <p>
+          고객님의 개인정보를 수정하고 <br />
+          관리할 수 있습니다
+        </p>
       </div>
       <div @click="cart">
         <p>CART</p>
         <p>장바구니</p>
         <p class="material-icons-outlined">shopping_cart</p>
-        <p>장바구니에 담아두신 상품의 <br> 목록을 확인합니다</p>
+        <p>
+          장바구니에 담아두신 상품의 <br />
+          목록을 확인합니다
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import User from '../../models/user'
 export default {
+  data () {
+    return {
+      user: new User('')
+    }
+  },
+  computed: {
+    currentUser () {
+      return this.$store.state.auth.user
+    }
+  },
   methods: {
     cart () {
       location.href = '/cart'
@@ -34,7 +54,16 @@ export default {
       location.href = '/orderlist'
     },
     modify () {
-      location.href = '/modify'
+      this.user.account = this.$store.state.auth.user.account
+      this.$store.dispatch('auth/findMember', this.user).then(
+        () => {
+          console.log(this.user.account)
+          this.$router.push(this.$router.push('/modify'))
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
     }
   }
 }
@@ -77,5 +106,4 @@ p.top {
 .boxs div p:nth-child(4) {
   font-size: 0.8rem;
 }
-
 </style>

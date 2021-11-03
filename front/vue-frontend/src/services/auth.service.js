@@ -20,6 +20,7 @@ class AuthService {
         // if (response.data.accessToken) {
         //   localStorage.setItem('user', JSON.stringify(response.data))
         // }
+        console.log(response.data)
         localStorage.setItem('user', JSON.stringify(response.data))
         return response.data
       })
@@ -71,6 +72,19 @@ class AuthService {
         account: user.account,
         password: user.password
       }).then(response => {
+        return response.data
+      })
+  }
+  findMember (user) {
+    console.log('1')
+    return axios
+      .get(API_URL + 'findMember', {
+        params: {
+          account: user.account
+        }
+      })
+      .then(response => {
+        console.log(response.data)
         return response.data
       })
   }

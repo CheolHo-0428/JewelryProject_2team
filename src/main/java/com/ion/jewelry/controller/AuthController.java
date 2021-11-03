@@ -157,4 +157,9 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 		
 		return memberService.updatePassword(result);
 	}
+	//회원정보조회
+	@GetMapping("/findMember")
+	public Header<MemberResponse> findByAccount(String account) {
+		return memberService.findByAccount(account);
+	}
 }
