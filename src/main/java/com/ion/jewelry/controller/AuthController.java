@@ -158,8 +158,18 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 		return memberService.updatePassword(result);
 	}
 	//회원정보조회
-	@GetMapping("/findMember")
-	public Header<MemberResponse> findByAccount(String account) {
-		return memberService.findByAccount(account);
+	@PostMapping("/findMember")
+	public Header<MemberResponse> findByID(String id) {
+		return memberService.findById(id);
+	}
+	//회원수정
+	@PutMapping("/modify")
+	public Header<MemberResponse> updateModify(@RequestBody MemberRequest request) {
+
+		Header<MemberRequest> result = new Header<MemberRequest>();
+		request.setPassword(encoder.encode(request.getPassword()));
+		result.setData(request);
+
+		return memberService.updateModify(result);
 	}
 }

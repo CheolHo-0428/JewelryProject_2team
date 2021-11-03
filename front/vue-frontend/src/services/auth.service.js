@@ -76,9 +76,8 @@ class AuthService {
       })
   }
   findMember (user) {
-    console.log('1')
     return axios
-      .get(API_URL + 'findMember', {
+      .post(API_URL + 'findMember', {
         params: {
           account: user.account
         }
@@ -87,6 +86,21 @@ class AuthService {
         console.log(response.data)
         return response.data
       })
+  }
+  modify (user) {
+    console.log('1')
+    return axios.put(API_URL + 'modify', {
+      account: user.account,
+      name: user.name,
+      password: user.password,
+      email: user.email,
+      phone: user.phone,
+      post_code: user.postCode,
+      address: user.address,
+      detail_address: user.detailAddress
+    }).then(response => {
+      return response.data
+    })
   }
 }
 

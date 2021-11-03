@@ -227,4 +227,37 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 				.orElseGet(() -> Header.ERROR("조회하신 데이터가 없습니다."))
 				;
 	}
+
+	public Header<MemberResponse> updateModify(Header<MemberRequest> request) {
+		MemberRequest memberRequest = request.getData();
+		
+		Optional<Member> optional = memberRepository.findByAccount(memberRequest.getAccount());
+			
+		return optional
+				.map(member -> {
+					member
+						.setAccount(memberRequest.getAccount())
+						.setPassword(memberRequest.getPassword())
+						.setEmail(memberRequest.getEmail())
+						.setPhone(memberRequest.getPhone())
+						.setPostCode(memberRequest.getPostCode())
+						.setAddress(memberRequest.getAddress())
+						.setDetailAddress(memberRequest.getDetailAddress());
+					
+					return member;
+				})
+				.map(member -> memberRepository.save(member))
+				.map(member -> response(member))
+				.map(member -> Header.OK(member))
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
+	}
+
+	public Header<MemberResponse> findById(String id) {
+		Optional<Member> optional = memberRepository.findById(id);
+		return optional
+				.map(member -> response(member))
+				.map(member -> Header.OK(member))
+				.orElseGet(() -> Header.ERROR("조회하신 데이터가 없습니다."))
+				;
+	}
 }

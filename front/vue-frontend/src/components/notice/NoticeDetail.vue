@@ -107,15 +107,14 @@
 
     <div class="btnWrap">
       <router-link to="/notice" class="btn">목록</router-link>
-      <a v-if="findRole === true" @click="mod" class="btn">수정</a>
-      <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
+      <a v-if="findRole === true" v-show="writer === $store.state.auth.user.account" @click="mod" class="btn">수정</a>
+      <a v-if="findRole === true" v-show="writer === $store.state.auth.user.account" @click="remove" class="btn">삭제</a>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
-import authHeader from '../../services/auth-header'
 
 export default {
   data () {
@@ -129,7 +128,8 @@ export default {
       inputReply: '',
       deleteImg: false,
       replyContent: [],
-      password: ''
+      password: '',
+      writer: ''
     }
   },
   computed: {
@@ -149,6 +149,7 @@ export default {
       this.stored_file_name = false
     },
     mod () {
+      console.log(this.replyContent)
       if (!this.title) {
         this.$swal.fire({
           icon: 'info',
@@ -156,6 +157,7 @@ export default {
           confirmButtonColor: '#A9E2F3'
         })
       } else {
+        console.log(this.deleteImg)
         if (this.deleteImg) {
           let frm = new FormData()
           let photoFile = document.getElementById('file')
@@ -169,7 +171,7 @@ export default {
             axios
               .put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
                 headers: {
-                  'Authorization': authHeader().Authorization,
+                  'Authorization': 'Bearer ' + this.$store.state.auth.user.token,
                   'Content-Type': 'multipart/form-data'
                 }
               })
@@ -189,8 +191,7 @@ export default {
                 delete_check: 'YES'
               }, {
                 headers: {
-                  'Authorization': authHeader().Authorization,
-                  'Content-Type': 'multipart/form-data'
+                  'Authorization': 'Bearer ' + this.$store.state.auth.user.token
                 }
               })
               .then((res) => {
@@ -201,6 +202,7 @@ export default {
               })
           }
         } else {
+          console.log('3')
           if (
             document.getElementById('file') &&
             document.getElementById('file').files[0]
@@ -216,7 +218,7 @@ export default {
             axios
               .put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
                 headers: {
-                  'Authorization': authHeader().Authorization,
+                  'Authorization': 'Bearer ' + this.$store.state.auth.user.token,
                   'Content-Type': 'multipart/form-data'
                 }
               })
@@ -227,6 +229,7 @@ export default {
                 console.log(error)
               })
           } else {
+            console.log('4')
             axios
               .put('http://localhost:8000/jewelry/noticeBoard/update', {
                 title: this.title,
@@ -235,8 +238,7 @@ export default {
                 writer: this.$store.state.auth.user.account
               }, {
                 headers: {
-                  'Authorization': authHeader().Authorization,
-                  'Content-Type': 'multipart/form-data'
+                  'Authorization': 'Bearer ' + this.$store.state.auth.user.token
                 }
               })
               .then((res) => {
@@ -277,6 +279,9 @@ export default {
               .delete(`http://localhost:8000/jewelry/noticeBoard/${this.id}`, {
                 data: {
                   id: this.id
+                },
+                headers: {
+                  'Authorization': 'Bearer ' + this.$store.state.auth.user.token
                 }
               })
               .then(function (response) {
@@ -330,6 +335,7 @@ export default {
           this.content = res.data.data[index].content
           this.id = res.data.data[index].id
           this.stored_file_name = res.data.data[index].stored_file_name
+          this.writer = res.data.data[index].writer
         })
         .catch((err) => {
           console.log(err)
