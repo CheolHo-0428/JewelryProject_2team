@@ -65,9 +65,7 @@
               <textarea v-model="inputReply" class="inputReply"></textarea>
             </td>
             <td>
-              <v-btn color="#F4F2E7" x-large class="v_btn" @click="regReply"
-                >등록</v-btn
-              >
+              <v-btn color="#F4F2E7" x-large class="v_btn" @click="regReply">등록</v-btn>
             </td>
           </tr>
         </tbody>
@@ -102,9 +100,9 @@
               {{ reply.updated_at.split("T")[1].split(".")[0] }}
             </td>
             <td>
-              <a @click="changeModify(i)" v-if="modify[i]">수정</a
+              <a @click="changeModify(i)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">수정</a
               ><a @click="saveReply(i)" v-if="!modify[i]">적용</a>
-              <a @click="removeReply(reply.id)" v-if="modify[i]">삭제</a
+              <a @click="removeReply(reply.id)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">삭제</a
               ><a @click="changeModify(i)" v-if="!modify[i]">취소</a>
             </td>
           </tr>
@@ -112,23 +110,17 @@
       </table>
     </div>
 
-<<<<<<< Updated upstream
     <div class="btnWrap">
-      <a @click="List" class="btn">목록</a>
+      <router-link to="/notice" class="btn">목록</router-link>
       <a v-if="findRole === true" @click="mod" class="btn">수정</a>
       <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
     </div>
-=======
-  <div class="btnWrap">
-    <router-link to="/notice" class="btn">목록</router-link>
-    <a v-if="findRole === true" @click="mod" class="btn">수정</a>
-    <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
->>>>>>> Stashed changes
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import authHeader from '../../services/auth-header'
 
 export default {
   data () {
@@ -161,27 +153,6 @@ export default {
       this.deleteImg = true
       this.stored_file_name = false
     },
-<<<<<<< Updated upstream
-    List () {
-      this.$swal
-        .fire({
-          icon: 'warning',
-          title: '원본으로 유지됩니다.',
-          text: '목록으로 이동하시겠습니까?',
-          showCancelButton: true,
-          confirmButtonText: 'Yes',
-          confirmButtonColor: '#FE9A2E',
-          cancelButtonColor: '#BDBDBD',
-          cancelButtonText: 'No'
-        })
-        .then((result) => {
-          if (result.isConfirmed) {
-            this.$router.push('/notice')
-          }
-        })
-    },
-=======
->>>>>>> Stashed changes
     mod () {
       if (!this.title) {
         this.$swal.fire({
@@ -197,13 +168,13 @@ export default {
             frm.append('title', this.title)
             frm.append('content', this.content)
             frm.append('id', this.id)
-            frm.append('writer', this.$store.state.auth.user)
+            frm.append('writer', this.$store.state.auth.user.account)
             frm.append('file', photoFile.files[0])
             frm.append('delete_check', 'YES')
-
             axios
               .put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
                 headers: {
+                  'Authorization': authHeader().Authorization,
                   'Content-Type': 'multipart/form-data'
                 }
               })
@@ -219,8 +190,13 @@ export default {
                 title: this.title,
                 content: this.content,
                 id: this.id,
-                writer: this.$store.state.auth.user,
+                writer: this.$store.state.auth.user.account,
                 delete_check: 'YES'
+              }, {
+                headers: {
+                  'Authorization': authHeader().Authorization,
+                  'Content-Type': 'multipart/form-data'
+                }
               })
               .then((res) => {
                 console.log(res)
@@ -236,17 +212,16 @@ export default {
           ) {
             let frm = new FormData()
             let photoFile = document.getElementById('file')
-
             frm.append('title', this.title)
             frm.append('content', this.content)
             frm.append('id', this.id)
-            frm.append('writer', this.$store.state.auth.user)
+            frm.append('writer', this.$store.state.auth.user.account)
             frm.append('delete_check', 'NO')
             frm.append('file', photoFile.files[0])
-
             axios
               .put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
                 headers: {
+                  'Authorization': authHeader().Authorization,
                   'Content-Type': 'multipart/form-data'
                 }
               })
@@ -262,7 +237,12 @@ export default {
                 title: this.title,
                 content: this.content,
                 id: this.id,
-                writer: this.$store.state.auth.user
+                writer: this.$store.state.auth.user.account
+              }, {
+                headers: {
+                  'Authorization': authHeader().Authorization,
+                  'Content-Type': 'multipart/form-data'
+                }
               })
               .then((res) => {
                 console.log(res)
@@ -296,9 +276,9 @@ export default {
           cancelButtonColor: '#BDBDBD',
           cancelButtonText: 'No'
         })
-        .then((result) => {
+        .then(async (result) => {
           if (result.isConfirmed) {
-            axios
+            await axios
               .delete(`http://localhost:8000/jewelry/noticeBoard/${this.id}`, {
                 data: {
                   id: this.id
@@ -310,11 +290,8 @@ export default {
               .catch(function (error) {
                 console.log(error)
               })
-            this.$store.commit('noticeDetail', {
-              id: 0,
-              urlPage: 'http://localhost:8000/jewelry/noticeBoard/paging'
-            })
-            this.$router.push('/notice')
+            await this.$store.commit('noticeDetail', {id: 0, urlPage: 'http://localhost:8000/jewelry/noticeBoard/paging'})
+            await this.$router.push('/notice')
           }
         })
     },
@@ -323,7 +300,7 @@ export default {
         .put('http://localhost:8000/jewelry/noticeBoardReply/update', {
           content: this.response_list[i].content,
           id: this.response_list[i].id,
-          writer: this.$store.state.auth.user
+          writer: this.$store.state.auth.user.account
         })
         .then((res) => {
           console.log(res)
@@ -331,7 +308,6 @@ export default {
         .catch((error) => {
           console.log(error)
         })
-
       this.$swal
         .fire({
           icon: 'success',
@@ -366,8 +342,7 @@ export default {
       await axios
         .get(`http://localhost:8000/jewelry/noticeBoard/${this.id}/replyInfo`)
         .then((res) => {
-          this.response_list =
-            res.data.data.notice_board_response.notice_board_reply_response_list
+          this.response_list = res.data.data.notice_board_response.notice_board_reply_response_list
           for (let i = 0; i < this.response_list.length; i++) {
             this.modify.push(true)
             this.replyContent.push(this.response_list[i].content)
@@ -391,8 +366,7 @@ export default {
           url: 'http://localhost:8000/jewelry/noticeBoardReply/reg',
           data: JSON.stringify({
             content: this.inputReply,
-<<<<<<< Updated upstream
-            writer: this.$store.state.auth.user,
+            writer: this.$store.state.auth.user.account,
             notice_board_id: this.id
           })
         })
@@ -417,28 +391,6 @@ export default {
           .catch((error) => {
             console.log(error)
           })
-=======
-            writer: this.$store.state.auth.user.account,
-            notice_board_id: this.id
-          })
-        }).then(res => {
-          console.log(res)
-          this.$swal.fire({
-            icon: 'success',
-            title: '댓글이 등록되었습니다.',
-            confirmButtonColor: '#CEF6CE'
-          }).then(() => {
-            this.modify = []
-            this.replyContent = []
-            this.notice()
-            this.inputReply = ''
-          }).catch(error => {
-            console.log(error)
-          })
-        }).catch(error => {
-          console.log(error)
-        })
->>>>>>> Stashed changes
       }
     },
     async removeReply (id) {
@@ -460,10 +412,11 @@ export default {
                   id: id
                 }
               })
-              .then(function (response) {
+              .then(async (response) => {
                 console.log(response)
                 this.modify = []
                 this.replyContent = []
+                await this.notice()
               })
               .catch(function (error) {
                 console.log(error)
@@ -471,9 +424,9 @@ export default {
           } else {
             this.modify = []
             this.replyContent = []
+            this.notice()
           }
         })
-      await this.notice()
     }
   },
   created () {
@@ -497,7 +450,6 @@ p.top {
 img {
   width: 14rem;
 }
-
 .inputReply {
   min-height: 120px;
   border: 1px solid black;
@@ -532,7 +484,6 @@ textarea {
 .cont {
   padding-left: 2rem !important;
 }
-
 .table td {
   padding: 0.5rem;
   vertical-align: middle;
@@ -558,7 +509,6 @@ a:active {
   position: relative;
   top: 0.5px;
 }
-
 .tbAdd {
   border-top: 1px solid #888;
 }

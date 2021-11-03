@@ -28,6 +28,7 @@ export default {
   methods: {
     change (id) {
       this.$store.commit('itemDetail', {id: id})
+      this.$store.commit('changeVersion', 0)
       this.$router.push('/detail')
     },
     earrings () {
