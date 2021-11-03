@@ -2,7 +2,9 @@ const item = {
   state: {
     itemId: 0,
     reviewId: 0,
-    qnaId: 0
+    qnaId: 0,
+    itemPageUrl: 'http://localhost:8000/jewelry/item/paging',
+    allItems: 'http://localhost:8000/jewelry/item'
   },
   mutations: {
     itemDetail (state, ob) {

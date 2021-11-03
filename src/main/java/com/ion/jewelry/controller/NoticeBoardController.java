@@ -56,6 +56,7 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 	public Header<NoticeBoardReplyInfoResponse> replyInfo(@PathVariable Long id) {
 		return boardService.replyInfo(id);
 	}
+	
 	@PostMapping("/regImg")
 	public Header<NoticeBoardResponse> create(
 			@Valid @RequestParam("title") String title,
@@ -72,6 +73,7 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 		result.setData(request);	
 		return boardService.createImg(result, files);
 	}
+	
 	@PostMapping("/reg")
 	public Header<NoticeBoardResponse> create(@RequestBody NoticeBoardRequest request) {
 		System.out.println("등록진입");
@@ -86,6 +88,7 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 	public Header delete(@PathVariable Long id) {
 		return baseService.delete(id);
 	}
+	
 	@PutMapping("/updateImg")
 	public Header<NoticeBoardResponse> update(
 			@Valid @RequestParam("title") String title,
@@ -106,6 +109,7 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 		result.setData(request);	
 		return boardService.updateImg(result, files);
 	}	
+	
 	@PutMapping("/update")
 	public Header<NoticeBoardResponse> update(@RequestBody NoticeBoardRequest request) {
 
