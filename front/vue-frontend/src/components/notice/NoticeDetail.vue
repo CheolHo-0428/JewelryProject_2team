@@ -38,12 +38,7 @@
           <tr v-if="!stored_file_name">
             <th>이미지 업로드</th>
             <td>
-              <input
-                v-show="findRole === true"
-                type="file"
-                id="file"
-                name="files"
-              />
+              <v-file-input v-show="findRole === true" id="file" name="files" label="File input" style="width: 200px;"></v-file-input>
             </td>
           </tr>
         </table>

@@ -19,7 +19,7 @@
         <tr>
           <th scope="col">이미지</th>
           <td class="img" colspan="3">
-            <input type="file" id="file" name="files" />
+            <v-file-input id="file" name="files" label="File input" style="width: 200px;"></v-file-input>
           </td>
         </tr>
       </tbody>

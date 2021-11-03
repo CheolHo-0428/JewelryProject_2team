@@ -17,43 +17,47 @@
     </v-carousel>
 
     <div class="category">
-      <p>All Products</p>
+      <p>New Items</p>
     </div>
 
     <div class="boxs">
+      <p class="cat">RING</p>
       <div class="box">
-        <div v-for="(list, i) in ring_response_list" :key="i" class="list">
-          <div class="img" @click="change(list.id)"></div>
+        <div v-for="i in 4" :key="i" class="list">
+          <div class="img" @click="change(ring_response_list[i-1].id)"></div>
           <div class="product">
-            <p class="name">{{list.name}}</p>
-            <p class="price">{{list.price}}원</p>
+            <p class="name" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].name}}</p>
+            <p class="price" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
+      <p class="cat">EARRINGS</p>
       <div class="box">
-        <div v-for="(list, i) in earrings_response_list" :key="i" class="list">
-          <div class="img" @click="change(list.id)"></div>
+        <div v-for="i in 4" :key="i" class="list">
+          <div class="img" @click="change(earrings_response_list[i-1].id)"></div>
           <div class="product">
-            <p class="name">{{list.name}}</p>
-            <p class="price">{{list.price}}원</p>
+            <p class="name" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].name}}</p>
+            <p class="price" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
+      <p class="cat">BRACELET</p>
       <div class="box">
-        <div v-for="(list, i) in bracelet_response_list" :key="i" class="list">
-          <div class="img" @click="change(list.id)"></div>
+        <div v-for="i in 4" :key="i" class="list">
+          <div class="img" @click="change(bracelet_response_list[i-1].id)"></div>
           <div class="product">
-            <p class="name">{{list.name}}</p>
-            <p class="price">{{list.price}}원</p>
+            <p class="name" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].name}}</p>
+            <p class="price" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
+      <p class="cat">NECKLACE</p>
       <div class="box">
-        <div v-for="(list, i) in necklace_response_list" :key="i" class="list">
-          <div class="img" @click="change(list.id)"></div>
+        <div v-for="i in 4" :key="i" class="list">
+          <div class="img" @click="change(necklace_response_list[i-1].id)"></div>
           <div class="product">
-            <p class="name">{{list.name}}</p>
-            <p class="price">{{list.price}}원</p>
+            <p class="name" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].name}}</p>
+            <p class="price" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
@@ -67,7 +71,6 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      response_list: [],
       ring_response_list: [],
       earrings_response_list: [],
       bracelet_response_list: [],
@@ -79,15 +82,6 @@ export default {
       this.$store.commit('itemDetail', {id: id})
       this.$store.commit('changeVersion', 0)
       this.$router.push('/detail')
-    },
-    all () {
-      axios.get('http://localhost:8000/jewelry/item/')
-        .then(res => {
-          this.response_list = res.data.data
-        })
-        .catch(err => {
-          console.log(err)
-        })
     },
     ring () {
       axios.get('http://localhost:8000/jewelry/category/4/itemInfo')
@@ -127,7 +121,6 @@ export default {
     }
   },
   created () {
-    this.all()
     this.ring()
     this.earrings()
     this.bracelet()
@@ -145,6 +138,7 @@ export default {
   font-weight: 700;
   font-size: 1.4rem;
   margin-bottom: 1rem;
+  text-decoration-line: underline;
 }
 
 .boxs {
@@ -154,6 +148,15 @@ export default {
   max-width: 1340px;
   min-width: 1110px;
   margin: 0 auto;
+}
+.cat {
+  text-align: left;
+  font-family: 'Open Sans Condensed', sans-serif;
+  font-weight: 700;
+  margin: 3rem 0 -1rem;
+  font-size: larger;
+  text-decoration-line: underline;
+  text-decoration-color: rgb(255, 245, 188);
 }
 .box {
   display: flex;

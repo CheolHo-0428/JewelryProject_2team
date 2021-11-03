@@ -16,13 +16,13 @@
           <tr>
             <td class="text">수량</td>
             <td>
-                <button type ="button" @click="$store.commit('minus')">-</button>
-                <input type="text" readonly="readonly" :value="`${$store.state.count}`">
-                <button type="button" @click="$store.commit('plus')">+</button>
+                <button type ="button" @click="minus">-</button>
+                <input type="text" readonly="readonly" :value="`${this.count}`">
+                <button type="button" @click="plus">+</button>
             </td>
           </tr>
         </div>
-        <div class="totPrice">총 상품금액 - {{$store.state.totalPrice}}원</div>
+        <div class="totPrice">총 상품금액 - {{totalPrice}}원</div>
         <div class="button">
           <v-btn color="#FBEF97" x-large @click="order">구매하기</v-btn>
           <v-btn color="#F4F2E7" x-large @click="cart">장바구니</v-btn>
@@ -64,7 +64,9 @@ export default {
   data () {
     return {
       name: '',
-      price: ''
+      price: '',
+      count: 1,
+      totalPrice: 0
     }
   },
   methods: {
@@ -73,6 +75,14 @@ export default {
     },
     order () {
       this.$router.push('/order')
+    },
+    plus () {
+      this.count++
+      this.totalPrice = this.price * this.count
+    },
+    minus () {
+      if (this.count !== 1) this.count--
+      this.totalPrice = this.price * this.count
     },
     changeVersion (index) {
       this.$store.commit('changeVersion', index)
@@ -84,6 +94,7 @@ export default {
 
           this.name = info.name
           this.price = info.price
+          this.totalPrice = info.price
         })
         .catch(err => {
           console.log(err)

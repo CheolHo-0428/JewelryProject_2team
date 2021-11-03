@@ -24,7 +24,7 @@
         </tr>
         <tr v-if="(!stored_file_name) && account">
           <th>이미지 업로드</th>
-          <td><input type="file" id="file" name="files" /></td>
+          <td><v-file-input id="file" name="files" label="File input" style="width: 200px;"></v-file-input></td>
         </tr>
       </table>
     </form>
@@ -452,6 +452,10 @@ textarea {
 }
 .s {
   font-size: small;
+}
+
+.v-text-field {
+  padding-top: 0 !important;
 }
 
 a {
