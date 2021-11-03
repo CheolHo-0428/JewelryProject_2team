@@ -9,32 +9,37 @@
         </h3>
         <span class="box int_id">
           <input
+            autocomplete="off"
             v-validate="'required'"
             type="text"
             id="name"
             class="int"
             name="name"
             v-model="user.name"
+            minlength="3"
+            maxlength="20"
           />
         </span>
         <div v-if="errors.has('name')" class="errorMessage" role="alert">
-          이름을 입력해주세요
+          이름은 3~20자 사이로 입력해주세요
         </div>
       </div>
       <div>
         <h3 class="join_title"><label for="email">이메일</label></h3>
         <span class="box int_pass">
           <input
+            autocomplete="off"
             type="email"
             id="email"
             class="int"
             v-validate="'required'"
             name="email"
             v-model="user.email"
+            maxlength="30"
           />
         </span>
         <div v-if="errors.has('email')" class="errorMessage" role="alert">
-          이메일을 입력해주세요
+          이메일을 형식에 맞게 입력해주세요
         </div>
       </div>
 
@@ -66,8 +71,9 @@ export default {
           this.$swal.fire({
             icon: 'warning',
             title: '입력사항이 입력되지 않거나 <br> 양식에 맞지 않습니다.',
-            text: '아래 빨간색으로 체크된 잘못된 부분을 확인해주세요',
-            confirmButtonColor: '#F8BB86'
+            showConfirmButton: true,
+            confirmButtonColor: '#F8BB86',
+            footer: '아래 빨간색으로 체크된 잘못된 부분을 확인해주세요'
           })
         }
         this.$store.dispatch('auth/findId', this.user).then(
@@ -77,7 +83,8 @@ export default {
                 position: 'center',
                 icon: 'success',
                 title: '아이디찾기에 성공하셨습니다.',
-                showConfirmButton: false,
+                showConfirmButton: true,
+                confirmButtonColor: '#a5dc86',
                 timer: 1500,
                 footer: '잊어버린아이디를 찾으셨네요!'
               })
@@ -90,8 +97,9 @@ export default {
                 position: 'center',
                 icon: 'warning',
                 title: '입력에 맞는 아이디가 없습니다.',
-                footer: '제대로 아이디를 입력했는지 확인해주세요.',
-                confirmButtonColor: '#F8BB86'
+                showConfirmButton: true,
+                confirmButtonColor: '#F8BB86',
+                footer: '제대로 아이디를 입력했는지 확인해주세요.'
               })
             }
           },
@@ -104,8 +112,9 @@ export default {
             this.$swal.fire({
               icon: 'error',
               title: '에러가 발견되었습니다.',
-              text: this.message,
-              confirmButtonColor: '#F27474'
+              showConfirmButton: true,
+              confirmButtonColor: '#F27474',
+              footer: this.message
             })
           }
         )

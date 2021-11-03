@@ -7,9 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -109,7 +108,6 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();
-
 		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: 권한이 없습니다."));
@@ -148,12 +146,15 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 		return memberService.findByNameAndAccountAndEmail(name, account, email);
 	}
 	//비밀번호변경
-//	@PutMapping("/changePw")
-//	public Header<MemberResponse> changePw(@RequestBody MemberRequest request) {
-//		
-//		Header<MemberRequest> result = new Header<MemberRequest>();
-//		result.setData(request);
-//		
-//		return baseService.update(result);
-//	}
+	@PutMapping("/changePw")
+	public Header<MemberResponse> changePw(@RequestBody MemberRequest request) {
+		
+		Header<MemberRequest> result = new Header<MemberRequest>();
+		
+		request.setPassword(encoder.encode(request.getPassword()));
+		
+		result.setData(request);
+		
+		return memberService.updatePassword(result);
+	}
 }

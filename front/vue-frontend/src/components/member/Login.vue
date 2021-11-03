@@ -9,6 +9,7 @@
       </h3>
       <span class="box int_id">
         <input
+          autocomplete="off"
           type="text"
           v-model="user.account"
           v-validate="'required'"
@@ -25,6 +26,7 @@
 
       <span class="box int_pass">
         <input
+          autocomplete="off"
           type="password"
           v-model="user.password"
           v-validate="'required'"
@@ -103,7 +105,8 @@ export default {
                 position: 'center',
                 icon: 'success',
                 title: '로그인에 성공하셨습니다.',
-                showConfirmButton: false,
+                showConfirmButton: true,
+                confirmButtonColor: '#a5dc86',
                 timer: 1500,
                 footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다'
               })
@@ -120,8 +123,9 @@ export default {
               this.$swal.fire({
                 icon: 'warning',
                 title: '잘못된값을 입력하셨습니다.',
-                text: '아이디와 비밀번호를 다시 확인해주세요',
-                confirmButtonColor: '#F8BB86'
+                showConfirmButton: true,
+                confirmButtonColor: '#F8BB86',
+                footer: '아이디와 비밀번호를 다시 확인해주세요'
               })
             }
           )

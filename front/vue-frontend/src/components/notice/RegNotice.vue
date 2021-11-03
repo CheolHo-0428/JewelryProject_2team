@@ -68,9 +68,10 @@ export default {
       } else {
         let frm = new FormData()
         let photoFile = document.getElementById('file')
+        console.log(this.$store.state.auth.user.account)
         frm.append('title', this.title)
         frm.append('content', this.content)
-        frm.append('writer', 'testUser')
+        frm.append('writer', this.$store.state.auth.user.account)
         frm.append('file', photoFile.files[0])
         if (photoFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/noticeBoard/regImg', frm, {
@@ -90,7 +91,7 @@ export default {
             data: JSON.stringify({
               title: this.title,
               content: this.content,
-              writer: 'testUser'
+              writer: this.$store.state.auth.user.account
             })
           }).then(res => {
             console.log(res)
