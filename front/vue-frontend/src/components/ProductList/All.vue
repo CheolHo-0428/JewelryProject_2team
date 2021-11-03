@@ -21,7 +21,7 @@
     </div>
 
     <div class="boxs">
-      <div v-for="(list, i) in response_list" :key="i">
+      <div v-for="(list, i) in response_list" :key="i" class="list">
         <div class="img" @click="change(list.id)"></div>
         <div class="product">
           <p class="name">{{list.name}}</p>
@@ -38,7 +38,11 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      response_list: []
+      response_list: [],
+      ring_response_list: [],
+      earrings_response_list: [],
+      bracelet_response_list: [],
+      necklace_response_list: []
     }
   },
   methods: {
@@ -54,10 +58,50 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    },
+    ring () {
+      axios.get('http://localhost:8000/jewelry/category/4/itemInfo')
+        .then(res => {
+          this.ring_response_list = res.data.data.category_response.item_response_list
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    earrings () {
+      axios.get('http://localhost:8000/jewelry/category/2/itemInfo')
+        .then(res => {
+          this.earrings_response_list = res.data.data.category_response.item_response_list
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    bracelet () {
+      axios.get('http://localhost:8000/jewelry/category/1/itemInfo')
+        .then(res => {
+          this.bracelet_response_list = res.data.data.category_response.item_response_list
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    necklace () {
+      axios.get('http://localhost:8000/jewelry/category/3/itemInfo')
+        .then(res => {
+          this.necklace_response_list = res.data.data.category_response.item_response_list
+        })
+        .catch(err => {
+          console.log(err)
+        })
     }
   },
   created () {
     this.all()
+    this.ring()
+    this.earrings()
+    this.bracelet()
+    this.necklace()
   }
 }
 </script>
@@ -81,12 +125,16 @@ export default {
   text-align: center;
   width: fit-content;
   max-width: 1340px;
+  min-width: 1110px;
   margin: 0 auto;
+}
+.list {
+  width: 25%;
 }
 .img {
   width: 230px;
   height: 230px;
-  margin: 2rem 3rem 1rem;
+  margin: 2rem auto 1rem;
   background-size: cover;
   background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   cursor: pointer;

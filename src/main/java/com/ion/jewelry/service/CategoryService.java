@@ -210,6 +210,7 @@ public class CategoryService extends AABaseService<CategoryRequest, CategoryResp
 					
 					return itemResponse;
 				})
+				.sorted((a, b) -> b.createdAt.compareTo(a.createdAt))
 				.collect(Collectors.toList());				
 		categoryResponse.setItemResponseList(itemResList);
 		

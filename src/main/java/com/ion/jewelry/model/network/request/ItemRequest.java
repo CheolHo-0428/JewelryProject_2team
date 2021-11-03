@@ -1,6 +1,7 @@
 package com.ion.jewelry.model.network.request;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import com.ion.jewelry.model.enums.ObjectStatus;
 
@@ -26,4 +27,6 @@ public class ItemRequest {
 	private ObjectStatus status; // 상품등록상태
 	
 	private Long categoryId; //카테고리 번호
+	
+	private LocalDateTime createdAt;
 }
