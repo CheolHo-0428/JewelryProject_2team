@@ -1,6 +1,7 @@
 package com.ion.jewelry.model.network.response;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.ion.jewelry.model.enums.ObjectStatus;
@@ -27,6 +28,8 @@ public class ItemResponse {
 	private ObjectStatus status; // 상품등록상태
 	
 	private Long categoryId; //카테고리 번호
+	
+	public LocalDateTime createdAt;
 	
 	private List<QnaBoardResponse> qnaBoardResponseList; // qnaboard 리스트;
 	
