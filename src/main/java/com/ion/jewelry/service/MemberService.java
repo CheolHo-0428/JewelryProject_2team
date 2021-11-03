@@ -201,4 +201,21 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 				.orElseGet(() -> Header.ERROR("조회하신 데이터가 없습니다."))
 				;
 	}
+	public Header<MemberResponse> updatePassword(Header<MemberRequest> request) {
+		
+		MemberRequest memberRequest = request.getData();
+		
+		Optional<Member> optional = memberRepository.findByAccount(memberRequest.getAccount());
+			
+		return optional
+				.map(member -> {
+					member
+						.setPassword(memberRequest.getPassword());
+					return member;
+				})
+				.map(member -> memberRepository.save(member))
+				.map(member -> response(member))
+				.map(member -> Header.OK(member))
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
+	}
 }

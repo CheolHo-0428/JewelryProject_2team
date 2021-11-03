@@ -11,20 +11,20 @@
         </colgroup>
         <tr>
           <th>제목</th>
-          <td><input type="text" v-model="title"/></td>
+          <td><input :disabled="findRole === false" type="text" v-model="title"/></td>
         </tr>
         <tr v-if="stored_file_name">
           <th>이미지</th>
           <td><img :src="stored_file_name"></td>
-          <td style="width:120px;"><a @click="imgfun">이미지 삭제</a></td>
+          <td v-show="findRole === true" style="width:120px;"><a @click="imgfun">이미지 삭제</a></td>
         </tr>
         <tr>
           <th>내용</th>
-          <td><textarea v-model="content"></textarea></td>
+          <td><textarea :disabled="findRole === false" v-model="content"></textarea></td>
         </tr>
         <tr v-if="!stored_file_name">
           <th>이미지 업로드</th>
-          <td><input type="file" id="file" name="files" /></td>
+          <td><input v-show="findRole === true" type="file" id="file" name="files" /></td>
         </tr>
       </table>
     </form>
@@ -72,8 +72,8 @@
 
   <div class="btnWrap">
     <a @click="List" class="btn">목록</a>
-    <a @click="mod" class="btn">수정</a>
-    <a @click="remove" class="btn">삭제</a>
+    <a v-if="findRole === true" @click="mod" class="btn">수정</a>
+    <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
   </div>
 </div>
 </template>
@@ -94,6 +94,17 @@ export default {
       deleteImg: false,
       replyContent: [],
       password: ''
+    }
+  },
+  computed: {
+    currentUser () {
+      return this.$store.state.auth.user
+    },
+    findRole () {
+      if (this.currentUser) {
+        return this.currentUser.roles.includes('ROLE_ADMIN')
+      }
+      return false
     }
   },
   methods: {
@@ -132,7 +143,7 @@ export default {
             frm.append('title', this.title)
             frm.append('content', this.content)
             frm.append('id', this.id)
-            frm.append('writer', 'testUser')
+            frm.append('writer', this.$store.state.auth.user)
             frm.append('file', photoFile.files[0])
             frm.append('delete_check', 'YES')
 
@@ -152,7 +163,7 @@ export default {
                 title: this.title,
                 content: this.content,
                 id: this.id,
-                writer: 'testUser',
+                writer: this.$store.state.auth.user,
                 delete_check: 'YES'
               }
             ).then(res => {
@@ -169,7 +180,7 @@ export default {
             frm.append('title', this.title)
             frm.append('content', this.content)
             frm.append('id', this.id)
-            frm.append('writer', 'testUser')
+            frm.append('writer', this.$store.state.auth.user)
             frm.append('delete_check', 'NO')
             frm.append('file', photoFile.files[0])
 
@@ -189,7 +200,7 @@ export default {
                 title: this.title,
                 content: this.content,
                 id: this.id,
-                writer: 'testUser'
+                writer: this.$store.state.auth.user
               }
             ).then(res => {
               console.log(res)
@@ -243,7 +254,7 @@ export default {
         {
           content: this.response_list[i].content,
           id: this.response_list[i].id,
-          writer: 'testUser'
+          writer: this.$store.state.auth.user
         }
       ).then(res => {
         console.log(res)
@@ -291,13 +302,21 @@ export default {
         })
     },
     regReply () {
+      if(this.inputReply===''){
+        this.$swal.fire({
+          icon: 'warning',
+          title: '댓글내용을 입력하고 등록해주세요',          
+          confirmButtonColor: '#FE9A2E'
+        })
+        return
+      } else {
       axios({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         url: 'http://localhost:8000/jewelry/noticeBoardReply/reg',
         data: JSON.stringify({
           content: this.inputReply,
-          writer: 'testUser',
+          writer: this.$store.state.auth.user,
           notice_board_id: this.id
         })
       }).then(res => {
@@ -317,6 +336,7 @@ export default {
       }).catch(error => {
         console.log(error)
       })
+      }
     },
     async removeReply (id) {
       await this.$swal.fire({

@@ -65,6 +65,15 @@ class AuthService {
         return response.data
       })
   }
+  changePw (user) {
+    return axios
+      .put(API_URL + 'changePw', {
+        account: user.account,
+        password: user.password
+      }).then(response => {
+        return response.data
+      })
+  }
 }
 
 export default new AuthService()

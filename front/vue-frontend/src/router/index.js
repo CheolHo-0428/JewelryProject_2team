@@ -186,7 +186,6 @@ const router = new VueRouter({
 // 탐색 작업이 트리거될 때마다 승인됨 상태를 확인하려면 다음과 같이 src/router.jsrouter.beforeEach() 끝에 추가하기만 하면 됩니다 .
 
 router.beforeEach((to, from, next) => {
-
   const publicPages = ['/login', '/signup', '/', '/mypage', '/notice', '/ring', '/earrings', '/bracelet', '/necklace', '/detail', '/cart', '/order', '/adorder', '/order_', '/orderlist', '/orderdetail', '/ordercancle', '/modify', '/regnotice', '/notice_', '/review_', '/qna_', '/admember', '/adminpage', '/adproduct', '/regproduct', '/adorder_', '/searchid', '/searchpw', '/findid', '/findpw', '/regreview', '/regqna', '/adsales', '/admember_', '/adproduct_']
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user')

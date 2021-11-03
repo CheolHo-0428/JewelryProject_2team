@@ -18,6 +18,7 @@
               class="int"
               minlength="3"
               maxlength="20"
+              autocomplete="no"
             />
           </span>
           <div v-if="submitted && errors.has('name')" class="errorMessage">
@@ -42,6 +43,7 @@
               class="int"
               minlength="3"
               maxlength="20"
+              autocomplete="off"
             />
           </span>
           <div v-if="submitted && errors.has('account')" class="errorMessage">
@@ -54,6 +56,7 @@
           <h3 class="join_title"><label for="pswd1">비밀번호</label></h3>
           <span class="box int_pass">
             <input
+              autocomplete="off"
               ref="password"
               placeholder="비밀번호는 6~20자로 입력하여 주세요"
               v-model="user.password"
@@ -76,6 +79,7 @@
           <h3 class="join_title"><label for="pswd2">비밀번호 확인</label></h3>
           <span class="box int_pass_check">
             <input
+              autocomplete="off"
               type="password"
               id="pswd2"
               v-validate="'required|confirmed:password'"
@@ -98,6 +102,7 @@
           </h3>
           <span class="box int_email">
             <input
+              autocomplete="off"
               v-model="user.email"
               v-validate="'required'"
               maxlength="30"
@@ -141,6 +146,7 @@
             </div>
             <div class="box int_mobile">
               <input
+                autocomplete="no"
                 v-model="phone2"
                 v-validate="'numeric'"
                 maxlength="4"
@@ -151,6 +157,7 @@
             </div>
             <div class="box int_mobile">
               <input
+                autocomplete="no"
                 v-model="phone3"
                 v-validate="'numeric'"
                 name="phone"
@@ -212,6 +219,7 @@
             </span>
             <span class="box addr3">
               <input
+                autocomplete="off"
                 name="detailAddress"
                 type="tel"
                 id="addr"
@@ -283,10 +291,10 @@ export default {
                 position: 'center',
                 icon: 'success',
                 title: '회원가입에 성공하셨습니다.',
-                showConfirmButton: true,
                 timer: 3000,
-                footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다!',
-                confirmButtonColor: '#a5dc86'
+                showConfirmButton: true,
+                confirmButtonColor: '#a5dc86',
+                footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다!'
               })
               this.$router.push('/')
             },
@@ -306,9 +314,9 @@ export default {
                   icon: 'success',
                   title: '회원가입에 성공하셨습니다.',
                   showConfirmButton: true,
+                  confirmButtonColor: '#a5dc86',
                   timer: 3000,
-                  footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다!',
-                  confirmButtonColor: '#a5dc86'
+                  footer: 'GGULUCK의 쇼핑몰에 오신것을 환영합니다!'
                 })
                 this.$router.push('/')
               } else {
@@ -316,8 +324,8 @@ export default {
                   icon: 'error',
                   title: '회원가입에 실패하셨습니다',
                   showConfirmButton: true,
-                  text: this.message,
-                  confirmButtonColor: '#F27474'
+                  confirmButtonColor: '#F27474',
+                  footer: this.message
                 })
               }
               this.successful = false
@@ -327,9 +335,9 @@ export default {
           this.$swal.fire({
             icon: 'warning',
             title: '입력사항이 입력되지 않거나<br> 양식에 맞지 않습니다.',
-            text: '아래 빨간색으로 체크된 잘못된 부분을 확인해주세요',
             showConfirmButton: true,
-            confirmButtonColor: '#F8BB86'
+            confirmButtonColor: '#F8BB86',
+            footer: '아래 빨간색으로 체크된 잘못된 부분을 확인해주세요'
           })
           this.successful = false
         }

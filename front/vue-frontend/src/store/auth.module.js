@@ -61,6 +61,18 @@ export const auth = {
           return Promise.reject(error)
         }
       )
+    },
+    changePw ({ commit }, user) {
+      return AuthService.changePw(user).then(
+        user => {
+          commit('changePwSuccess', user)
+          return Promise.resolve(user)
+        },
+        error => {
+          commit('changePwFailure')
+          return Promise.reject(error)
+        }
+      )
     }
   },
   mutations: {
@@ -97,6 +109,12 @@ export const auth = {
     findPwFailure (state) {
       state.status.loggedIn = false
       state.user = null
+    },
+    changePwSuccess (state) {
+      state.status.loggedIn = false
+    },
+    changePwFailure (state) {
+      state.status.loggedIn = false
     }
   }
 }
