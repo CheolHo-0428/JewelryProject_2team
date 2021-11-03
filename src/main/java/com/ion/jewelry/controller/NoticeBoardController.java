@@ -24,10 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
-import com.ion.jewelry.model.network.request.NoticeBoardReplyRequest;
 import com.ion.jewelry.model.network.request.NoticeBoardRequest;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
-import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.service.NoticeBoardService;
 

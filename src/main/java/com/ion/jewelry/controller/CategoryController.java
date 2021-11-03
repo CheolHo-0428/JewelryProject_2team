@@ -46,4 +46,12 @@ public class CategoryController extends AABaseController<CategoryRequest, Catego
 		return categoryService.itemInfo(id);
 	}
 	
+	@GetMapping("{id}/itemPagingInfo") // http://localhost:8000/jewelry/category/1/itemPagingInfo
+	public Header<CategoryItemInfoResponse> itemPagingInfo(
+			@PathVariable Long id, 
+			@PageableDefault(sort = "id", direction = Sort.Direction.DESC, size=2)
+			Pageable pageable){
+		return categoryService.itemPagingInfo(id, pageable);
+	}
+	
 }

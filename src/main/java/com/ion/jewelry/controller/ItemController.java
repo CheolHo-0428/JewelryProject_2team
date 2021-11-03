@@ -33,7 +33,7 @@ public class ItemController extends AABaseController<ItemRequest, ItemResponse, 
 	@Override
 	@GetMapping("/paging") // http://localhost:8000/jewelry/item/paging?page=0
 	public Header<List<ItemResponse>> pagingRead(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10)
+			@PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10)
 			Pageable pageable) {
 		
 		log.info("페이징처리 정보: {}", pageable);
