@@ -1,81 +1,123 @@
 <template>
-<div id="reg">
-  <p class="top">공지사항</p>
+  <div id="reg">
+    <p class="top">공지사항</p>
 
-  <div class="AddWrap">
-    <form>
-      <table class="tbAdd">
+    <div class="AddWrap">
+      <form>
+        <table class="tbAdd">
+          <colgroup>
+            <col width="15%" />
+            <col width="*" />
+          </colgroup>
+          <tr>
+            <th>제목</th>
+            <td>
+              <input
+                :disabled="findRole === false"
+                type="text"
+                v-model="title"
+              />
+            </td>
+          </tr>
+          <tr v-if="stored_file_name">
+            <th>이미지</th>
+            <td><img :src="stored_file_name" /></td>
+            <td v-show="findRole === true" style="width: 120px">
+              <a @click="imgfun">이미지 삭제</a>
+            </td>
+          </tr>
+          <tr>
+            <th>내용</th>
+            <td>
+              <textarea
+                :disabled="findRole === false"
+                v-model="content"
+              ></textarea>
+            </td>
+          </tr>
+          <tr v-if="!stored_file_name">
+            <th>이미지 업로드</th>
+            <td>
+              <input
+                v-show="findRole === true"
+                type="file"
+                id="file"
+                name="files"
+              />
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+
+    <div class="input">
+      <p>댓글</p>
+
+      <table>
         <colgroup>
+          <col width="85%" />
           <col width="15%" />
-          <col width="*" />
         </colgroup>
-        <tr>
-          <th>제목</th>
-          <td><input :disabled="findRole === false" type="text" v-model="title"/></td>
-        </tr>
-        <tr v-if="stored_file_name">
-          <th>이미지</th>
-          <td><img :src="stored_file_name"></td>
-          <td v-show="findRole === true" style="width:120px;"><a @click="imgfun">이미지 삭제</a></td>
-        </tr>
-        <tr>
-          <th>내용</th>
-          <td><textarea :disabled="findRole === false" v-model="content"></textarea></td>
-        </tr>
-        <tr v-if="!stored_file_name">
-          <th>이미지 업로드</th>
-          <td><input v-show="findRole === true" type="file" id="file" name="files" /></td>
-        </tr>
+
+        <tbody>
+          <tr>
+            <td>
+              <textarea v-model="inputReply" class="inputReply"></textarea>
+            </td>
+            <td>
+              <v-btn color="#F4F2E7" x-large class="v_btn" @click="regReply"
+                >등록</v-btn
+              >
+            </td>
+          </tr>
+        </tbody>
       </table>
-    </form>
+    </div>
+
+    <div class="reply">
+      <table class="table">
+        <colgroup>
+          <col width="53%" />
+          <col width="12%" />
+          <col width="20%" />
+          <col width="15%" />
+        </colgroup>
+
+        <tbody>
+          <tr v-for="(reply, i) in response_list" :key="i">
+            <td class="cont">
+              <v-textarea
+                v-model="replyContent[i]"
+                @input="reply.content = replyContent[i]"
+                :readonly="modify[i]"
+                :class="{ mod: modify[i] }"
+                auto-grow
+                rows="1"
+                row-height="18"
+              ></v-textarea>
+            </td>
+            <td class="s">{{ reply.writer }}</td>
+            <td class="s">
+              {{ reply.updated_at.split("T")[0] }}
+              {{ reply.updated_at.split("T")[1].split(".")[0] }}
+            </td>
+            <td>
+              <a @click="changeModify(i)" v-if="modify[i]">수정</a
+              ><a @click="saveReply(i)" v-if="!modify[i]">적용</a>
+              <a @click="removeReply(reply.id)" v-if="modify[i]">삭제</a
+              ><a @click="changeModify(i)" v-if="!modify[i]">취소</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="btnWrap">
+      <a @click="List" class="btn">목록</a>
+      <a v-if="findRole === true" @click="mod" class="btn">수정</a>
+      <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
+    </div>
   </div>
-
-  <div class="input">
-    <p>댓글</p>
-
-    <table>
-      <colgroup>
-        <col width="85%">
-        <col width="15%">
-      </colgroup>
-
-      <tbody>
-        <tr>
-          <td><textarea v-model="inputReply" class="inputReply"></textarea></td>
-          <td><v-btn color="#F4F2E7" x-large class="v_btn" @click="regReply" >등록</v-btn></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="reply">
-    <table class="table">
-      <colgroup>
-        <col width="53%">
-        <col width="12%">
-        <col width="20%">
-        <col width="15%">
-      </colgroup>
-
-      <tbody>
-        <tr v-for="(reply, i) in response_list" :key="i">
-          <td class="cont"><v-textarea v-model="replyContent[i]" @input="reply.content = replyContent[i]" :readonly="modify[i]" :class="{'mod' : modify[i]}" auto-grow rows="1" row-height="18"></v-textarea></td>
-          <td class="s">{{reply.writer}}</td>
-          <td class="s">{{reply.updated_at.split('T')[0]}} {{reply.updated_at.split('T')[1].split('.')[0]}}</td>
-          <td><a @click="changeModify(i)" v-if="modify[i]">수정</a><a @click="saveReply(i)" v-if="!modify[i]">적용</a>
-              <a @click="removeReply(reply.id)" v-if="modify[i]">삭제</a><a @click="changeModify(i)" v-if="!modify[i]">취소</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="btnWrap">
-    <a @click="List" class="btn">목록</a>
-    <a v-if="findRole === true" @click="mod" class="btn">수정</a>
-    <a v-if="findRole === true" @click="remove" class="btn">삭제</a>
-  </div>
-</div>
 </template>
 
 <script>
@@ -113,20 +155,22 @@ export default {
       this.stored_file_name = false
     },
     List () {
-      this.$swal.fire({
-        icon: 'warning',
-        title: '원본으로 유지됩니다.',
-        text: '목록으로 이동하시겠습니까?',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        confirmButtonColor: '#FE9A2E',
-        cancelButtonColor: '#BDBDBD',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.$router.push('/notice')
-        }
-      })
+      this.$swal
+        .fire({
+          icon: 'warning',
+          title: '원본으로 유지됩니다.',
+          text: '목록으로 이동하시겠습니까?',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          confirmButtonColor: '#FE9A2E',
+          cancelButtonColor: '#BDBDBD',
+          cancelButtonText: 'No'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            this.$router.push('/notice')
+          }
+        })
     },
     mod () {
       if (!this.title) {
@@ -147,33 +191,39 @@ export default {
             frm.append('file', photoFile.files[0])
             frm.append('delete_check', 'YES')
 
-            axios.put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            }).then((response) => {
-              console.log(response)
-            }).catch((error) => {
-              console.log(error)
-            })
+            axios
+              .put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+              .then((response) => {
+                console.log(response)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
           } else {
-            axios.put(
-              'http://localhost:8000/jewelry/noticeBoard/update',
-              {
+            axios
+              .put('http://localhost:8000/jewelry/noticeBoard/update', {
                 title: this.title,
                 content: this.content,
                 id: this.id,
                 writer: this.$store.state.auth.user,
                 delete_check: 'YES'
-              }
-            ).then(res => {
-              console.log(res)
-            }).catch(error => {
-              console.log(error)
-            })
+              })
+              .then((res) => {
+                console.log(res)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
           }
         } else {
-          if (document.getElementById('file') && document.getElementById('file').files[0]) {
+          if (
+            document.getElementById('file') &&
+            document.getElementById('file').files[0]
+          ) {
             let frm = new FormData()
             let photoFile = document.getElementById('file')
 
@@ -184,190 +234,212 @@ export default {
             frm.append('delete_check', 'NO')
             frm.append('file', photoFile.files[0])
 
-            axios.put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            }).then((response) => {
-              console.log(response)
-            }).catch((error) => {
-              console.log(error)
-            })
+            axios
+              .put('http://localhost:8000/jewelry/noticeBoard/updateImg', frm, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              })
+              .then((response) => {
+                console.log(response)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
           } else {
-            axios.put(
-              'http://localhost:8000/jewelry/noticeBoard/update',
-              {
+            axios
+              .put('http://localhost:8000/jewelry/noticeBoard/update', {
                 title: this.title,
                 content: this.content,
                 id: this.id,
                 writer: this.$store.state.auth.user
-              }
-            ).then(res => {
-              console.log(res)
-            }).catch(error => {
-              console.log(error)
-            })
+              })
+              .then((res) => {
+                console.log(res)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
           }
         }
-        this.$swal.fire({
-          icon: 'success',
-          title: '공지사항이 수정되었습니다.',
-          text: '목록으로 이동합니다.',
-          confirmButtonColor: '#CEF6CE'
-        }).then(() => {
-          this.$router.push('/notice')
-        })
+        this.$swal
+          .fire({
+            icon: 'success',
+            title: '공지사항이 수정되었습니다.',
+            text: '목록으로 이동합니다.',
+            confirmButtonColor: '#CEF6CE'
+          })
+          .then(() => {
+            this.$router.push('/notice')
+          })
       }
     },
     remove () {
-      this.$swal.fire({
-        icon: 'warning',
-        title: '해당글이 삭제됩니다.',
-        text: '목록으로 이동하시겠습니까?',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        confirmButtonColor: '#FE9A2E',
-        cancelButtonColor: '#BDBDBD',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios.delete(
-            `http://localhost:8000/jewelry/noticeBoard/${this.id}`,
-            {
-              data: {
-                id: this.id
-              }
-            }
-          ).then(function (response) {
-            console.log(response)
-          }).catch(function (error) {
-            console.log(error)
-          })
-          this.$store.commit('noticeDetail', {id: 0, urlPage: 'http://localhost:8000/jewelry/noticeBoard/paging'})
-          this.$router.push('/notice')
-        }
-      })
+      this.$swal
+        .fire({
+          icon: 'warning',
+          title: '해당글이 삭제됩니다.',
+          text: '목록으로 이동하시겠습니까?',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          confirmButtonColor: '#FE9A2E',
+          cancelButtonColor: '#BDBDBD',
+          cancelButtonText: 'No'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            axios
+              .delete(`http://localhost:8000/jewelry/noticeBoard/${this.id}`, {
+                data: {
+                  id: this.id
+                }
+              })
+              .then(function (response) {
+                console.log(response)
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+            this.$store.commit('noticeDetail', {
+              id: 0,
+              urlPage: 'http://localhost:8000/jewelry/noticeBoard/paging'
+            })
+            this.$router.push('/notice')
+          }
+        })
     },
     saveReply (i) {
-      axios.put(
-        'http://localhost:8000/jewelry/noticeBoardReply/update',
-        {
+      axios
+        .put('http://localhost:8000/jewelry/noticeBoardReply/update', {
           content: this.response_list[i].content,
           id: this.response_list[i].id,
           writer: this.$store.state.auth.user
-        }
-      ).then(res => {
-        console.log(res)
-      }).catch(error => {
-        console.log(error)
-      })
+        })
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((error) => {
+          console.log(error)
+        })
 
-      this.$swal.fire({
-        icon: 'success',
-        title: '댓글이 수정되었습니다.',
-        confirmButtonColor: '#CEF6CE'
-      }).then(() => {
-        this.modify = []
-        this.replyContent = []
-        this.notice()
-      })
+      this.$swal
+        .fire({
+          icon: 'success',
+          title: '댓글이 수정되었습니다.',
+          confirmButtonColor: '#CEF6CE'
+        })
+        .then(() => {
+          this.modify = []
+          this.replyContent = []
+          this.notice()
+        })
     },
     changeModify (i) {
       this.$set(this.modify, i, !this.modify[i])
     },
     async notice () {
-      await axios.get(this.$store.state.notice.allNotices)
-        .then(res => {
+      await axios
+        .get(this.$store.state.notice.allNotices)
+        .then((res) => {
           let notices = res.data.data
-          let index = notices.findIndex(i => i.id === this.$store.state.notice.noticeId)
-
+          let index = notices.findIndex(
+            (i) => i.id === this.$store.state.notice.noticeId
+          )
           this.title = res.data.data[index].title
           this.content = res.data.data[index].content
           this.id = res.data.data[index].id
           this.stored_file_name = res.data.data[index].stored_file_name
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
-      await axios.get(`http://localhost:8000/jewelry/noticeBoard/${this.id}/replyInfo`)
-        .then(res => {
-          this.response_list = res.data.data.notice_board_response.notice_board_reply_response_list
+      await axios
+        .get(`http://localhost:8000/jewelry/noticeBoard/${this.id}/replyInfo`)
+        .then((res) => {
+          this.response_list =
+            res.data.data.notice_board_response.notice_board_reply_response_list
           for (let i = 0; i < this.response_list.length; i++) {
             this.modify.push(true)
             this.replyContent.push(this.response_list[i].content)
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     },
     regReply () {
-      if(this.inputReply===''){
+      if (this.inputReply === '') {
         this.$swal.fire({
           icon: 'warning',
-          title: '댓글내용을 입력하고 등록해주세요',          
+          title: '댓글내용을 입력하고 등록해주세요',
           confirmButtonColor: '#FE9A2E'
         })
-        return
       } else {
-      axios({
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        url: 'http://localhost:8000/jewelry/noticeBoardReply/reg',
-        data: JSON.stringify({
-          content: this.inputReply,
-          writer: this.$store.state.auth.user,
-          notice_board_id: this.id
+        axios({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          url: 'http://localhost:8000/jewelry/noticeBoardReply/reg',
+          data: JSON.stringify({
+            content: this.inputReply,
+            writer: this.$store.state.auth.user,
+            notice_board_id: this.id
+          })
         })
-      }).then(res => {
-        console.log(res)
-        this.$swal.fire({
-          icon: 'success',
-          title: '댓글이 등록되었습니다.',
-          confirmButtonColor: '#CEF6CE'
-        }).then(() => {
-          this.modify = []
-          this.replyContent = []
-          this.notice()
-          this.inputReply = ''
-        }).catch(error => {
-          console.log(error)
-        })
-      }).catch(error => {
-        console.log(error)
-      })
+          .then((res) => {
+            console.log(res)
+            this.$swal
+              .fire({
+                icon: 'success',
+                title: '댓글이 등록되었습니다.',
+                confirmButtonColor: '#CEF6CE'
+              })
+              .then(() => {
+                this.modify = []
+                this.replyContent = []
+                this.notice()
+                this.inputReply = ''
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          })
+          .catch((error) => {
+            console.log(error)
+          })
       }
     },
     async removeReply (id) {
-      await this.$swal.fire({
-        icon: 'warning',
-        title: '해당댓글이 삭제됩니다.',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        confirmButtonColor: '#FE9A2E',
-        cancelButtonColor: '#BDBDBD',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios.delete(
-            `http://localhost:8000/jewelry/noticeBoardReply/${id}`,
-            {
-              data: {
-                id: id
-              }
-            }
-          ).then(function (response) {
-            console.log(response)
+      await this.$swal
+        .fire({
+          icon: 'warning',
+          title: '해당댓글이 삭제됩니다.',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          confirmButtonColor: '#FE9A2E',
+          cancelButtonColor: '#BDBDBD',
+          cancelButtonText: 'No'
+        })
+        .then((result) => {
+          if (result.isConfirmed) {
+            axios
+              .delete(`http://localhost:8000/jewelry/noticeBoardReply/${id}`, {
+                data: {
+                  id: id
+                }
+              })
+              .then(function (response) {
+                console.log(response)
+                this.modify = []
+                this.replyContent = []
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+          } else {
             this.modify = []
             this.replyContent = []
-          }).catch(function (error) {
-            console.log(error)
-          })
-        } else {
-          this.modify = []
-          this.replyContent = []
-        }
-      })
+          }
+        })
       await this.notice()
     }
   },
@@ -444,24 +516,57 @@ a {
   font-size: 0.8rem;
   font-weight: 700;
   background-color: #fefff2;
-  box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5);
+  box-shadow: 1px 0.5px 0 rgb(0, 0, 0, 0.5);
   margin-left: 0.3rem;
   cursor: pointer;
 }
 a:active {
-  box-shadow: 1px 0px 0 rgb(0,0,0,0.5);
+  box-shadow: 1px 0px 0 rgb(0, 0, 0, 0.5);
   position: relative;
   top: 0.5px;
 }
 
-.tbAdd{border-top:1px solid #888;}
-.tbAdd th, .tbAdd td{border-bottom:1px solid #eee; padding:5px 0;}
-.tbAdd td{padding:10px 10px; box-sizing:border-box;}
-.tbAdd td input{width:100%; min-height:30px; box-sizing:border-box; padding:0 10px;}
-.tbAdd td textarea{width:100%; min-height:250px; padding:10px; box-sizing:border-box;}
-.btnWrap{text-align:center; margin:30px 0;}
-.btnWrap a{margin:0 10px;}
-table{width:100%; border-collapse:collapse;}
-a{text-decoration:none;}
-.btn{padding:10px; background:#34445c; color:#fff;}
+.tbAdd {
+  border-top: 1px solid #888;
+}
+.tbAdd th,
+.tbAdd td {
+  border-bottom: 1px solid #eee;
+  padding: 5px 0;
+}
+.tbAdd td {
+  padding: 10px 10px;
+  box-sizing: border-box;
+}
+.tbAdd td input {
+  width: 100%;
+  min-height: 30px;
+  box-sizing: border-box;
+  padding: 0 10px;
+}
+.tbAdd td textarea {
+  width: 100%;
+  min-height: 250px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.btnWrap {
+  text-align: center;
+  margin: 30px 0;
+}
+.btnWrap a {
+  margin: 0 10px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+a {
+  text-decoration: none;
+}
+.btn {
+  padding: 10px;
+  background: #34445c;
+  color: #fff;
+}
 </style>
