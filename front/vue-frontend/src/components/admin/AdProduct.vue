@@ -30,10 +30,10 @@
             <form class="d-flex">
               <select name="product" class="op" @change="optionChange($event)">
                 <option value="" selected>-- 선택하세요 --</option>
-                <option value="ring">반지</option>
-                <option value="earrings">귀걸이</option>
-                <option value="bracelet">팔찌</option>
-                <option value="necklace">목걸이</option>
+                <option value="1">팔찌</option>
+                <option value="2">귀걸이</option>
+                <option value="3">목걸이</option>
+                <option value="4">반지</option>
               </select>
               <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
               <button class="search" type="submit">
@@ -65,15 +65,15 @@
           <th>상품명</th>
           <th>상품가격</th>
           <th>재고</th>
-          <th></th>
-          <th></th>
+          <th>상세보기</th>
+          <th>상품삭제</th>
         </tr>
       </thead>
 
       <tbody>
         <tr v-for="(item, i) in selectData" :key="i">
             <td>{{ total_elements - (page -1)*10 - i }}</td>
-            <td>{{ item.id }}</td>
+            <td>gguluck-{{ item.id }}-21Y11M</td>
             <td class="img"><div></div></td>
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
@@ -97,8 +97,8 @@
 </template>
 
 <script>
-// import axios from 'axios'
-// const url = 'http://localhost:8000/jewelry/item/paging'
+import axios from 'axios'
+const url = 'http://localhost:8000/jewelry/item/paging'
 
 export default {
   data () {
@@ -141,9 +141,57 @@ export default {
         }
       })
     },
-    // prevPage () {
-    //   this.urlPage
-    // },
+    detail (id) {
+      this.$store.commit('itemDetail', {id: id, urlPage: this.urlPage})
+      this.$router.push('/adproduct_')
+    },
+    changePage (page) {
+      this.urlPage = url + `?page=${page - 1}`
+      this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
+      this.item()
+    },
+    nextPage () {
+      this.urlPage = url + `?page=${this.end}`
+      this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
+      this.notice()
+    },
+    prevPage () {
+      this.urlPage = url + `?page=${this.start - 2}`
+      this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
+      this.item()
+    },
+    item () {
+      return axios.get(this.urlPage)
+        .then(res => {
+          this.items = res.data.data
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    itemAll () {
+      axios.get('http://localhost:8000/jewelry/item/')
+        .then(res => {
+          this.allItems = res.data.data
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     optionChange (event) {
       this.option = event.target.value
     },
@@ -160,7 +208,18 @@ export default {
       })
       this.isSearch = true
       return this.searchedData
+    },
+    sortedBracelet () {
+      this.searchedData = this.allItems.filter(data => {
+        return data.category_id.toLowerCase().includes(this.search.toLowerCase())
+      })
+      this.isSearch = true
+      return this.searchedData
     }
+  },
+  created () {
+    this.item()
+    this.itemAll()
   },
   computed: {
     selectData () {
@@ -168,6 +227,8 @@ export default {
         return this.sortedName()
       } else if (this.search && this.option === 'id') {
         return this.sortedId()
+      } else if (this.search && this.option === '1') {
+        return this.sortedBracelet()
       } else {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.isSearch = false
@@ -303,7 +364,9 @@ p {
 .page a:hover:not(.active) {
   background-color: silver;
 }
-
+.pageNum {
+  cursor: pointer;
+}
 .add {
   margin: 0;
   width: 950px;

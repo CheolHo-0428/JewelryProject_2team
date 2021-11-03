@@ -9,6 +9,7 @@ const item = {
   mutations: {
     itemDetail (state, ob) {
       state.itemId = ob.id
+      state.itemPageUrl = ob.urlPage
     },
     reviewDetail (state, ob) {
       state.reviewId = ob.id
