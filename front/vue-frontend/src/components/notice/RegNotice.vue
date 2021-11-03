@@ -34,6 +34,8 @@
 
 <script>
 import axios from 'axios'
+import authHeader from '../../services/auth-header'
+
 export default {
   data () {
     return {
@@ -43,6 +45,7 @@ export default {
   },
   methods: {
     List () {
+      console.log(authHeader().Authorization)
       this.$swal.fire({
         icon: 'warning',
         title: '해당내용이 지워집니다.',
@@ -75,7 +78,10 @@ export default {
         frm.append('file', photoFile.files[0])
         if (photoFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/noticeBoard/regImg', frm, {
-            headers: {'Content-Type': 'multipart/form-data'}
+            headers: {
+              'Authorization': authHeader().Authorization,
+              'Content-Type': 'multipart/form-data'
+            }
           }).then((response) => {
             console.log(response)
           }).catch((error) => {
@@ -84,7 +90,7 @@ export default {
         } else {
           axios({
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Authorization': authHeader().Authorization, 'Content-Type': 'application/json' },
             url: 'http://localhost:8000/jewelry/noticeBoard/reg',
             data: JSON.stringify({
               title: this.title,

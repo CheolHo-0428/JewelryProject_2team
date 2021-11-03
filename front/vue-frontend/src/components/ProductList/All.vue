@@ -21,11 +21,40 @@
     </div>
 
     <div class="boxs">
-      <div v-for="(list, i) in response_list" :key="i" class="list">
-        <div class="img" @click="change(list.id)"></div>
-        <div class="product">
-          <p class="name">{{list.name}}</p>
-          <p class="price">{{list.price}}원</p>
+      <div class="box">
+        <div v-for="(list, i) in ring_response_list" :key="i" class="list">
+          <div class="img" @click="change(list.id)"></div>
+          <div class="product">
+            <p class="name">{{list.name}}</p>
+            <p class="price">{{list.price}}원</p>
+          </div>
+        </div>
+      </div>
+      <div class="box">
+        <div v-for="(list, i) in earrings_response_list" :key="i" class="list">
+          <div class="img" @click="change(list.id)"></div>
+          <div class="product">
+            <p class="name">{{list.name}}</p>
+            <p class="price">{{list.price}}원</p>
+          </div>
+        </div>
+      </div>
+      <div class="box">
+        <div v-for="(list, i) in bracelet_response_list" :key="i" class="list">
+          <div class="img" @click="change(list.id)"></div>
+          <div class="product">
+            <p class="name">{{list.name}}</p>
+            <p class="price">{{list.price}}원</p>
+          </div>
+        </div>
+      </div>
+      <div class="box">
+        <div v-for="(list, i) in necklace_response_list" :key="i" class="list">
+          <div class="img" @click="change(list.id)"></div>
+          <div class="product">
+            <p class="name">{{list.name}}</p>
+            <p class="price">{{list.price}}원</p>
+          </div>
         </div>
       </div>
     </div>
@@ -48,6 +77,7 @@ export default {
   methods: {
     change (id) {
       this.$store.commit('itemDetail', {id: id})
+      this.$store.commit('changeVersion', 0)
       this.$router.push('/detail')
     },
     all () {
@@ -118,15 +148,17 @@ export default {
 }
 
 .boxs {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   margin-bottom: 4rem !important;
   text-align: center;
   width: fit-content;
   max-width: 1340px;
   min-width: 1110px;
   margin: 0 auto;
+}
+.box {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 .list {
   width: 25%;

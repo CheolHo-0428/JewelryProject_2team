@@ -11,31 +11,31 @@
         <tr>
           <th scope="col">조건검색</th>
           <td>
-            <form class="d-flex">
-              <select name="product" class="op">
+            <div class="d-flex">
+              <select name="product" class="op" @change="optionChange($event)">
                 <option value="" selected>-- 선택하세요 --</option>
                 <option value="name">상품명</option>
-                <option value="num">상품번호</option>
+                <option value="id">상품번호</option>
               </select>
-              <input class="form-control me-2" type="search" aria-label="Search">
+              <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
               <button class="search" type="submit">
                 <span class="material-icons-outlined">search</span>
               </button>
-            </form>
+            </div>
           </td>
         </tr>
         <tr>
           <th scope="col">상품분류</th>
           <td>
             <form class="d-flex">
-              <select name="product" class="op">
+              <select name="product" class="op" @change="optionChange($event)">
                 <option value="" selected>-- 선택하세요 --</option>
                 <option value="ring">반지</option>
                 <option value="earrings">귀걸이</option>
                 <option value="bracelet">팔찌</option>
                 <option value="necklace">목걸이</option>
               </select>
-              <input class="form-control me-2" type="search" aria-label="Search">
+              <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
               <button class="search" type="submit">
                 <span class="material-icons-outlined">search</span>
               </button>
@@ -47,9 +47,10 @@
 
     <table class="list">
       <colgroup>
-        <col width="14%">
-        <col width="20%">
-        <col width="20%">
+        <col width="2%">
+        <col width="13%">
+        <col width="18%">
+        <col width="21%">
         <col width="13%">
         <col width="9%">
         <col width="12%">
@@ -58,6 +59,7 @@
 
       <thead>
         <tr>
+          <th>#</th>
           <th>상품번호</th>
           <th>이미지</th>
           <th>상품명</th>
@@ -69,12 +71,13 @@
       </thead>
 
       <tbody>
-        <tr v-for="i in 10" :key="i">
-            <td>abc1234</td>
+        <tr v-for="(item, i) in selectData" :key="i">
+            <td>{{ total_elements - (page -1)*10 - i }}</td>
+            <td>{{ item.id }}</td>
             <td class="img"><div></div></td>
-            <td>목걸이</td>
-            <td>10000원</td>
-            <td>34</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.stock }}</td>
             <td class="button"><a href="/adproduct_">상세보기</a></td>
             <td class="button remove"><a @click="remove">상품삭제</a></td>
         </tr>
@@ -82,18 +85,11 @@
     </table>
 
     <!-- pagination -->
-    <div class="page">
+    <div class="page" v-if="!isSearch">
       <div class="box">
-        <a href="#" class="arrow">&laquo;</a>
-        <a href="#" class="active">1</a>
-        <a href="#">2</a>
-        <a href="#">3</a>
-        <a href="#">4</a>
-        <a href="#">5</a>
-        <a href="#">6</a>
-        <a href="#">7</a>
-        <a href="#">8</a>
-        <a href="#" class="arrow">&raquo;</a>
+        <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
+        <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
+        <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
       </div>
     </div>
 
@@ -101,7 +97,29 @@
 </template>
 
 <script>
+// import axios from 'axios'
+// const url = 'http://localhost:8000/jewelry/item/paging'
+
 export default {
+  data () {
+    return {
+      urlPage: this.$store.state.item.itemPageUrl,
+      items: [],
+      allItems: [],
+      end: 0,
+      next: false,
+      page: 0,
+      prev: false,
+      start: 0,
+      page_list: [],
+      total_pages: 0,
+      search: '',
+      option: '',
+      searchedData: [],
+      isSearch: false,
+      total_elements: 0
+    }
+  },
   methods: {
     remove () {
       this.$swal.fire({
@@ -122,6 +140,39 @@ export default {
           })
         }
       })
+    },
+    // prevPage () {
+    //   this.urlPage
+    // },
+    optionChange (event) {
+      this.option = event.target.value
+    },
+    sortedName () {
+      this.searchedData = this.allItems.filter(data => {
+        return data.name.toLowerCase().includes(this.search.toLowerCase())
+      })
+      this.isSearch = true
+      return this.searchedData
+    },
+    sortedId () {
+      this.searchedData = this.allItems.filter(data => {
+        return data.id.toLowerCase().includes(this.search.toLowerCase())
+      })
+      this.isSearch = true
+      return this.searchedData
+    }
+  },
+  computed: {
+    selectData () {
+      if (this.search && this.option === 'name') {
+        return this.sortedName()
+      } else if (this.search && this.option === 'id') {
+        return this.sortedId()
+      } else {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.isSearch = false
+        return this.items
+      }
     }
   }
 }
