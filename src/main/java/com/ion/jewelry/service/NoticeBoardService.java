@@ -22,6 +22,7 @@ import com.ion.jewelry.model.network.request.NoticeBoardRequest;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
 import com.ion.jewelry.model.network.response.NoticeBoardResponse;
+import com.ion.jewelry.repository.NoticeBoardRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,6 +37,9 @@ public class NoticeBoardService extends
 	private NoticeBoardReplyService replyService;
 	
 	private final NoticeBoardFileHandler fileHandler;
+	
+	@Autowired
+	private NoticeBoardRepository boardRepo;
 	
 	@Override
 	public Header<NoticeBoardResponse> create(Header<NoticeBoardRequest> request) {
@@ -230,6 +234,41 @@ public class NoticeBoardService extends
 		return Header.OK(boardResList, pagination);
 	}
 	
+	@Transactional
+	public Header<List<NoticeBoardResponse>> searchTitle(String keyword, Pageable pageable) {
+		Page<NoticeBoard> page = boardRepo.findByTitleContaining(keyword, pageable);
+		
+		List<NoticeBoardResponse> boardResList = page.stream()
+				.map(board -> response(board))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(boardResList, pagination);
+	}
+	@Transactional
+	public Header<List<NoticeBoardResponse>> searchWriter(String keyword, Pageable pageable) {
+		Page<NoticeBoard> page = boardRepo.findByWriterContaining(keyword, pageable);
+		
+		List<NoticeBoardResponse> boardResList = page.stream()
+				.map(board -> response(board))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(boardResList, pagination);
+	}
+	
 	public Header<NoticeBoardReplyInfoResponse> replyInfo(Long id){
 		// Board를 찾는다.
 		NoticeBoard noticeBoard = baseRepo.getOne(id);
@@ -259,7 +298,6 @@ public class NoticeBoardService extends
 	
 	public NoticeBoardResponse response(NoticeBoard board) {
 
-		
 		NoticeBoardResponse res = NoticeBoardResponse.builder()
 				.id(board.getId())
 				.title(board.getTitle())

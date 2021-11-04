@@ -61,15 +61,10 @@
             </li>
           </ul>
           <form class="d-flex">
-            <input
-              class="form-control me-2"
-              type="search"
-              placeholder="제품명 입력"
-              aria-label="Search"
-            />
-            <button class="search" type="submit">
+            <input class="form-control me-2" type="search" placeholder="제품명 입력" v-model="keyword" aria-label="Search"/>
+            <div class="search" @click="search">
               <span class="material-icons-outlined">search</span>
-            </button>
+            </div>
           </form>
         </div>
       </div>
@@ -79,6 +74,11 @@
 
 <script>
 export default {
+  data () {
+    return {
+      keyword: ''
+    }
+  },
   computed: {
     currentUser () {
       return this.$store.state.auth.user
@@ -96,6 +96,13 @@ export default {
         footer: 'GGULUCK의 쇼핑몰을 이용하실 고객은 로그인을 부탁드립니다.'
       })
       this.$router.push('/login')
+    },
+    search () {
+      this.$store.commit('searchItem', this.keyword)
+      this.$router.push('/searchedItem').catch(() => {
+        this.$router.go()
+      })
+      this.keyword = ''
     }
   }
 }
@@ -155,5 +162,6 @@ ul.navbar-nav {
   border: none;
   background-color: #f8f9fa;
   vertical-align: middle;
+  cursor: pointer;
 }
 </style>

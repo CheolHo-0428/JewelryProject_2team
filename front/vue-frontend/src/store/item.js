@@ -4,7 +4,8 @@ const item = {
     reviewId: 0,
     qnaId: 0,
     itemPageUrl: 'http://localhost:8000/jewelry/item/paging',
-    allItems: 'http://localhost:8000/jewelry/item'
+    allItems: 'http://localhost:8000/jewelry/item',
+    searchedItem: ''
   },
   mutations: {
     itemDetail (state, ob) {
@@ -16,6 +17,9 @@ const item = {
     },
     qnaDetail (state, ob) {
       state.qnaId = ob.id
+    },
+    searchItem (state, keyword) {
+      state.searchedItem = keyword
     }
   },
   actions: {
