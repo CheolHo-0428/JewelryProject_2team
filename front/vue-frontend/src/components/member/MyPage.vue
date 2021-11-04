@@ -11,7 +11,7 @@
           확인하실 수 있습니다
         </p>
       </div>
-      <div @click="modify">
+      <div @click="mypage">
         <p>MODIFY</p>
         <p>회원정보수정</p>
         <p class="material-icons-outlined">settings</p>
@@ -38,7 +38,7 @@ import User from '../../models/user'
 export default {
   data () {
     return {
-      user: new User('')
+      user: new User('', '', '', '', '', '', '', '', '')
     }
   },
   computed: {
@@ -53,21 +53,24 @@ export default {
     orderList () {
       location.href = '/orderlist'
     },
-    modify () {
-      this.user.account = this.$store.state.auth.user.account
-      this.$store.dispatch('auth/findMember', this.user).then(
-        (data) => {
-          this.$router.push({
-            name: 'findMember',
-            query: {
-              account: data.data.account
-            }
-          })
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+    mypage () {
+      this.$router.push('/modify')
+      // console.log(this.$store.state.auth.user.id)
+      // this.user.account = this.$store.state.auth.user.account
+      // // console.log(this.user.id)
+      // this.$store.dispatch('auth/mypage', this.user).then(
+      //   (data) => {
+      //     console.log(data)
+      //     this.$router.push('/modify')
+      //   },
+      //   (error) => {
+      //     console.log(error)
+      //   }
+      // )
+      // this.$router.push({
+      //   name: 'modify',
+      //   query: { account: data.data.account }
+      // })
     }
   }
 }

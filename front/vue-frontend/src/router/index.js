@@ -97,7 +97,7 @@ const route = [
   {
     path: '/modify',
     component: MODIFY,
-    name: 'findMember'
+    name: 'modify'
   },
   {
     path: '/regnotice',

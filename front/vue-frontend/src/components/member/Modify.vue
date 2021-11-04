@@ -34,8 +34,9 @@
           </h3>
           <span class="box int_id">
             <input
+              readonly
               placeholder="아이디는 3~20자 사이로 입력해주세요"
-              v-model="account"
+              v-model="user.account"
               v-validate="'required'"
               type="text"
               name="account"
@@ -102,8 +103,9 @@
           </h3>
           <span class="box int_email">
             <input
+              readonly
               autocomplete="off"
-              v-model="email"
+              v-model="user.email"
               v-validate="'required'"
               maxlength="30"
               type="email"
@@ -197,7 +199,7 @@
                 class="int"
                 maxlength="8"
                 placeholder="우편번호 입력"
-                v-model="postCode"
+                v-model="user.postCode"
               />
             </div>
             <div class="form-group btn_area">
@@ -214,7 +216,7 @@
                 class="int"
                 maxlength="16"
                 placeholder="주소 입력"
-                v-model="address"
+                v-model="user.address"
               />
             </span>
             <span class="box addr3">
@@ -227,7 +229,7 @@
                 maxlength="16"
                 placeholder="상세 주소 입력"
                 v-validate="'required'"
-                v-model="detailAddress"
+                v-model="user.detailAddress"
               />
             </span>
             <div
@@ -261,13 +263,7 @@ export default {
       message: '',
       phone1: this.$store.state.auth.user.phone.substring(0, 3),
       phone2: this.$store.state.auth.user.phone.substring(4, 8),
-      phone3: this.$store.state.auth.user.phone.substring(9, 13),
-      name: this.$store.state.auth.user.name,
-      account: this.$store.state.auth.user.account,
-      email: this.$store.state.auth.user.email,
-      postCode: this.$store.state.auth.user.post_code,
-      address: this.$store.state.auth.user.address,
-      detailAddress: this.$store.state.auth.user.detail_address
+      phone3: this.$store.state.auth.user.phone.substring(9, 13)
     }
   },
   methods: {
@@ -275,19 +271,15 @@ export default {
       this.$router.push('/mypage')
     },
     modify () {
+      console.log('4')
       this.message = ''
       this.submitted = true
       this.$validator.validate().then((isValid) => {
         if (isValid) {
-          this.user.name = this.name
-          this.user.account = this.account
-          this.user.email = this.email
-          this.user.post_code = this.post_code
-          this.user.address = this.address
-          this.user.detailAddress = this.detail_address
           this.user.phone = this.phone1 + '-' + this.phone2 + '-' + this.phone3
           this.$store.dispatch('auth/modify', this.user).then(
             (data) => {
+              console.log('5')
               this.successful = true
               this.$swal.fire({
                 position: 'center',
@@ -301,6 +293,7 @@ export default {
               this.$router.push('/mypage')
             },
             (error) => {
+              console.log('6')
               this.message =
                 (error.response &&
                   error.response.data &&
@@ -357,8 +350,8 @@ export default {
           if (fullRoadAddr !== '') {
             fullRoadAddr += extraRoadAddr
           }
-          this.postCode = data.zonecode
-          this.address = fullRoadAddr
+          this.user.postCode = data.zonecode
+          this.user.address = fullRoadAddr
         }
       }).open()
     },
@@ -571,5 +564,17 @@ input::placeholder {
   outline: none !important;
   box-shadow: none;
   border-color: #b4b9be;
+}
+.int_id{
+  background-color:#e1e5e9;
+}
+#id{
+  background-color:#e1e5e9;
+}
+.int_email{
+  background-color:#e1e5e9;
+}
+#email{
+  background-color:#e1e5e9;
 }
 </style>
