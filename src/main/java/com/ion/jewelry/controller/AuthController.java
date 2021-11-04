@@ -169,6 +169,7 @@ public class AuthController extends AABaseController<MemberRequest, MemberRespon
 	public Header<MemberResponse> updateModify(@RequestBody MemberRequest request) {
 
 		Header<MemberRequest> result = new Header<MemberRequest>();
+		request.setPassword(encoder.encode(request.getPassword()));
 		result.setData(request);
 
 		return memberService.updateModify(result);

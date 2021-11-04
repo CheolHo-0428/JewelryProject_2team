@@ -76,9 +76,9 @@ export const auth = {
     },
     mypage ({ commit }, user) {
       return AuthService.mypage(user).then(
-        response => {
-          commit('mypageSuccess')
-          return Promise.resolve(response.data)
+        user => {
+          commit('mypageSuccess', user)
+          return Promise.resolve(user)
         },
         error => {
           commit('mypageFailure')
@@ -95,6 +95,18 @@ export const auth = {
         },
         error => {
           commit('modifyFailure')
+          return Promise.reject(error)
+        }
+      )
+    },
+    delete ({commit}, user) {
+      return AuthService.delete(user).then(
+        user => {
+          commit('deleteSuccess', user)
+          return Promise.resolve(user)
+        },
+        error => {
+          commit('deleteFailure')
           return Promise.reject(error)
         }
       )
@@ -152,6 +164,12 @@ export const auth = {
     },
     modifyFailure (state) {
       state.status.loggedIn = true
+    },
+    deleteSuccess (state) {
+      state.status.loggedIn = false
+    },
+    deleteFail (state) {
+      state.status.loggedIn = false
     }
   }
 }

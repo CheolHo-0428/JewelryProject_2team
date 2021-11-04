@@ -10,7 +10,7 @@
           <span class="box int_name">
             <input
               placeholder="이름은 3~20자 사이로 입력해주세요"
-              v-model="user.name"
+              v-model="name"
               v-validate="'required'"
               type="text"
               name="name"
@@ -36,7 +36,7 @@
             <input
               readonly
               placeholder="아이디는 3~20자 사이로 입력해주세요"
-              v-model="user.account"
+              v-model="account"
               v-validate="'required'"
               type="text"
               name="account"
@@ -60,7 +60,7 @@
               autocomplete="off"
               ref="password"
               placeholder="비밀번호는 6~20자로 입력하여 주세요"
-              v-model="user.password"
+              v-model="password"
               v-validate="'required|'"
               minlength="6"
               maxlength="20"
@@ -105,7 +105,7 @@
             <input
               readonly
               autocomplete="off"
-              v-model="user.email"
+              v-model="email"
               v-validate="'required'"
               maxlength="30"
               type="email"
@@ -199,7 +199,7 @@
                 class="int"
                 maxlength="8"
                 placeholder="우편번호 입력"
-                v-model="user.postCode"
+                v-model="postCode"
               />
             </div>
             <div class="form-group btn_area">
@@ -216,7 +216,7 @@
                 class="int"
                 maxlength="16"
                 placeholder="주소 입력"
-                v-model="user.address"
+                v-model="address"
               />
             </span>
             <span class="box addr3">
@@ -229,7 +229,7 @@
                 maxlength="16"
                 placeholder="상세 주소 입력"
                 v-validate="'required'"
-                v-model="user.detailAddress"
+                v-model="detailAddress"
               />
             </span>
             <div
@@ -261,9 +261,16 @@ export default {
       submitted: false,
       successful: false,
       message: '',
+      password: '',
       phone1: this.$store.state.auth.user.phone.substring(0, 3),
       phone2: this.$store.state.auth.user.phone.substring(4, 8),
-      phone3: this.$store.state.auth.user.phone.substring(9, 13)
+      phone3: this.$store.state.auth.user.phone.substring(9, 13),
+      name: this.$store.state.auth.user.name,
+      account: this.$store.state.auth.user.account,
+      email: this.$store.state.auth.user.email,
+      postCode: this.$store.state.auth.user.post_code,
+      address: this.$store.state.auth.user.address,
+      detailAddress: this.$store.state.auth.user.detail_address
     }
   },
   methods: {
@@ -276,7 +283,19 @@ export default {
       this.submitted = true
       this.$validator.validate().then((isValid) => {
         if (isValid) {
+          this.user.name = this.name
+          this.user.account = this.account
+          this.user.email = this.email
+          this.user.detailAddress = this.detail_address
           this.user.phone = this.phone1 + '-' + this.phone2 + '-' + this.phone3
+          this.user.password = this.password
+          this.user.postCode = this.postCode
+          this.user.address = this.address
+          this.user.detailAddress = this.detailAddress
+          console.log('userpostcode' + this.postCode)
+          console.log('userAddress' + this.user.address)
+          console.log('usrdetailAddress' + this.user.detailAddress)
+          console.log('user확인' + this.user)
           this.$store.dispatch('auth/modify', this.user).then(
             (data) => {
               console.log('5')
@@ -350,8 +369,8 @@ export default {
           if (fullRoadAddr !== '') {
             fullRoadAddr += extraRoadAddr
           }
-          this.user.postCode = data.zonecode
-          this.user.address = fullRoadAddr
+          this.postCode = data.zonecode
+          this.address = fullRoadAddr
         }
       }).open()
     },
@@ -365,12 +384,35 @@ export default {
         cancelButtonColor: '#BDBDBD'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$swal.fire({
-            icon: 'success',
-            title: '탈퇴 되었습니다.',
-            confirmButtonColor: '#CEF6CE'
-          })
-          this.$router.push('/')
+          this.$store.dispatch('auth/delete', this.user).then(
+            () => {
+              this.$swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: '탈퇴에 성공하셨습니다.',
+                showConfirmButton: true,
+                confirmButtonColor: '#a5dc86',
+                timer: 1500,
+                footer: '다음에도 또 이용해주세요'
+              })
+              this.$router.push('/')
+            },
+            (error) => {
+              console.log(error)
+              //   this.message =
+              // 에러메세지 알고싶을때 이걸로 확인!
+              // (error.response && error.response.data) ||
+              // error.message ||
+              // error.toString()
+              this.$swal.fire({
+                icon: 'warning',
+                title: '오류가 발생하였습니다.',
+                showConfirmButton: true,
+                confirmButtonColor: '#F8BB86',
+                footer: '해당홈페이지에 문의 주시기 바랍니다.'
+              })
+            }
+          )
         }
       })
     }

@@ -236,6 +236,7 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 		return optional
 				.map(member -> {
 					member
+						.setName(memberRequest.getName())
 						.setPassword(memberRequest.getPassword())
 						.setPhone(memberRequest.getPhone())
 						.setPostCode(memberRequest.getPostCode())

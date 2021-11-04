@@ -84,6 +84,14 @@ class AuthService {
   }
   modify (user) {
     console.log('1')
+    console.log('account' + user.account)
+    console.log('name' + user.name)
+    console.log('password' + user.password)
+    console.log('email' + user.email)
+    console.log('phone' + user.phone)
+    console.log('postcode' + user.postCode)
+    console.log('address' + user.address)
+    console.log('detailAddress' + user.detailAddress)
     return axios.put(API_URL + 'modify', {
       account: user.account,
       name: user.name,
@@ -95,6 +103,14 @@ class AuthService {
       detail_address: user.detailAddress
     }).then(response => {
       console.log('2')
+      console.log(response.data)
+      return response.data
+    })
+  }
+  delete (user) {
+    return axios.delete(API_URL + 'delete', {
+      id: user.id
+    }).then(response => {
       return response.data
     })
   }

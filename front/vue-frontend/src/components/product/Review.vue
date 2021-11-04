@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <div class="button">
-      <v-btn color="#F4F2E7" to="/regreview">리뷰작성</v-btn>
+      <v-btn v-if='findRole == true' color="#F4F2E7" to="/regreview">리뷰작성</v-btn>
     </div>
     <div class="box" v-for="(list, i) in response_list" :key="i">
       <div class="img" v-if="list.stored_file_name">
@@ -43,6 +43,17 @@ export default {
         .catch(err => {
           console.log(err)
         })
+    }
+  },
+  computed: {
+    currentUser () {
+      return this.$store.state.auth.user
+    },
+    findRole () {
+      if (this.currentUser) {
+        return this.currentUser.roles.includes('ROLE_ADMIN') || this.currentUser.roles.includes('ROLE_USER')
+      }
+      return false
     }
   },
   created () {
