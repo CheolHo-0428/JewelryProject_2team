@@ -15,7 +15,7 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedState({
-      paths: ['notice', 'item']
+      paths: ['notice', 'item','auth']
     })
   ],
   state: {
