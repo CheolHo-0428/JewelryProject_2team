@@ -17,8 +17,8 @@
                 <option value="writer">작성자</option>
                 <option value="title">공지제목</option>
               </select>
-              <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
-              <div class="search">
+              <input class="form-control me-2" type="search" v-model="keyword" aria-label="Search">
+              <div class="search" @click="selectData">
                 <span class="material-icons-outlined">search</span>
               </div>
             </div>
@@ -41,9 +41,17 @@
         </tr>
       </thead>
 
-      <tbody>
-        <tr v-for="(notice, i) in selectData" :key="i">
-          <td class="tdNo">{{total_elements - (page - 1)*10 - i}}</td>
+      <tbody v-if="!isSearch">
+        <tr v-for="(notice, i) in notices" :key="i">
+          <td class="tdNo" >{{total_elements - (page - 1)*10 - i}}</td>
+          <td class="tdTitle" @click="detail(notice.id)">{{notice.title}}</td>
+          <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
+          <td class="tdWriter">{{notice.writer}}</td>
+        </tr>
+      </tbody>
+      <tbody v-if="isSearch">
+        <tr v-for="(notice, i) in searchedData" :key="i">
+          <td class="tdNo" >{{total_elements - (page - 1)*10 - i}}</td>
           <td class="tdTitle" @click="detail(notice.id)">{{notice.title}}</td>
           <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
           <td class="tdWriter">{{notice.writer}}</td>
@@ -52,7 +60,7 @@
     </table>
 
     <!-- pagination -->
-    <div class="page" v-if="!isSearch">
+    <div class="page">
       <div class="box">
         <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
         <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
@@ -80,11 +88,13 @@ export default {
       start: 0,
       page_list: [],
       total_pages: 0,
-      search: '',
+      keyword: '',
       option: '',
       searchedData: [],
       isSearch: false,
-      total_elements: 0
+      isWriter: false,
+      total_elements: 0,
+      searchPage: 0
     }
   },
   methods: {
@@ -93,21 +103,47 @@ export default {
       this.$router.push('/notice_')
     },
     changePage (page) {
-      this.urlPage = url + `?page=${page - 1}`
-      this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
-      this.notice()
+      if (!this.isSearch) {
+        this.urlPage = url + `?page=${page - 1}`
+        this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
+        this.notice()
+      } else if (!this.isWriter) {
+        this.searchPage = page - 1
+        this.searchTitle()
+      } else {
+        this.searchPage = page - 1
+        this.serchWriter()
+      }
     },
     nextPage () {
-      this.urlPage = url + `?page=${this.end}`
-      this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
-      this.notice()
+      if (!this.isSearch) {
+        this.urlPage = url + `?page=${this.end}`
+        this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
+        this.notice()
+      } else if (!this.isWriter) {
+        this.searchPage = this.end
+        this.searchTitle()
+      } else {
+        this.searchPage = this.end
+        this.serchWriter()
+      }
     },
     prevPage () {
-      this.urlPage = url + `?page=${this.start - 2}`
-      this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
-      this.notice()
+      if (!this.isSearch) {
+        this.urlPage = url + `?page=${this.start - 2}`
+        this.$store.commit('noticeDetail', {id: 0, urlPage: this.urlPage})
+        this.notice()
+      } else if (!this.isWriter) {
+        this.searchPage = this.start - 2
+        this.searchTitle()
+      } else {
+        this.searchPage = this.start - 2
+        this.serchWriter()
+      }
     },
     notice () {
+      this.isSearch = false
+      this.isWriter = false
       return axios.get(this.urlPage)
         .then(res => {
           this.notices = res.data.data
@@ -143,19 +179,70 @@ export default {
     optionChange (event) {
       this.option = event.target.value
     },
-    sortedTitle () {
-      this.searchedData = this.allNotices.filter(data => {
-        return data.title.toLowerCase().includes(this.search.toLowerCase())
-      })
+    searchTitle () {
       this.isSearch = true
-      return this.searchedData
+      this.isWriter = false
+      return axios.get(`http://localhost:8000/jewelry/noticeBoard/searchTitle?keyword=${this.keyword}&page=${this.searchPage}`)
+        .then(res => {
+          this.searchedData = []
+          this.searchedData = res.data.data
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
-    sortedWriter () {
-      this.searchedData = this.allNotices.filter(data => {
-        return data.writer.toLowerCase().includes(this.search.toLowerCase())
-      })
+    serchWriter () {
       this.isSearch = true
-      return this.searchedData
+      this.isWriter = true
+      return axios.get(`http://localhost:8000/jewelry/noticeBoard/searchWriter?keyword=${this.keyword}&page=${this.searchPage}`)
+        .then(res => {
+          this.searchedData = []
+          this.searchedData = res.data.data
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    selectData () {
+      if (this.option === 'title') {
+        this.searchTitle()
+      } else if (this.option === 'writer') {
+        this.serchWriter()
+      } else {
+        this.isSearch = false
+        this.keyword = ''
+        this.notice()
+      }
     }
   },
   created () {
@@ -163,17 +250,6 @@ export default {
     this.noticeAll()
   },
   computed: {
-    selectData () {
-      if (this.search && this.option === 'title') {
-        return this.sortedTitle()
-      } else if (this.search && this.option === 'writer') {
-        return this.sortedWriter()
-      } else {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.isSearch = false
-        return this.notices
-      }
-    },
     currentUser () {
       return this.$store.state.auth.user
     },
@@ -248,7 +324,7 @@ input {
 }
 .material-icons-outlined {
   vertical-align: middle;
-  margin-left: -2.8rem;
+  cursor: pointer;
 }
 
 .list th {

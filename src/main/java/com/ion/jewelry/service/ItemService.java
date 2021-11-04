@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ion.jewelry.model.entity.Cart;
 import com.ion.jewelry.model.entity.ImageFile;
-import com.ion.jewelry.model.entity.Category;
 import com.ion.jewelry.model.entity.Item;
 import com.ion.jewelry.model.entity.OrderDetail;
 import com.ion.jewelry.model.entity.QnaBoard;
@@ -58,6 +58,9 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 	
 	@Autowired
 	private OrderDetailService orderDetailService;
+	
+	@Autowired
+	private ItemRepository itemRepo;
 	
 	@Override
 	public Header<ItemResponse> create(Header<ItemRequest> request) {
@@ -148,6 +151,24 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 		Page<Item> page = baseRepo.findAll(pageable);
 		
 		// 2. 조회한 데이터 응답(페이지 정보 포함)
+		List<ItemResponse> itemResList = page.stream()
+				.map(item -> response(item))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(itemResList, pagination);
+	}
+	
+	@Transactional
+	public Header<List<ItemResponse>> search(String keyword, Pageable pageable) {
+		Page<Item> page = itemRepo.findByNameContaining(keyword, pageable);
+		
 		List<ItemResponse> itemResList = page.stream()
 				.map(item -> response(item))
 				.collect(Collectors.toList());

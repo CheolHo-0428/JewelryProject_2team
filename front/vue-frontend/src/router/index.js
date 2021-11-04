@@ -35,6 +35,7 @@ import FINDID from '../components/member/FindID.vue'
 import FINDPW from '../components/member/FindPW.vue'
 import REGREVIEW from '../components/product/RegReview.vue'
 import REGQNA from '../components/product/RegQna.vue'
+import SEARCHEDITEM from '../components/ProductList/SearchedItem.vue'
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -176,6 +177,10 @@ const route = [
   {
     path: '/regqna',
     component: REGQNA
+  },
+  {
+    path: '/searchedItem',
+    component: SEARCHEDITEM
   }
 ]
 

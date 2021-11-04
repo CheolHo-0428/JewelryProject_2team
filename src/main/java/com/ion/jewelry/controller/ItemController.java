@@ -2,6 +2,8 @@ package com.ion.jewelry.controller;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,6 +54,12 @@ public class ItemController extends AABaseController<ItemRequest, ItemResponse, 
 		return itemService.itemInfo(id);
 	}
 	
+
+	@GetMapping("/search")
+	public Header<List<ItemResponse>> search(@PathParam("keyword")String keyword, @PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		return itemService.search(keyword, pageable);
+  }
+
 	//@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/update")
 	public Header<ItemResponse> update(@RequestBody ItemRequest request) {

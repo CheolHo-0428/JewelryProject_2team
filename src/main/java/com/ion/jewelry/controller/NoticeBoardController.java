@@ -3,12 +3,15 @@ package com.ion.jewelry.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,6 +50,17 @@ public class NoticeBoardController extends AABaseController<NoticeBoardRequest, 
 
 		log.info("{}", pageable);
 		return baseService.pagingRead(pageable);
+	}
+	
+	@GetMapping("/searchTitle") // http://localhost:8000/jewelry/noticeBoard/searchTitle?keyword=test&page=0
+	public Header<List<NoticeBoardResponse>> searchTitle(@PathParam("keyword")String keyword, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		
+		return boardService.searchTitle(keyword, pageable);
+	}
+	@GetMapping("/searchWriter")
+	public Header<List<NoticeBoardResponse>> searchWriter(@PathParam("keyword")String keyword, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		
+		return boardService.searchWriter(keyword, pageable);
 	}
 
 	// 공지사항 번호별 댓글 조회
