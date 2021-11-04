@@ -31,6 +31,12 @@ public class ItemResponse {
 	
 	public LocalDateTime createdAt;
 	
+	public String createdBy;
+	
+	public LocalDateTime updatedAt;
+	
+	public String updatedBy;
+	
 	private List<QnaBoardResponse> qnaBoardResponseList; // qnaboard 리스트;
 	
 	private List<ReviewBoardResponse> reviewBoardResponseList; // qnaboard 리스트;

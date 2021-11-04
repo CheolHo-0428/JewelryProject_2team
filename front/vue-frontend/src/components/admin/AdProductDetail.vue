@@ -7,27 +7,52 @@
       <form>
         <table class="table">
           <colgroup>
-            <col width="20%">
-            <col width="30%">
+            <col width="13%">
+            <col width="38%">
           </colgroup>
           <tbody>
             <tr>
+              <th scope="col">상품번호</th>
+              <td class="noblock">
+                gguluck-<input type="text" v-model="id" class="no" disabled>-21Y11M
+              </td>
               <th scope="col">상품명</th>
-              <td><input type="text" value="~~목걸이"></td>
-              <th scope="col">상품코드</th>
-              <td><input type="text" value="ab1234"></td>
+              <td><input type="text" v-model="name"></td>
             </tr>
             <tr>
               <th scope="col">상품분류</th>
-              <td><input type="text" value="목걸이"></td>
+
+              <td>
+                <!-- <input type="text" v-model="category_id"> -->
+                <select name="category_id" id="category_id" v-model="category_id" class="op" @change="categoryChange($event)">
+                  <option value="1">BRACELET</option>
+                  <option value="2">EARRINGS</option>
+                  <option value="3">NECKLACE</option>
+                  <option value="4">RING</option>
+                </select>
+              </td>
+
               <th scope="col">상품가격</th>
-              <td><input type="text" value="30000원"></td>
+              <td><input type="text" v-model="price"></td>
             </tr>
             <tr>
               <th scope="col">재고량</th>
-              <td><input type="text" value="23"></td>
+              <td><input type="text" v-model="stock"></td>
+              <th scope="col">등록상태</th>
+              <td>
+                <select name="status" id="status" v-model="status" class="op" @change="statusChange($event)">
+                  <option value="REGISTERED">REGISTERED</option>
+                  <option value="UNREGISTERED">UNREGISTERED</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <!-- <th scope="col">등록자</th>
+              <td><input type="text" v-model="created_by" disabled></td> -->
               <th scope="col">등록날짜</th>
-              <td><input type="text" value="2021-10-25"></td>
+              <td><input type="text" v-model="created_at" disabled></td>
+              <th scope="col">수정날짜</th>
+              <td><input type="text" v-model="updated_at" disabled></td>
             </tr>
             <tr>
               <th scope="col">이미지</th>
@@ -44,13 +69,30 @@
 
     <div class="button">
       <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>
-      <v-btn color="#FBEF97" x-large @click="save">저장</v-btn>
+      <v-btn color="#FBEF97" x-large @click="mod">저장</v-btn>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
+  data () {
+    return {
+      id: 0,
+      name: '',
+      category_id: '',
+      price: '',
+      stock: '',
+      created_at: '',
+      created_by: '',
+      updated_at: '',
+      status: '',
+      stored_file_name: '',
+      deleteImg: false
+    }
+  },
   methods: {
     list () {
       this.$swal.fire({
@@ -77,7 +119,64 @@ export default {
       }).then(() => {
         location.href = '/adproduct'
       })
+    },
+    mod () {
+      if (!this.name || !this.price || !this.stock) {
+        this.$swal.fire({
+          icon: 'info',
+          title: '상품명 OR 가격 OR 재고량이 비어있습니다.',
+          confirmButtonColor: '#A9E2F3'
+        })
+      } else {
+        axios
+          .put('http://localhost:8000/jewelry/item/update', {
+            id: this.id,
+            name: this.name,
+            category_id: this.category_id,
+            price: this.price,
+            stock: this.stock,
+            status: this.status
+          })
+          .then((res) => {
+            console.log(res)
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        this.save()
+      }
+    },
+    async item () {
+      await axios
+        .get(this.$store.state.item.allItems)
+        .then((res) => {
+          let items = res.data.data
+          let index = items.findIndex(
+            (i) => i.id === this.$store.state.item.itemId
+          )
+          this.id = res.data.data[index].id
+          this.name = res.data.data[index].name
+          this.category_id = res.data.data[index].category_id
+          this.price = res.data.data[index].price
+          this.stock = res.data.data[index].stock
+          this.status = res.data.data[index].status
+          this.created_at = res.data.data[index].created_at.split('T')[0] + ' ' + res.data.data[index].created_at.split('T')[1].split('.')[0]
+          this.created_by = res.data.data[index].created_by
+          this.updated_at = res.data.data[index].updated_at.split('T')[0] + ' ' + res.data.data[index].updated_at.split('T')[1].split('.')[0]
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     }
+  },
+  categoryChange (event) {
+    this.category_id = event.target.value
+  },
+  statusChange (event) {
+    this.status = event.target.value
+  },
+  created () {
+    this.item()
   }
 }
 </script>
@@ -106,7 +205,11 @@ p.top {
 }
 input {
   text-align: center;
-  width: 100% !important;
+  width: 100%;
+  font-size: 0.8rem;
+}
+input.no {
+  width: 5%;
   font-size: 0.8rem;
 }
 tr {
@@ -121,6 +224,9 @@ th {
   border-left: 1px solid black;
   vertical-align: middle;
 }
+td {
+  font-size: 0.85rem;
+}
 .img {
   overflow-x: scroll;
 }
@@ -134,7 +240,6 @@ th {
   background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   margin-left: 35px;
 }
-
 .button button {
   border: 1px solid black;
   margin: 0 0.6rem;
@@ -144,5 +249,18 @@ th {
 .button {
   margin-bottom: 2rem;
 }
-
+.op {
+  /* border: 1px solid black; */
+  width: 100px;
+  font-size: 0.8rem;
+  border-radius: 2px;
+  padding: 0.2rem;
+  background-color: white;
+  text-align: center;
+}
+.noblock {
+  text-align: center;
+  padding-top: 1%;
+  border: 0px;
+}
 </style>
