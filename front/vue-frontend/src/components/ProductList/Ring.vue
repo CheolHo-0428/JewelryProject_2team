@@ -5,7 +5,7 @@
     </div>
 
     <div class="boxs">
-      <div v-for="(list, i) in response_list" :key="i" class="list">
+      <div v-for="(list, i) in response_list" :key="i" class="list" :style="computedStyledObject">
         <div class="img" @click="change(list.id)"></div>
         <div class="product">
           <p class="name">{{list.name}}</p>
@@ -19,7 +19,7 @@
       <div class="page">
         <div class="box">
           <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
-          <a @click="changePage(p)" v-for="i in 4" class="pageNum" :key="i" :class="{'active' : page + 1 == i}">{{i}}</a>
+          <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
           <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
         </div>
       </div>
@@ -29,10 +29,12 @@
 
 <script>
 import axios from 'axios'
+const url = 'http://localhost:8000/jewelry/category/4/itemPagingInfo'
 
 export default {
   data () {
     return {
+      urlPage: 'http://localhost:8000/jewelry/category/4/itemPagingInfo',
       response_list: [],
       end: 0,
       next: false,
@@ -41,7 +43,8 @@ export default {
       start: 0,
       page_list: [],
       total_pages: 0,
-      total_elements: 0
+      total_elements: 0,
+      current_elements: 0
     }
   },
   methods: {
@@ -50,10 +53,38 @@ export default {
       this.$store.commit('changeVersion', 0)
       this.$router.push('/detail')
     },
+    changePage (page) {
+      this.urlPage = url + `?page=${page - 1}`
+      this.ring()
+    },
+    nextPage () {
+      this.urlPage = url + `?page=${this.end}`
+      this.ring()
+    },
+    prevPage () {
+      this.urlPage = url + `?page=${this.start - 2}`
+      this.ring()
+    },
     ring () {
-      axios.get('http://localhost:8000/jewelry/category/4/itemInfo')
+      return axios.get(this.urlPage)
         .then(res => {
           this.response_list = res.data.data.category_response.item_response_list
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+          this.current_elements = res.data.pagination.current_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
         })
         .catch(err => {
           console.log(err)
@@ -62,6 +93,13 @@ export default {
   },
   created () {
     this.ring()
+  },
+  computed: {
+    computedStyledObject () {
+      return {
+        width: this.current_elements === 1 ? '100%' : this.current_elements === 2 ? '33%' : this.current_elements === 3 ? '33%' : '25%'
+      }
+    }
   }
 }
 </script>
@@ -89,13 +127,10 @@ export default {
   min-width: 1110px;
   margin: 0 auto;
 }
-.list {
-  width: 25%;
-}
 .img {
   width: 230px;
   height: 230px;
-  margin: 2rem 3rem 1rem;
+  margin: 2rem auto 1rem;
   background-size: cover;
   background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   cursor: pointer;
