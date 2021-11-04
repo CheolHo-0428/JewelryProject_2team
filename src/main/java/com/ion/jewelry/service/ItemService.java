@@ -242,7 +242,10 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 				.stock(item.getStock())
 				.status(item.getStatus())
 				.createdAt(item.getCreatedAt())
+				.createdBy(item.getCreatedBy())
 				.categoryId(item.getCategory().getId())
+				.updatedAt(item.getUpdatedAt())
+				.updatedBy(item.getUpdatedBy())
 				.build();
 		
 		return res;
