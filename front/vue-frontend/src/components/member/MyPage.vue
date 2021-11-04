@@ -54,19 +54,19 @@ export default {
       location.href = '/orderlist'
     },
     mypage () {
-      this.$router.push('/modify')
-      // console.log(this.$store.state.auth.user.id)
-      // this.user.account = this.$store.state.auth.user.account
-      // // console.log(this.user.id)
-      // this.$store.dispatch('auth/mypage', this.user).then(
-      //   (data) => {
-      //     console.log(data)
-      //     this.$router.push('/modify')
-      //   },
-      //   (error) => {
-      //     console.log(error)
-      //   }
-      // )
+      // this.$router.push('/modify')
+      console.log(this.$store.state.auth.user.name)
+      this.user.account = this.$store.state.auth.user.account
+      // console.log(this.user.id)
+      this.$store.dispatch('auth/mypage', this.user).then(
+        (data) => {
+          console.log(data)
+          this.$router.push('/modify')
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
       // this.$router.push({
       //   name: 'modify',
       //   query: { account: data.data.account }

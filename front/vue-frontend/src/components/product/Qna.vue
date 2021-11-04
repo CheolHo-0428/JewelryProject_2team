@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <div class="button">
-      <v-btn color="#F4F2E7" to="/regqna">Q&A등록</v-btn>
+      <v-btn  v-if='findRole == true' color="#F4F2E7" to="/regqna">Q&A등록</v-btn>
     </div>
     <div class="box" v-for="(list, i) in response_list" :key="i">
       <div class="num">{{response_list.length - i}}</div>
@@ -40,6 +40,17 @@ export default {
   },
   created () {
     this.qna()
+  },
+  computed: {
+    currentUser () {
+      return this.$store.state.auth.user
+    },
+    findRole () {
+      if (this.currentUser) {
+        return this.currentUser.roles.includes('ROLE_ADMIN') || this.currentUser.roles.includes('ROLE_USER')
+      }
+      return false
+    }
   }
 }
 </script>

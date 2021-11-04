@@ -17,6 +17,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ion.jewelry.model.enums.ObjectStatus;
@@ -43,13 +45,14 @@ import lombok.experimental.Accessors;
 //			@UniqueConstraint(columnNames = "email") 
 //		}
 //)
+
 public class Member extends AABaseTimeEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MemberSequenceGenerator")
 	@SequenceGenerator(name = "MemberSequenceGenerator", sequenceName = "MemberSequence", initialValue = 1, allocationSize = 1)
 	private Long id; // 회원번호(pk)
-
+	
 	private String account; //아이디
 	
 	private String name; //이름
