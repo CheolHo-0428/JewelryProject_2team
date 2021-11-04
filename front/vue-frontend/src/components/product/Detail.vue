@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="sideBanner">
+      <span class="txt-label">
+        공간남으니까... 배너...넣을까요....?
+      </span>
+    </div>
     <div class="topContent">
       <div class="topBox left">
         <div class="imageBox"></div>
@@ -7,11 +12,13 @@
       <div class="topBox right">
         <div class="name">{{this.name}}</div>
         <div class="price">PRICE - {{this.price}}원</div>
+        <hr>
         <div class="trans">
-          <p>배송 : 국내배송</p>
-          <p>배송 방법 : 택배</p>
-          <p>배송비 : 2500원</p>
+          <p><span class="info">국내·해외배송 </span><span class="info2">국내배송</span></p>
+          <p><span class="info">배송 방법 </span><span class="info2">택배</span></p>
+          <p><span class="info">배송비 </span><span class="info2">2500원</span></p>
         </div>
+        <hr>
         <div class="count">
           <tr>
             <td class="text">수량</td>
@@ -33,10 +40,10 @@
     <div class="tab">
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link" aria-current="page" @click="changeVersion(0)" :class="{'active' : $store.state.detail_version == 0}">상세정보</a>
+          <a class="nav-link" aria-current="page" @click="changeVersion(0)" :class="{'active' : $store.state.detail_version == 0}">IMAGE</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link"  @click="changeVersion(1)" :class="{'active' : $store.state.detail_version  == 1}">리뷰</a>
+          <a class="nav-link"  @click="changeVersion(1)" :class="{'active' : $store.state.detail_version  == 1}">REVIEW</a>
         </li>
         <li class="nav-item">
           <a class="nav-link"  @click="changeVersion(2)" :class="{'active' : $store.state.detail_version  == 2}">Q&A</a>
@@ -106,29 +113,52 @@ export default {
   },
   mounted () {
     window.scrollTo(0, 0)
+    let floatPosition = parseInt($('.sideBanner').css('top'))
+
+    // scroll 인식
+    $(window).scroll(() => {
+      // 현재 스크롤 위치
+      let currentTop = $(window).scrollTop()
+      let bannerTop = currentTop + floatPosition + 'px'
+
+      // 이동 애니메이션
+      $('.sideBanner').stop().animate({
+        'top': bannerTop
+      }, 500)
+    }).scroll()
   }
 }
 </script>
 
 <style scoped>
+.sideBanner {
+  position: absolute;
+  width: 280px;
+  height: 450px;
+  top: 170px;
+  padding: 2rem 1rem;
+  background-color: #ffd95d;
+  color: #fff;
+  margin-left: 2rem;
+  z-index: 999;
+}
+
 .topContent {
-  margin: 5rem 0;
+  margin: 4rem 0 3rem;
   display: flex;
   justify-content: center;
 }
 .topBox {
-  margin: 0 0.1rem;
-  width: 28rem;
+  margin: 0 1rem;
+  width: 33rem;
   padding-bottom: 2rem;
-  border: 0.1rem solid #6b6868;
-  border-radius: 10px;
 }
 .imageBox {
-  width: 300px;
-  height: 300px;
+  width: 460px;
+  height: 480px;
   margin: 4rem auto;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
+  background-image: url(https://ifh.cc/g/K3vlNQ.jpg);
 }
 .name {
   font-weight: 700;
@@ -139,17 +169,20 @@ export default {
   text-align: right;
   font-weight: 700;
   font-size: 1.2rem;
-  float: right;
-  margin-right: 3rem;
-  width: fit-content;
+  margin-right: 2rem;
 }
 .trans {
-  margin: 3rem 0 3rem 2rem;
-  font-size: 0.7rem;
-  color: #b4b9be;
+  margin: 2rem 0 2rem 2rem;
+  font-size: 0.9rem;
+  color: #9da2a7;
+}
+.info {
+  color: black;
+  width: 8rem;
+  display: inline-block;
 }
 .count {
-  margin: 2rem 0 0 2em;
+  margin: 1.8rem 0 0 2em;
 }
 .count .text {
   padding-right: 2rem;
@@ -158,11 +191,11 @@ export default {
 .count button {
   outline: none;
   background-color: white;
-  padding: 0 0.3rem;
-  border-radius: 50%;
-  border: 1px solid black;
+  padding: 0 0.5rem;
+  border-radius: 2px;
+  border: 1.7px solid black;
   margin: 0 0.5rem;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 700;
   box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5);
 }
@@ -172,11 +205,11 @@ export default {
   top: 0.5px;
 }
 .count input {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 700;
   border-radius: 2px;
   outline: none;
-  border: 1px solid black;
+  border: 1.7px solid black;
   text-align:center;
 }
 .totPrice {
@@ -188,13 +221,14 @@ export default {
 .button {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 3rem;
 }
 .button button {
   border: 1px solid black;
   margin: 0 0.6rem;
-  padding: 0.5rem 2rem;
+  padding: 1.8rem 2.6rem !important;
   font-weight: 700;
+  font-size: 1.2rem;
 }
 
 .tab {
@@ -208,5 +242,6 @@ export default {
   color: #b4b9be;
   cursor: pointer;
   transition: .5s;
+  font-weight: 700;
 }
 </style>

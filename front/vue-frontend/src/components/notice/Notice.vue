@@ -17,7 +17,7 @@
                 <option value="writer">작성자</option>
                 <option value="title">공지제목</option>
               </select>
-              <input class="form-control me-2" type="search" v-model="keyword" aria-label="Search">
+              <input class="form-control me-2" @keyup.enter="selectData" type="search" v-model="keyword" aria-label="Search">
               <div class="search" @click="selectData">
                 <span class="material-icons-outlined">search</span>
               </div>
