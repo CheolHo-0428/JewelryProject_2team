@@ -2,41 +2,45 @@
   <div class="outer">
     <p class="top">상품상세</p>
 
-    <p class="group">상품 정보</p>
-    <table class="table">
-      <colgroup>
-        <col width="20%">
-        <col width="30%">
-      </colgroup>
-      <tbody>
-        <tr>
-          <th scope="col">상품명</th>
-          <td><input type="text" value="~~목걸이"></td>
-          <th scope="col">상품코드</th>
-          <td><input type="text" value="ab1234"></td>
-        </tr>
-        <tr>
-          <th scope="col">상품분류</th>
-          <td><input type="text" value="목걸이"></td>
-          <th scope="col">상품가격</th>
-          <td><input type="text" value="30000원"></td>
-        </tr>
-        <tr>
-          <th scope="col">재고량</th>
-          <td><input type="text" value="23"></td>
-          <th scope="col">등록날짜</th>
-          <td><input type="text" value="2021-10-25"></td>
-        </tr>
-        <tr>
-          <th scope="col">이미지</th>
-          <td class="img" colspan="3">
-            <div class="imgBox">
-              <div v-for="i in 3" :key="i"></div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- <p class="group">상품 정보</p> -->
+    <div class="AddWrap">
+      <form>
+        <table class="table">
+          <colgroup>
+            <col width="20%">
+            <col width="30%">
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="col">상품명</th>
+              <td><input type="text" value="~~목걸이"></td>
+              <th scope="col">상품코드</th>
+              <td><input type="text" value="ab1234"></td>
+            </tr>
+            <tr>
+              <th scope="col">상품분류</th>
+              <td><input type="text" value="목걸이"></td>
+              <th scope="col">상품가격</th>
+              <td><input type="text" value="30000원"></td>
+            </tr>
+            <tr>
+              <th scope="col">재고량</th>
+              <td><input type="text" value="23"></td>
+              <th scope="col">등록날짜</th>
+              <td><input type="text" value="2021-10-25"></td>
+            </tr>
+            <tr>
+              <th scope="col">이미지</th>
+              <td class="img" colspan="3">
+                <div class="imgBox">
+                  <div v-for="i in 3" :key="i"></div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
 
     <div class="button">
       <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>

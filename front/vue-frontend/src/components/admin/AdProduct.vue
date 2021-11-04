@@ -16,6 +16,7 @@
                 <option value="" selected>-- 선택하세요 --</option>
                 <option value="name">상품명</option>
                 <option value="id">상품번호</option>
+                <option value="category_id">상품분류</option>
               </select>
               <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
               <button class="search" type="submit">
@@ -24,10 +25,10 @@
             </div>
           </td>
         </tr>
-        <tr>
+        <!-- <tr>
           <th scope="col">상품분류</th>
           <td>
-            <form class="d-flex">
+            <div class="d-flex">
               <select name="product" class="op" @change="optionChange($event)">
                 <option value="" selected>-- 선택하세요 --</option>
                 <option value="1">팔찌</option>
@@ -39,9 +40,9 @@
               <button class="search" type="submit">
                 <span class="material-icons-outlined">search</span>
               </button>
-            </form>
+            </div>
           </td>
-        </tr>
+        </tr> -->
       </tbody>
     </table>
 
@@ -49,8 +50,9 @@
       <colgroup>
         <col width="2%">
         <col width="13%">
-        <col width="18%">
-        <col width="21%">
+        <col width="13%">
+        <col width="5%">
+        <col width="17%">
         <col width="13%">
         <col width="9%">
         <col width="12%">
@@ -61,6 +63,7 @@
         <tr>
           <th>#</th>
           <th>상품번호</th>
+          <th>상품분류</th>
           <th>이미지</th>
           <th>상품명</th>
           <th>상품가격</th>
@@ -74,11 +77,16 @@
         <tr v-for="(item, i) in selectData" :key="i">
             <td>{{ total_elements - (page -1)*10 - i }}</td>
             <td>gguluck-{{ item.id }}-21Y11M</td>
+            <td v-if="item.category_id === 1">BRACELET</td>
+            <td v-else-if="item.category_id === 2">EARRINGS</td>
+            <td v-else-if="item.category_id === 3">NECKLACE</td>
+            <td v-else-if="item.category_id === 4">RING</td>
+            <td v-else>OTHER</td>
             <td class="img"><div></div></td>
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.stock }}</td>
-            <td class="button"><a href="/adproduct_">상세보기</a></td>
+            <td class="button"><a @click="detail(item.id)">상세보기</a></td>
             <td class="button remove"><a @click="remove">상품삭제</a></td>
         </tr>
       </tbody>
@@ -204,14 +212,14 @@ export default {
     },
     sortedId () {
       this.searchedData = this.allItems.filter(data => {
-        return data.id.toLowerCase().includes(this.search.toLowerCase())
+        return data.id.toString().includes(this.search.toString())
       })
       this.isSearch = true
       return this.searchedData
     },
-    sortedBracelet () {
+    sortedCategory () {
       this.searchedData = this.allItems.filter(data => {
-        return data.category_id.toLowerCase().includes(this.search.toLowerCase())
+        return data.category_id.toString().includes(this.search.toString())
       })
       this.isSearch = true
       return this.searchedData
@@ -227,8 +235,8 @@ export default {
         return this.sortedName()
       } else if (this.search && this.option === 'id') {
         return this.sortedId()
-      } else if (this.search && this.option === '1') {
-        return this.sortedBracelet()
+      } else if (this.search && this.option === 'category_id') {
+        return this.sortedCategory()
       } else {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
         this.isSearch = false
@@ -307,7 +315,7 @@ p {
   height: 100px;
   background-size: cover;
   background-image: url(https://ifh.cc/g/W8P7ct.jpg);
-  margin-left: 35px;
+  /* margin-left: 35px; */
 }
 .list th,
 .list td {
