@@ -151,6 +151,7 @@
                 autocomplete="no"
                 v-model="phone2"
                 v-validate="'numeric'"
+                minlength="4"
                 maxlength="4"
                 name="phone"
                 type="tel"
@@ -163,6 +164,7 @@
                 v-model="phone3"
                 v-validate="'numeric'"
                 name="phone"
+                minlength="4"
                 maxlength="4"
                 type="tel"
                 class="int phone"
@@ -182,7 +184,7 @@
               class="errorMessage clear"
               role="alert"
             >
-              번호를 숫자로 입력해주세요
+              번호를 숫자로 4글자 입력해주세요
             </div>
           </div>
         </div>
@@ -254,7 +256,9 @@
 
 <script>
 import User from '../../models/user'
+import axios from 'axios'
 export default {
+  name: 'modify',
   data () {
     return {
       user: new User('', '', '', '', '', '', '', ''),
@@ -262,23 +266,42 @@ export default {
       successful: false,
       message: '',
       password: '',
-      phone1: this.$store.state.auth.user.phone.substring(0, 3),
-      phone2: this.$store.state.auth.user.phone.substring(4, 8),
-      phone3: this.$store.state.auth.user.phone.substring(9, 13),
-      name: this.$store.state.auth.user.name,
-      account: this.$store.state.auth.user.account,
-      email: this.$store.state.auth.user.email,
-      postCode: this.$store.state.auth.user.post_code,
-      address: this.$store.state.auth.user.address,
-      detailAddress: this.$store.state.auth.user.detail_address
+      phone1: '',
+      phone2: '',
+      phone3: '',
+      name: '',
+      account: '',
+      email: '',
+      postCode: '',
+      address: '',
+      detailAddress: ''
     }
   },
+  created () {
+    this.member()
+  },
   methods: {
+    member () {
+      return axios.get('http://localhost:8000/jewelry/auth/mypage?account=' + this.$store.state.auth.user.account)
+        .then(res => {
+          this.phone1 = res.data.data.phone.substring(0, 3)
+          this.phone2 = res.data.data.phone.substring(4, 8)
+          this.phone3 = res.data.data.phone.substring(9, 13)
+          this.name = res.data.data.name
+          this.account = res.data.data.account
+          this.email = res.data.data.email
+          this.postCode = res.data.data.post_code
+          this.address = res.data.data.address
+          this.detailAddress = res.data.data.detail_address
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
     mypage () {
       this.$router.push('/mypage')
     },
     modify () {
-      console.log('4')
       this.message = ''
       this.submitted = true
       this.$validator.validate().then((isValid) => {
@@ -292,13 +315,8 @@ export default {
           this.user.postCode = this.postCode
           this.user.address = this.address
           this.user.detailAddress = this.detailAddress
-          console.log('userpostcode' + this.postCode)
-          console.log('userAddress' + this.user.address)
-          console.log('usrdetailAddress' + this.user.detailAddress)
-          console.log('user확인' + this.user)
           this.$store.dispatch('auth/modify', this.user).then(
             (data) => {
-              console.log('5')
               this.successful = true
               this.$swal.fire({
                 position: 'center',
@@ -312,7 +330,6 @@ export default {
               this.$router.push('/mypage')
             },
             (error) => {
-              console.log('6')
               this.message =
                 (error.response &&
                   error.response.data &&
@@ -332,7 +349,7 @@ export default {
         } else {
           this.$swal.fire({
             icon: 'warning',
-            title: '입력사항이 입력되지 않거나<br> 양식에 맞지 않습니다.',
+            title: '입력사항이 입력되지 않거나 <br> 양식에 맞지 않습니다.',
             showConfirmButton: true,
             confirmButtonColor: '#F8BB86',
             footer: '아래 빨간색으로 체크된 잘못된 부분을 확인해주세요'
@@ -384,7 +401,7 @@ export default {
         cancelButtonColor: '#BDBDBD'
       }).then((result) => {
         if (result.isConfirmed) {
-          this.$store.dispatch('auth/delete', this.user).then(
+          this.$store.dispatch('auth/delete', this.$store.state.auth.user.id).then(
             () => {
               this.$swal.fire({
                 position: 'center',
@@ -395,6 +412,7 @@ export default {
                 timer: 1500,
                 footer: '다음에도 또 이용해주세요'
               })
+              this.$store.dispatch('auth/logout')
               this.$router.push('/')
             },
             (error) => {

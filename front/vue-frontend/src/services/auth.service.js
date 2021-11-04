@@ -75,23 +75,7 @@ class AuthService {
         return response.data
       })
   }
-  mypage (user) {
-    return axios.get(API_URL + 'mypage', {
-      params: {
-        account: user.account
-      }
-    })
-  }
   modify (user) {
-    console.log('1')
-    console.log('account' + user.account)
-    console.log('name' + user.name)
-    console.log('password' + user.password)
-    console.log('email' + user.email)
-    console.log('phone' + user.phone)
-    console.log('postcode' + user.postCode)
-    console.log('address' + user.address)
-    console.log('detailAddress' + user.detailAddress)
     return axios.put(API_URL + 'modify', {
       account: user.account,
       name: user.name,
@@ -107,10 +91,12 @@ class AuthService {
       return response.data
     })
   }
-  delete (user) {
-    return axios.delete(API_URL + 'delete', {
-      id: user.id
+  delete (id) {
+    console.log(id)
+    return axios.delete(`http://localhost:8000/jewelry/auth/${id}`, {
+      data: {id: id}
     }).then(response => {
+      console.log(response.data)
       return response.data
     })
   }
