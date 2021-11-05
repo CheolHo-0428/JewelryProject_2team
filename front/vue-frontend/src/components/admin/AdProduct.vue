@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <p>상품목록</p>
-    <p class="add"><a class="btn btn-dark" href="/regproduct">상품 등록</a></p>
+    <p class="add"><a class="btn btn-dark" href="/regproduct">상품등록</a></p>
     <table class="table">
       <colgroup>
         <col width="20%">
@@ -17,11 +17,12 @@
                 <option value="name">상품명</option>
                 <option value="id">상품번호</option>
                 <option value="category_id">상품분류</option>
+                <option value="status">등록상태</option>
               </select>
-              <input class="form-control me-2" type="search" v-model="search" aria-label="Search">
-              <button class="search" type="submit">
+              <input class="form-control me-2" type="search" v-model="keyword" aria-label="Search">
+              <div class="search" @click="selectData">
                 <span class="material-icons-outlined">search</span>
-              </button>
+              </div>
             </div>
           </td>
         </tr>
@@ -68,14 +69,14 @@
           <th>상품명</th>
           <th>상품가격</th>
           <th>재고</th>
+          <th>등록상태</th>
           <th>상세보기</th>
-          <th>상품삭제</th>
         </tr>
       </thead>
 
-      <tbody>
-        <tr v-for="(item, i) in selectData" :key="i">
-            <td>{{ total_elements - (page -1)*10 - i }}</td>
+      <tbody v-if="!isSearch">
+        <tr v-for="(item, i) in items" :key="i">
+            <td>{{ total_elements - (page -1)*8 - i }}</td>
             <td>gguluck-{{ item.id }}-21Y11M</td>
             <td v-if="item.category_id === 1">BRACELET</td>
             <td v-else-if="item.category_id === 2">EARRINGS</td>
@@ -86,14 +87,31 @@
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.stock }}</td>
+            <td>{{ item.status }}</td>
             <td class="button"><a @click="detail(item.id)">상세보기</a></td>
-            <td class="button remove"><a @click="remove">상품삭제</a></td>
+        </tr>
+      </tbody>
+      <tbody v-if="isSearch">
+        <tr v-for="(item, i) in searchedData" :key="i">
+            <td>{{ total_elements - (page -1)*8 - i }}</td>
+            <td>gguluck-{{ item.id }}-21Y11M</td>
+            <td v-if="item.category_id === 1">BRACELET</td>
+            <td v-else-if="item.category_id === 2">EARRINGS</td>
+            <td v-else-if="item.category_id === 3">NECKLACE</td>
+            <td v-else-if="item.category_id === 4">RING</td>
+            <td v-else>OTHER</td>
+            <td class="img"><div></div></td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.price }}</td>
+            <td>{{ item.stock }}</td>
+            <td>{{ item.status }}</td>
+            <td class="button"><a @click="detail(item.id)">상세보기</a></td>
         </tr>
       </tbody>
     </table>
 
     <!-- pagination -->
-    <div class="page" v-if="!isSearch">
+    <div class="page">
       <div class="box">
         <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
         <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
@@ -121,11 +139,16 @@ export default {
       start: 0,
       page_list: [],
       total_pages: 0,
-      search: '',
+      keyword: '',
       option: '',
       searchedData: [],
       isSearch: false,
-      total_elements: 0
+      isName: false,
+      isId: false,
+      isCategoryId: false,
+      isStatus: false,
+      total_elements: 0,
+      searchPage: 0
     }
   },
   methods: {
@@ -154,21 +177,69 @@ export default {
       this.$router.push('/adproduct_')
     },
     changePage (page) {
-      this.urlPage = url + `?page=${page - 1}`
-      this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
-      this.item()
+      window.scrollTo(0, 0)
+      if (!this.isSearch) {
+        this.urlPage = url + `?page=${page - 1}`
+        this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
+        this.item()
+      } else if (!this.isId && !this.isCategoryId && !this.isStatus) {
+        this.searchPage = page - 1
+        this.searchName()
+      } else if (!this.isName && !this.isCategoryId && !this.isStatus) {
+        this.searchPage = page - 1
+        this.searchId()
+      } else if (!this.isName && !this.isId && !this.isStatus) {
+        this.searchPage = page - 1
+        this.searchCategoryId()
+      } else if (!this.isName && !this.isId && !this.isCategoryId) {
+        this.searchPage = page - 1
+        this.searchStatus()
+      }
     },
     nextPage () {
-      this.urlPage = url + `?page=${this.end}`
-      this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
-      this.notice()
+      if (!this.isSearch) {
+        this.urlPage = url + `?page=${this.end}`
+        this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
+        this.item()
+      } else if (!this.isId && !this.isCategoryId && !this.isStatus) {
+        this.searchPage = this.end
+        this.searchName()
+      } else if (!this.isName && !this.isCategoryId && !this.isStatus) {
+        this.searchPage = this.end
+        this.searchId()
+      } else if (!this.isName && !this.isId && !this.isStatus) {
+        this.searchPage = this.end
+        this.searchCategoryId()
+      } else if (!this.isName && !this.isId && !this.isCategoryId) {
+        this.searchPage = this.end
+        this.searchStatus()
+      }
     },
     prevPage () {
-      this.urlPage = url + `?page=${this.start - 2}`
-      this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
-      this.item()
+      if (!this.isSearch) {
+        this.urlPage = url + `?page=${this.start - 2}`
+        this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
+        this.item()
+      } else if (!this.isId && !this.isCategoryId && !this.isStatus) {
+        this.searchPage = this.start - 2
+        this.searchName()
+      } else if (!this.isName && !this.isCategoryId && !this.isStatus) {
+        this.searchPage = this.start - 2
+        this.searchId()
+      } else if (!this.isName && !this.isId && !this.isStatus) {
+        this.searchPage = this.start - 2
+        this.searchCategoryId()
+      } else if (!this.isName && !this.isId && !this.isCategoryId) {
+        this.searchPage = this.start - 2
+        this.searchStatus()
+      }
     },
     item () {
+      this.isSearch = false
+      this.isName = false
+      this.isId = false
+      this.isCategoryId = false
+      this.isStatus = false
       return axios.get(this.urlPage)
         .then(res => {
           this.items = res.data.data
@@ -203,46 +274,151 @@ export default {
     optionChange (event) {
       this.option = event.target.value
     },
-    sortedName () {
-      this.searchedData = this.allItems.filter(data => {
-        return data.name.toLowerCase().includes(this.search.toLowerCase())
-      })
+    searchName () {
       this.isSearch = true
-      return this.searchedData
+      this.isName = true
+      this.isId = false
+      this.isCategoryId = false
+      this.isStatus = false
+      return axios.get(`http://localhost:8000/jewelry/item/search?keyword=${this.keyword}&page=${this.searchPage}`)
+        .then(res => {
+          this.searchedData = []
+          this.searchedData = res.data.data
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
-    sortedId () {
-      this.searchedData = this.allItems.filter(data => {
-        return data.id.toString().includes(this.search.toString())
-      })
+    searchId () {
       this.isSearch = true
-      return this.searchedData
+      this.isName = false
+      this.isId = true
+      this.isCategoryId = false
+      this.isStatus = false
+      return axios.get(`http://localhost:8000/jewelry/item/searchId?keyword=${this.keyword}&page=${this.searchPage}`)
+        .then(res => {
+          this.searchedData = []
+          this.searchedData = res.data.data
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
-    sortedCategory () {
-      this.searchedData = this.allItems.filter(data => {
-        return data.category_id.toString().includes(this.search.toString())
-      })
+    searchCategoryId () {
       this.isSearch = true
-      return this.searchedData
+      this.isName = false
+      this.isId = false
+      this.isCategoryId = true
+      this.isStatus = false
+      return axios.get(`http://localhost:8000/jewelry/item/searchCategoryId?keyword=${this.keyword}&page=${this.searchPage}`)
+        .then(res => {
+          this.searchedData = []
+          this.searchedData = res.data.data
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    searchStatus () {
+      this.isSearch = true
+      this.isName = false
+      this.isId = false
+      this.isCategoryId = false
+      this.isStatus = true
+      return axios.get(`http://localhost:8000/jewelry/item/searchStatus?keyword=${this.keyword}&page=${this.searchPage}`)
+        .then(res => {
+          this.searchedData = []
+          this.searchedData = res.data.data
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    selectData () {
+      if (this.option === 'id') {
+        this.searchId()
+      } else if (this.option === 'name') {
+        this.searchName()
+      } else if (this.option === 'category_id') {
+        this.searchCategoryId()
+      } else if (this.option === 'status') {
+        this.searchStatus()
+      } else {
+        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+        this.isSearch = false
+        this.keyword = ''
+        this.item()
+      }
     }
   },
   created () {
     this.item()
     this.itemAll()
   },
+  mounted () {
+    window.scrollTo(0, 0)
+  },
   computed: {
-    selectData () {
-      if (this.search && this.option === 'name') {
-        return this.sortedName()
-      } else if (this.search && this.option === 'id') {
-        return this.sortedId()
-      } else if (this.search && this.option === 'category_id') {
-        return this.sortedCategory()
-      } else {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.isSearch = false
-        return this.items
-      }
-    }
   }
 }
 </script>
@@ -299,7 +475,7 @@ th {
 }
 .material-icons-outlined {
   vertical-align: middle;
-  margin-left: 1rem;
+  cursor: pointer;
 }
 
 table {

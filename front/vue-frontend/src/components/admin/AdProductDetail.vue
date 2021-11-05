@@ -70,6 +70,7 @@
     <div class="button">
       <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>
       <v-btn color="#FBEF97" x-large @click="mod">저장</v-btn>
+      <v-btn color="#f27474" x-large @click="remove">삭제</v-btn>
     </div>
   </div>
 </template>
@@ -145,6 +146,37 @@ export default {
           })
         this.save()
       }
+    },
+    remove () {
+      this.$swal
+        .fire({
+          icon: 'warning',
+          title: '해당상품이 삭제됩니다.',
+          text: '목록으로 이동하시겠습니까?',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          confirmButtonColor: '#FE9A2E',
+          cancelButtonColor: '#BDBDBD',
+          cancelButtonText: 'No'
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            await axios
+              .delete(`http://localhost:8000/jewelry/item/${this.id}`, {
+                data: {
+                  id: this.id
+                }
+              })
+              .then(function (response) {
+                console.log(response)
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+            await this.$store.commit('itemDetail', {id: 0, urlPage: 'http://localhost:8000/jewelry/item/paging'})
+            await this.$router.push('/adproduct')
+          }
+        })
     },
     async item () {
       await axios

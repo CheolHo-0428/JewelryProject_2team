@@ -167,7 +167,61 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 	
 	@Transactional
 	public Header<List<ItemResponse>> search(String keyword, Pageable pageable) {
-		Page<Item> page = itemRepo.findByNameContaining(keyword, pageable);
+		Page<Item> page = itemRepo.findByNameContainsIgnoreCase(keyword, pageable);
+		
+		List<ItemResponse> itemResList = page.stream()
+				.map(item -> response(item))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(itemResList, pagination);
+	}
+	
+	@Transactional
+	public Header<List<ItemResponse>> searchId(Long keyword, Pageable pageable) {
+		Page<Item> page = itemRepo.findById(keyword, pageable);
+		
+		List<ItemResponse> itemResList = page.stream()
+				.map(item -> response(item))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(itemResList, pagination);
+	}
+	
+	@Transactional
+	public Header<List<ItemResponse>> searchCategoryId(Long keyword, Pageable pageable) {
+		Page<Item> page = itemRepo.findByCategoryId(keyword, pageable);
+		
+		List<ItemResponse> itemResList = page.stream()
+				.map(item -> response(item))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(itemResList, pagination);
+	}
+	
+	@Transactional
+	public Header<List<ItemResponse>> searchStatus(ObjectStatus keyword, Pageable pageable) {
+		Page<Item> page = itemRepo.findByStatus(keyword, pageable);
 		
 		List<ItemResponse> itemResList = page.stream()
 				.map(item -> response(item))

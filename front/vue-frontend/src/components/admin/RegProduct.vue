@@ -2,55 +2,64 @@
   <div class="outer">
     <p class="top">상품등록</p>
 
-    <p class="group">상품 정보</p>
-    <table class="table">
-      <colgroup>
-        <col width="20%">
-        <col width="30%">
-      </colgroup>
-      <tbody>
-        <tr>
-          <th scope="col">상품명</th>
-          <td><input type="text"></td>
-          <th scope="col">상품코드</th>
-          <td><input type="text"></td>
-        </tr>
-        <tr>
-          <th scope="col">상품분류</th>
-          <td>
-            <select name="product" class="op">
-              <option value="" selected>-- 선택하세요 --</option>
-              <option value="ring">반지</option>
-              <option value="earrings">귀걸이</option>
-              <option value="bracelet">팔찌</option>
-              <option value="necklace">목걸이</option>
-            </select>
-          </td>
-          <th scope="col">상품가격</th>
-          <td><input type="text"></td>
-        </tr>
-        <tr>
-          <th scope="col">재고량</th>
-          <td><input type="text"></td>
-        </tr>
-        <tr>
-          <th scope="col">이미지</th>
-          <td class="img" colspan="3">
-            <input type="file" multiple>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="AddWrap">
+      <form>
+        <table class="table">
+          <colgroup>
+            <col width="13%">
+            <col width="38%">
+          </colgroup>
+          <tbody>
+            <tr>
+              <th scope="col">상품명</th>
+              <td><input type="text" placeholder="상품명 입력" v-model="name"></td>
+              <th scope="col">재고량</th>
+              <td><input type="number" placeholder="재고량 입력" v-model="stock"></td>
+            </tr>
+            <tr>
+              <th scope="col">상품분류</th>
+              <td>
+                <select name="product" class="op" v-model="category_id" @change="categoryChange($event)">
+                  <option value="" selected>-- 선택하세요 --</option>
+                  <option value="1">BRACELET</option>
+                  <option value="2">EARRINGS</option>
+                  <option value="3">NECKLACE</option>
+                  <option value="4">RING</option>
+                </select>
+              </td>
+              <th scope="col">상품가격</th>
+              <td><input type="number" placeholder="상품가격 입력" v-model="price"></td>
+            </tr>
+            <tr>
+              <th scope="col">이미지</th>
+              <td class="img" colspan="3">
+                <input type="file" multiple>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
+    </div>
 
     <div class="button">
       <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>
-      <v-btn color="#FBEF97" x-large @click="save">등록</v-btn>
+      <v-btn color="#FBEF97" x-large @click="addItem">등록</v-btn>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
+  data () {
+    return {
+      name: '',
+      category_id: '',
+      price: '',
+      stock: ''
+    }
+  },
   methods: {
     list () {
       this.$swal.fire({
@@ -77,6 +86,31 @@ export default {
       }).then(() => {
         location.href = '/adproduct'
       })
+    },
+    addItem () {
+      if (!this.name || !this.stock || !this.category_id || !this.price) {
+        this.$swal.fire({
+          icon: 'info',
+          title: '제목 OR 재고 OR 분류 OR 가격을 적어주세요.',
+          confirmButtonColor: '#A9E2F3'
+        })
+      } else {
+        axios
+          .post('http://localhost:8000/jewelry/item/reg', {
+            name: this.name,
+            stock: this.stock,
+            category_id: this.category_id,
+            price: this.price
+          }).then(res => {
+            console.log(res)
+          }).catch(error => {
+            console.log(error)
+          })
+        this.save()
+      }
+    },
+    categoryChange (event) {
+      this.category_id = event.target.value
     }
   }
 }
