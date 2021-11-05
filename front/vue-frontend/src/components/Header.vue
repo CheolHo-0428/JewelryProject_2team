@@ -53,7 +53,7 @@
             </li>
             <li v-if="currentUser" class="nav-item name">
               <router-link to="/mypage" class="nav-link"
-                >{{ currentUser.name }}님</router-link
+                >{{ currentUser.account }}님</router-link
               >
             </li>
             <li v-if="currentUser" class="nav-item logout">

@@ -11,7 +11,7 @@
           확인하실 수 있습니다
         </p>
       </div>
-      <div @click="mypage">
+      <div @click="mypage(account)">
         <p>MODIFY</p>
         <p>회원정보수정</p>
         <p class="material-icons-outlined">settings</p>
@@ -38,7 +38,9 @@ import User from '../../models/user'
 export default {
   data () {
     return {
-      user: new User('', '', '', '', '', '', '', '', '')
+      user: new User('', '', '', '', '', '', '', '', ''),
+      urlPage: this.$store.state.member.memberUrl,
+      account: this.$store.state.auth.user.account
     }
   },
   computed: {
@@ -53,24 +55,33 @@ export default {
     orderList () {
       location.href = '/orderlist'
     },
-    mypage () {
-      // this.$router.push('/modify')
-      console.log(this.$store.state.auth.user.name)
-      this.user.account = this.$store.state.auth.user.account
-      // console.log(this.user.id)
-      this.$store.dispatch('auth/mypage', this.user).then(
-        (data) => {
-          console.log(data)
-          this.$router.push('/modify')
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-      // this.$router.push({
-      //   name: 'modify',
-      //   query: { account: data.data.account }
-      // })
+    mypage (account) {
+      this.$store.commit('mypage', {account: account, urlPage: this.urlPage})
+      this.$router.push('/modify')
+      // console.log(this.$store.state.auth.user.name)
+      // this.user.account = this.$store.state.auth.user.account
+      // this.$store.dispatch('auth/mypage', this.user).then(
+      //   (data) => {
+      //     console.log(data.data.data)
+      //     // this.$router.push('/modify')
+      //     this.$router.push({
+      //       name: 'modify',
+      //       query: {
+      //         account: data.data.data.account,
+      //         email: data.data.data.email,
+      //         phone: data.data.data.phone,
+      //         address: data.data.data.address,
+      //         detail_address: data.data.data.detail_address,
+      //         name: data.data.data.name,
+      //         post_code: data.data.data.post_code
+      //       },
+      //       props: true
+      //     })
+      //   },
+      //   (error) => {
+      //     console.log(error)
+      //   }
+      // )
     }
   }
 }

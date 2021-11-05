@@ -4,6 +4,7 @@ import createPersistedState from 'vuex-persistedstate'
 import notice from './notice'
 import { auth } from './auth.module'
 import item from './item'
+import member from './member'
 
 Vue.use(Vuex)
 
@@ -11,11 +12,12 @@ export default new Vuex.Store({
   modules: {
     notice,
     auth,
-    item
+    item,
+    member
   },
   plugins: [
     createPersistedState({
-      paths: ['notice', 'item', 'auth']
+      paths: ['notice', 'item', 'auth', 'member']
     })
   ],
   state: {
