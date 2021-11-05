@@ -61,7 +61,7 @@
             </li>
           </ul>
           <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="제품명 입력" v-model="keyword" aria-label="Search"/>
+            <input class="form-control me-2" @keypress.enter="search" type="search" placeholder="제품명 입력" v-model="keyword" aria-label="Search"/>
             <div class="search" @click="search">
               <span class="material-icons-outlined">search</span>
             </div>
