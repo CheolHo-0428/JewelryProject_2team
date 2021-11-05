@@ -1,5 +1,10 @@
 <template>
   <div>
+    <div class="sideBanner">
+      <span class="txt-label">
+        공간남으니까... 배너...넣을까요....?
+      </span>
+    </div>
     <v-carousel
       cycle
       height="360"
@@ -125,11 +130,38 @@ export default {
     this.earrings()
     this.bracelet()
     this.necklace()
+  },
+  mounted () {
+    window.scrollTo(0, 0)
+    let floatPosition = parseInt($('.sideBanner').css('top'))
+
+    // scroll 인식
+    $(window).scroll(() => {
+      // 현재 스크롤 위치
+      let currentTop = $(window).scrollTop()
+      let bannerTop = currentTop + floatPosition + 'px'
+
+      // 이동 애니메이션
+      $('.sideBanner').stop().animate({
+        'top': bannerTop
+      }, 500)
+    }).scroll()
   }
 }
 </script>
 
 <style scoped>
+.sideBanner {
+  position: absolute;
+  width: 300px;
+  height: 350px;
+  top: 170px;
+  padding: 2rem 1rem;
+  background-color: #ffd95d;
+  color: #fff;
+  margin-left: 20px;
+}
+
 .category {
   text-align: center;
   margin-top: 4rem;

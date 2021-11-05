@@ -65,7 +65,6 @@ export default {
       this.serchItem()
     },
     serchItem () {
-      console.log(this.$store.state.item.searchedItem, this.searchPage)
       return axios.get(`http://localhost:8000/jewelry/item/search?keyword=${this.$store.state.item.searchedItem}&page=${this.searchPage}`)
         .then(res => {
           this.searchedData = []
