@@ -1,5 +1,6 @@
 package com.ion.jewelry.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ion.jewelry.model.entity.Member;
 import com.ion.jewelry.model.entity.NoticeBoard;
@@ -127,7 +129,6 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 		List<MemberResponse> memberResList = page.stream()
 				.map(member -> response(member))
 				.collect(Collectors.toList());
-		
 		Pagination pagination = Pagination.builder()
 				.totalPages(page.getTotalPages())
 				.totalElements(page.getTotalElements())
@@ -178,6 +179,8 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 				.address(member.getAddress())
 				.detailAddress(member.getDetailAddress())
 				.status(member.getStatus())
+				.createdAt(member.getCreatedAt())
+				.adminMessage(member.getAdminMessage())
 				//.unregDate(member.getUnregDate())
 				.build();
 		
@@ -243,6 +246,56 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 						.setAddress(memberRequest.getAddress())
 						.setDetailAddress(memberRequest.getDetailAddress());
 					
+					return member;
+				})
+				.map(member -> memberRepository.save(member))
+				.map(member -> response(member))
+				.map(member -> Header.OK(member))
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
+	}
+	@Transactional
+	public Header<List<MemberResponse>> searchAccount(String keyword, Pageable pageable) {
+		Page<Member> page = memberRepository.findByAccountContaining(keyword, pageable);
+		
+		List<MemberResponse> admemberList = page.stream()
+				.map(member -> response(member))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(admemberList, pagination);
+	}
+	@Transactional
+	public Header<List<MemberResponse>> searchName(String keyword, Pageable pageable) {
+		Page<Member> page = memberRepository.findByNameContaining(keyword, pageable);
+		
+		List<MemberResponse> admemberList = page.stream()
+				.map(member -> response(member))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(admemberList, pagination);
+	}
+
+	public Header<MemberResponse> updateMemo(Header<MemberRequest> result) {
+		MemberRequest memberRequest = result.getData();
+		
+		Optional<Member> optional = memberRepository.findByAccount(memberRequest.getAccount());
+		return optional
+				.map(member -> {
+					member
+						.setAdminMessage(memberRequest.getAdminMessage());
 					return member;
 				})
 				.map(member -> memberRepository.save(member))

@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <p>장바구니</p>
-    <div class="box" v-for="i in 2" :key="i">
+    <div class="box" v-for="(cart, i) in carts" :key="i">
       <div class="check">
         <v-checkbox color="#FBCD6E"></v-checkbox>
       </div>
@@ -51,8 +51,26 @@
 </template>
 
 <script>
-export default {
+// import axios from 'axios'
 
+export default {
+  data () {
+    return {
+      carts: [],
+      end: 0,
+      next: false,
+      page: 0,
+      prev: false,
+      start: 0,
+      page_list: [],
+      total_pages: 0,
+      total_elements: 0,
+      searchPage: 0
+    }
+  },
+  created () {
+    // this.cart()
+  }
 }
 </script>
 

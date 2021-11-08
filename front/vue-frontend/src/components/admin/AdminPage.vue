@@ -34,16 +34,16 @@
 export default {
   methods: {
     admember () {
-      location.href = '/admember'
+      this.$router.push('/admember')
     },
     adproduct () {
-      location.href = '/adproduct'
+      this.$router.push('/adproduct')
     },
     adorder () {
-      location.href = '/adorder'
+      this.$router.push('/adorder')
     },
     adsales () {
-      location.href = '/adsales'
+      this.$router.push('/adsales')
     }
   }
 }

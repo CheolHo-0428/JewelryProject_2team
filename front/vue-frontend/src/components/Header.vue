@@ -51,6 +51,9 @@
             <li v-if="currentUser" class="nav-item mypage">
               <router-link to="/mypage" class="nav-link">MYPAGE</router-link>
             </li>
+            <li v-if="currentUser && findRole" class="nav-item adminpage">
+              <router-link to="/adminpage" class="nav-link">MANAGEMENT</router-link>
+            </li>
             <li v-if="currentUser" class="nav-item name">
               <router-link to="/mypage" class="nav-link"
                 >{{ currentUser.account }}님</router-link
@@ -82,6 +85,12 @@ export default {
   computed: {
     currentUser () {
       return this.$store.state.auth.user
+    },
+    findRole () {
+      if (this.currentUser) {
+        return this.currentUser.roles.includes('ROLE_ADMIN')
+      }
+      return false
     }
   },
   methods: {

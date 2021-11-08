@@ -69,6 +69,8 @@ public class Member extends AABaseTimeEntity{
 
 	private String detailAddress; // 주소2(상세주소)
 	
+	private String adminMessage; //관리자메모
+	
 	@Enumerated(EnumType.STRING)
 	private ObjectStatus status; // 가입상태(등록OR미동르고)
 	

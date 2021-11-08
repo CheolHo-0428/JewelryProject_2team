@@ -33,5 +33,7 @@ public class MemberRequest {
 	
 	private ObjectStatus status; // 가입상태(등록OR미동르고)
 	
+	private String adminMessage; //관리자메모
+	
 	//private LocalDateTime unregDate; // 해지날짜
 }
