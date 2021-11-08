@@ -3,26 +3,35 @@
     <p class="top">주문상세</p>
 
     <p class="group">주문상품 정보</p> <br>
-    <div class="boxs">
-      <div class="box" v-for="i in 2" :key="i">
-        <div class="img">
-          <div></div>
-        </div>
-        <div class="content">
-          상품코드
-        </div>
-        <div class="content">
-          상품명
-        </div>
-        <div class="price">
-          가격
-        </div>
-        <div class="count">
-          수량
-        </div>
-        <div class="price">총 가격</div>
-      </div>
-    </div>
+    <table class="info">
+      <colgroup>
+        <col style="width:19%">
+        <col style="width:38%">
+        <col style="width:14%">
+        <col style="width:11%">
+        <col style="width:18%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">이미지</th>
+          <th scope="col">상품정보</th>
+          <th scope="col">판매가</th>
+          <th scope="col">수량</th>
+          <th scope="col">합계</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(order, i) in orderDetailInfo" :key="i">
+          <td class="img"><div></div></td>
+          <td>
+            <strong class="itemName" v-if="productNameList[i]">{{productNameList[i]}}</strong>
+          </td>
+          <td>{{order.order_price}}원</td>
+          <td>{{order.order_count}}</td>
+          <td>{{order.order_count * order.order_price}}원</td>
+        </tr>
+      </tbody>
+    </table>
 
     <p class="group">주문 정보</p>
     <table class="table t2">
@@ -33,54 +42,66 @@
       <tbody>
         <tr>
           <th scope="col">주문번호</th>
-          <td><input type="text" value="abc123" readonly></td>
+          <td><input type="text" :value="orderGroupInfo.id" readonly></td>
           <th scope="col">주문일자</th>
-          <td><input type="text" value="2021-10-25" readonly></td>
+          <td><input type="text" :value="orderGroupInfo.created_at.split('T')[0]" readonly></td>
         </tr>
         <tr>
           <th scope="col">결제방법</th>
           <td><input type="text" value="무통장입금" readonly></td>
           <th scope="col">결제계좌</th>
-          <td><input type="text" value="국민은행000-00000000-00" readonly></td>
+          <td><input type="text" :value="this.bank" readonly></td>
         </tr>
         <tr>
-          <th scope="col">입금인</th>
-          <td><input type="text" value="홍길동" readonly></td>
+          <th scope="col">입금자명</th>
+          <td><input type="text" :value="orderGroupInfo.depositor" readonly></td>
+          <th scope="col">전화번호</th>
+          <td><input type="text" :value="orderGroupInfo.phone"></td>
+        </tr>
+        <tr>
+          <th scope="col">총결제금액</th>
+          <td><input type="text" :value="orderGroupInfo.total_price + '원'" readonly></td>
           <th scope="col">주문처리상태</th>
           <td>
             <select name="order" class="op">
-              <option value="1" selected>주문완료</option>
-              <option value="2">결제확인</option>
-              <option value="3">배송완료</option>
-              <option value="4">주문취소</option>
+              <option value="BEFORE_BANK_TRANSFER" :selected="orderGroupInfo.order_product_state === 'order_product_state'">입금전</option>
+              <option value="READY" :selected="orderGroupInfo.order_product_state === 'READY'">배송준비중</option>
+              <option value="SHIPPING" :selected="orderGroupInfo.order_product_state === 'SHIPPING'">배송중</option>
+              <option value="COMPLETE" :selected="orderGroupInfo.order_product_state === 'COMPLETE'">배송완료</option>
             </select>
           </td>
         </tr>
       </tbody>
     </table>
 
-    <p class="group">주문자 정보</p>
+    <p class="group">배송 정보</p>
     <table class="table t3">
       <colgroup>
+        <col width="10%">
         <col width="20%">
-        <col width="30%">
+        <col width="15%">
+        <col width="20%">
+        <col width="15%">
+        <col width="20%">
       </colgroup>
       <tbody>
         <tr>
-          <th scope="col">주문자명</th>
-          <td><input type="text" value="홍길동" readonly></td>
-          <th scope="col">전화번호</th>
-          <td><input type="text" value="010-0000-1111"></td>
+          <th scope="col">주문자번호</th>
+          <td><input style="outline:none;" type="text" :value="orderGroupInfo.member_id" readonly></td>
+          <th scope="col">우편번호</th>
+          <td><input type="text" v-model="postCode"></td>
+          <th scope="col">주소변경</th>
+          <td class="changeBtn"><a @click="showApi">click</a></td>
         </tr>
         <tr>
-          <th scope="col">이메일</th>
-          <td><input type="text" value="aaa@naver.com"></td>
           <th scope="col">주소</th>
-          <td><input type="text" value="서울시 송파구 ㅇㅇ아파트 101동101호"></td>
+          <td colspan="3"><input type="text" v-model="address"></td>
+          <th scope="col">상세주소</th>
+          <td><input style="outline:none;" type="text" v-model="detailAddress"></td>
         </tr>
         <tr>
           <th scope="col">요청사항</th>
-          <td colspan="3"><input type="text" value="문앞에 놔주세요."></td>
+          <td colspan="5"><input type="text" :value="orderGroupInfo.delivery_message"></td>
         </tr>
       </tbody>
     </table>
@@ -93,7 +114,21 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
+  data () {
+    return {
+      orderGroupInfo: {},
+      orderDetailInfo: [],
+      bank: '',
+      productNameList: [],
+      detailId: [],
+      postCode: 0,
+      address: '',
+      detailAddress: ''
+    }
+  },
   methods: {
     list () {
       this.$swal.fire({
@@ -107,20 +142,109 @@ export default {
         cancelButtonText: 'No'
       }).then((result) => {
         if (result.isConfirmed) {
-          location.href = '/adorder'
+          this.$router.push('/adorder')
         }
       })
     },
     save () {
-      this.$swal.fire({
-        icon: 'success',
-        title: '주문정보가 수정되었습니다.',
-        text: '목록으로 이동합니다.',
-        confirmButtonColor: '#CEF6CE'
-      }).then(() => {
-        location.href = '/adorder'
-      })
+      // axios
+      //   .put('http://localhost:8000/jewelry/orderGroup/update', {
+      //     title: this.title,
+      //     content: this.content,
+      //     id: this.id,
+      //     writer: this.$store.state.auth.user.account
+      //   }, {
+      //     headers: {
+      //       'Authorization': 'Bearer ' + this.$store.state.auth.user.token
+      //     }
+      //   })
+      //   .then((res) => {
+      //     console.log(res)
+      //     this.$swal.fire({
+      //       icon: 'success',
+      //       title: '주문정보가 수정되었습니다.',
+      //       text: '목록으로 이동합니다.',
+      //       confirmButtonColor: '#CEF6CE'
+      //     }).then(() => {
+      //       this.$router.push('/adorder')
+      //     })
+      //   })
+      //   .catch((error) => {
+      //     console.log(error)
+      //   })
+    },
+    showApi () {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+          // 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
+          // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+          let fullRoadAddr = data.roadAddress
+          // 도로명 주소 변수
+          let extraRoadAddr = ''
+          // 도로명 조합형 주소 변수
+          // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+          // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+            extraRoadAddr += data.bname
+          } // 건물명이 있고, 공동주택일 경우 추가한다.
+          if (data.buildingName !== '' && data.apartment === 'Y') {
+            extraRoadAddr +=
+              extraRoadAddr !== ''
+                ? ', ' + data.buildingName
+                : data.buildingName
+          }
+          // 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+          if (extraRoadAddr !== '') {
+            extraRoadAddr = ' (' + extraRoadAddr + ')'
+          }
+          if (fullRoadAddr !== '') {
+            fullRoadAddr += extraRoadAddr
+          }
+          this.postCode = data.zonecode
+          this.address = fullRoadAddr
+          this.detailAddress = ''
+        }
+      }).open()
+    },
+    orderDetail () {
+      return axios.get(`http://localhost:8000/jewelry/orderGroup/${this.$store.state.order.orderId}/orderDetailInfo`)
+        .then(res => {
+          this.orderGroupInfo = res.data.data.order_group_response
+          this.orderDetailInfo = res.data.data.order_group_response.order_detail_response_list
+
+          this.postCode = this.orderGroupInfo.post_code
+          this.address = this.orderGroupInfo.address
+          this.detailAddress = this.orderGroupInfo.detail_address
+
+          for (let i = 0; i < this.orderDetailInfo.length; i++) {
+            this.detailId.push(this.orderDetailInfo[i].id)
+          }
+
+          if (this.orderGroupInfo.pay_account === 'IBK') this.bank = '기업은행000-00000000-00'
+          else this.bank = '우리은행111-11111111-11'
+
+          this.productName()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    async productName () {
+      for (let i = 0; i < this.orderDetailInfo.length; i++) {
+        const id = this.orderDetailInfo[i].item_id
+        await axios.get(`http://localhost:8000/jewelry/item/${id}`)
+          .then(res => {
+            this.productNameList.push(res.data.data.name)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
     }
+  },
+  created () {
+    this.orderDetail()
   }
 }
 </script>
@@ -140,6 +264,7 @@ p.top {
 .group {
   float: left;
   margin-bottom: 2rem;
+  font-weight: 700;
 }
 .boxs {
   width: 53rem;
@@ -177,7 +302,7 @@ p.top {
   width: fit-content;
   font-size: 0.8rem;
   border-radius: 2px;
-  padding: 0.2rem;
+  padding: 0.2rem 0.8rem;
   background-color: white;
   text-align: center;
 }
@@ -196,17 +321,58 @@ input {
 .t2 input {
   outline: none;
 }
-tr {
+.table tr {
   border-bottom: 1.5px solid gray;
   border-right: 1px solid black;
 }
-th {
+.table th {
   padding: 0.6rem 0;
   font-size: 0.85rem;
   background-color: #fefff2;
   border-right: 1px solid black;
   border-left: 1px solid black;
   vertical-align: middle;
+}
+
+.changeBtn a {
+  text-decoration: none;
+  color: black;
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 0.2rem 1.5rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background-color: #fefff2;
+  box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5);
+  cursor: pointer;
+}
+.changeBtn a:active {
+  box-shadow: 1px 0px 0 rgb(0,0,0,0.5);
+  position: relative;
+  top: 0.5px;
+}
+
+.info {
+  margin: 1rem 0 3rem;
+  border: 2px solid black;
+  border-left: none;
+  border-right: none;
+  width: 850px;
+}
+.info thead {
+  border-bottom: 1px solid black;
+  background-color: #fefff2;
+}
+.info thead th {
+  padding: 1rem 0;
+  vertical-align: middle;
+}
+.info tbody td {
+  padding: 1rem 0;
+  vertical-align: middle;
+}
+.info tbody tr {
+  border-bottom: 0.5px solid black;
 }
 
 .button button {

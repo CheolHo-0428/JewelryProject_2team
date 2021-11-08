@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.ion.jewelry.model.entity.Member;
+import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.entity.OrderDetail;
 import com.ion.jewelry.model.entity.OrderGroup;
 import com.ion.jewelry.model.enums.OrderProductState;
@@ -17,10 +20,12 @@ import com.ion.jewelry.model.enums.PayMethod;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.OrderGroupRequest;
+import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.model.network.response.OrderDetailResponse;
 import com.ion.jewelry.model.network.response.OrderGroupOrderDetailInfoResponse;
 import com.ion.jewelry.model.network.response.OrderGroupResponse;
 import com.ion.jewelry.repository.MemberRepository;
+import com.ion.jewelry.repository.OrderGroupRepository;
 
 @Service
 public class OrderGroupService extends 
@@ -31,6 +36,9 @@ public class OrderGroupService extends
 	
 	@Autowired
 	private OrderDetailService orderDetailService;
+	
+	@Autowired
+	private OrderGroupRepository orderGroupRepo;
 	
 	@Override
 	public Header<OrderGroupResponse> create(Header<OrderGroupRequest> request) {
@@ -136,6 +144,25 @@ public class OrderGroupService extends
 		return Header.OK(orderGroupResList, pagination);
 	}
 	
+	@Transactional
+	public Header<List<OrderGroupResponse>> searchMember(Long id, Pageable pageable) {
+		Member member = memberRepo.getOne(id);
+		Page<OrderGroup> page = orderGroupRepo.findByMember(member, pageable);
+		
+		List<OrderGroupResponse> orderGroupResList = page.stream()
+				.map(orderGroup -> response(orderGroup))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(orderGroupResList, pagination);
+	}
+	
 	//특정주문에 해당되는 주문상세들 조회
 	public Header<OrderGroupOrderDetailInfoResponse> orderDetailInfo(Long id){
 		OrderGroup orderGroup = baseRepo.getOne(id);
@@ -175,6 +202,7 @@ public class OrderGroupService extends
 				.payAccount(orderGroup.getPayAccount())
 				.arrivalDate(orderGroup.getArrivalDate())
 				.memberId(orderGroup.getMember().getId())
+				.createdAt(orderGroup.getCreatedAt())
 				.build();
 				
 		return res;

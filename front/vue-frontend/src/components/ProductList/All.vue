@@ -1,10 +1,5 @@
 <template>
   <div>
-    <div class="sideBanner">
-      <span class="txt-label">
-        공간남으니까... 배너...넣을까요....?
-      </span>
-    </div>
     <v-carousel
       cycle
       height="360"
@@ -151,16 +146,6 @@ export default {
 </script>
 
 <style scoped>
-.sideBanner {
-  position: absolute;
-  width: 300px;
-  height: 350px;
-  top: 170px;
-  padding: 2rem 1rem;
-  background-color: #ffd95d;
-  color: #fff;
-  margin-left: 20px;
-}
 
 .category {
   text-align: center;
