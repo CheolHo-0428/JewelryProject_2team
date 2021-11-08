@@ -33,7 +33,8 @@
             <tr>
               <th scope="col">이미지</th>
               <td class="img" colspan="3">
-                <input type="file" multiple>
+                <v-file-input id="file" name="files" label="File input" style="width: 200px;" multiple="multiple"></v-file-input>
+                <!-- <input type="file" multiple> -->
               </td>
             </tr>
           </tbody>
@@ -57,7 +58,9 @@ export default {
       name: '',
       category_id: '',
       price: '',
-      stock: ''
+      stock: '',
+      delegate_thumbnail: '',
+      item_id: ''
     }
   },
   methods: {
@@ -73,7 +76,7 @@ export default {
         cancelButtonText: 'No'
       }).then((result) => {
         if (result.isConfirmed) {
-          location.href = '/adproduct'
+          this.$router.push('/adproduct')
         }
       })
     },
@@ -84,10 +87,10 @@ export default {
         text: '목록으로 이동합니다.',
         confirmButtonColor: '#CEF6CE'
       }).then(() => {
-        location.href = '/adproduct'
+        this.$router.push('/adproduct')
       })
     },
-    addItem () {
+    async addItem () {
       if (!this.name || !this.stock || !this.category_id || !this.price) {
         this.$swal.fire({
           icon: 'info',
@@ -95,7 +98,7 @@ export default {
           confirmButtonColor: '#A9E2F3'
         })
       } else {
-        axios
+        await axios
           .post('http://localhost:8000/jewelry/item/reg', {
             name: this.name,
             stock: this.stock,
@@ -106,6 +109,35 @@ export default {
           }).catch(error => {
             console.log(error)
           })
+        await axios
+          .get(`http://localhost:8000/jewelry/item/search?keyword=${this.name}&page=0`, {
+            data: {
+              name: this.name
+            }
+          }).then((res) => {
+            this.item_id = ''
+            // console.log('**************************', res.data.data[0].id)
+            this.item_id = res.data.data[0].id
+          })
+        let frm = new FormData()
+        let imageFile = document.getElementById('file')
+        frm.append('delegateThumbnail', this.delegate_thumbnail)
+        frm.append('itemId', this.item_id)
+        console.log('************************', imageFile.files)
+        for (let i = 0; i < imageFile.files.length; i++) {
+          frm.append('file', imageFile.files[i])
+        }
+        if (imageFile.files[0]) {
+          axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then((response) => {
+            console.log(response)
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
         this.save()
       }
     },

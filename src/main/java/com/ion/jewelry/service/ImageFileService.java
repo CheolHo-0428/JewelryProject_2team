@@ -1,14 +1,20 @@
 package com.ion.jewelry.service;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.FileHandler;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ion.jewelry.component.ItemImageFileHandler;
 import com.ion.jewelry.model.entity.ImageFile;
 import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.Header;
@@ -17,11 +23,17 @@ import com.ion.jewelry.model.network.request.ImageFileRequest;
 import com.ion.jewelry.model.network.response.ImageFileResponse;
 import com.ion.jewelry.repository.ItemRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileResponse, ImageFile> {
 	
 	@Autowired
 	private ItemRepository itemRepo;
+	
+	private final ItemImageFileHandler fileHandler;
+	
 	
 	@Override
 	public Header<ImageFileResponse> create(Header<ImageFileRequest> request) {
@@ -40,6 +52,59 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 		ImageFileResponse imageFileResponse = response(newImageFile);
 		
 		return Header.OK(imageFileResponse);
+	}
+	
+	@Transactional
+	public Header<ImageFileResponse> createImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {
+		ImageFileRequest imageFileRequest = request.getData();
+		
+		ImageFile imageFile = fileHandler.parseFileInfo(imageFileRequest, files);
+		ImageFile newImageFile = baseRepo.save(imageFile);
+		ImageFileResponse imageFileResponse = response(newImageFile);
+		
+		return Header.OK(imageFileResponse);
+	}
+	
+	@Transactional
+	public Header<ImageFileResponse> updateImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {
+		ImageFileRequest imageFileRequest = request.getData();
+		Optional<ImageFile> optional = baseRepo.findById(imageFileRequest.getId());
+		
+		ImageFile imageFile = fileHandler.parseFileInfo(imageFileRequest, files);
+		
+		return optional
+				.map(image -> {
+					System.out.println("!!!" + imageFileRequest.getDeleteCheck());
+					if(imageFileRequest.getDeleteCheck() == YesNo.YES) {
+						String path = image.getStoredFileName();
+						
+						File file = new File(new File("").getAbsoluteFile() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+						System.out.println("!!!" + path);
+						if(file.exists()) {
+							if(file.delete()) {
+								System.out.println("파일삭제 성공");
+								delete(imageFileRequest.getId());
+							} else {
+								System.out.println("파일삭제 실패");
+							}
+						} else {
+							System.out.println("파일이 존재하지 않습니다.");
+						}
+					}
+					image
+					.setOriginFileName(imageFileRequest.getOriginFileName())
+					.setStoredFileName(imageFileRequest.getStoredFileName())
+					.setStoredThumbnail(imageFileRequest.getStoredThumbnail())
+					.setDelegateThumbnail(imageFileRequest.getDelegateThumbnail())
+					.setFileSize(imageFileRequest.getFileSize())
+					.setDeleteCheck(imageFileRequest.getDeleteCheck())
+					.setItem(itemRepo.getOne(imageFileRequest.getItemId()));
+					return image;
+				})
+				.map(image -> baseRepo.save(image))
+				.map(image -> response(image))
+				.map(image -> Header.OK(image))
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));		
 	}
 
 	@Override

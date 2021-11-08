@@ -4,20 +4,20 @@
     <div class="check material-icons">done_all</div>
     <div class="text">
       <p>고객님의 주문이 완료 되었습니다.</p>
-      <p>주문내역 및 배송에 관한 안내는 <a href="/orderdetail">주문조회</a>를 통하여 확인 가능합니다.</p>
-      <p>주문번호 : <input type="text" value="23313232123" readonly></p>
-      <p>주문일자 : <input type="text" value="2021-10-23" readonly></p>
+      <p>주문내역 및 배송에 관한 안내는 <a @click="detail">주문조회</a>를 통하여 확인 가능합니다.</p>
+      <p>주문번호 : <input type="text" :value="orderInfo.id" readonly></p>
+      <p>주문일자 : <input type="text" v-if="orderInfo.created_at" :value="orderInfo.created_at.split('T')[0]" readonly></p>
     </div>
     <form>
       <p>
         <label>최종 결제금액</label>
-        <span><input class="pay" type="text" value="12500원" readonly></span>
+        <span><input class="pay" type="text" :value="orderInfo.total_price" readonly></span>
       </p>
       <p>
         <label>결제수단</label>
         <span class="info">
           <p>무통장입금</p>
-          <p>입금자 : <input type="text" readonly value="홍길동">, 계좌번호 : <input type="text" readonly value="국민은행000-00000000-00"> </p>
+          <p>입금자 : <input type="text" readonly :value="orderInfo.depositor">, 계좌번호 : <input type="text" readonly v-model="bank"> </p>
         </span>
       </p>
     </form>
@@ -25,8 +25,54 @@
 </template>
 
 <script>
-export default {
+import axios from 'axios'
 
+export default {
+  data () {
+    return {
+      orderInfo: {},
+      bank: ''
+    }
+  },
+  methods: {
+    detail () {
+      this.$store.commit('changeOrderId', this.orderInfo.id)
+      this.$router.push('/orderdetail')
+    },
+    orderDetail () {
+      axios({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        url: 'http://localhost:8000/jewelry/orderDetail/reg',
+        data: JSON.stringify({
+          item_id: this.$store.state.order.itemId,
+          order_count: this.$store.state.order.count,
+          order_price: this.$store.state.order.price,
+          order_group_id: this.orderInfo.id
+        })
+      }).then(res => {
+        console.log(res)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
+    orderGroup () {
+      return axios.get(`http://localhost:8000/jewelry/member/${this.$store.state.auth.user.id}/orderGroupInfo`)
+        .then(res => {
+          this.orderInfo = res.data.data.member_response.order_group_list[0]
+
+          if (this.orderInfo.pay_account === 'IBK') this.bank = '기업은행000-00000000-00'
+          else this.bank = '우리은행111-11111111-11'
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+  async created () {
+    await this.orderGroup()
+    await this.orderDetail()
+  }
 }
 </script>
 
@@ -35,6 +81,9 @@ export default {
   margin: 3rem auto;
   width: 52rem;
   text-align: center;
+}
+a {
+  cursor: pointer;
 }
 p {
   font-weight: 700;

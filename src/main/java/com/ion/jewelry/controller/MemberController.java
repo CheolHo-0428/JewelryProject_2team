@@ -54,6 +54,7 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 		log.info("read id: {}", id);
 		return memberService.orderGroupInfo(id);
 	}
+
 	@GetMapping("/searchAccount") // http://localhost:8000/jewelry/member/searchMemberNo?keyword=test&page=0
 	public Header<List<MemberResponse>> searchAccount(@PathParam("keyword")String keyword, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 		
@@ -73,7 +74,7 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 		return memberService.updateMemo(result);
 		
 	}
-	
+
 	//이부분 테스트 해보시라고 만든거라 나중에 제거예정입니다!
 	@Autowired
 	RoleRepository roleRepository;

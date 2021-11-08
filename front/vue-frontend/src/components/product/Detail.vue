@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div class="sideBanner">
-      <span class="txt-label">
-        공간남으니까... 배너...넣을까요....?
-      </span>
-    </div>
+    <div class="sideBanner"></div>
     <div class="topContent">
       <div class="topBox left">
         <div class="imageBox"></div>
@@ -71,7 +67,7 @@ export default {
   data () {
     return {
       name: '',
-      price: '',
+      price: 0,
       count: 1,
       totalPrice: 0
     }
@@ -103,6 +99,10 @@ export default {
       })
     },
     order () {
+      this.$store.commit('changeCount', this.count)
+      this.$store.commit('changeItemId', this.$store.state.item.itemId)
+      this.$store.commit('changePrice', this.price)
+      this.$store.commit('changeName', this.name)
       this.$router.push('/order')
     },
     plus () {
@@ -156,13 +156,12 @@ export default {
 .sideBanner {
   position: absolute;
   width: 280px;
-  height: 450px;
+  height: 400px;
   top: 170px;
-  padding: 2rem 1rem;
   background-color: #ffd95d;
-  color: #fff;
-  margin-left: 2rem;
-  z-index: 999;
+  margin-left: 20px;
+  background-size: cover;
+  background-image: url(https://ifh.cc/g/AyICP7.jpg);
 }
 
 .topContent {

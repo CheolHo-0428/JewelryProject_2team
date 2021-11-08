@@ -5,7 +5,10 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/jewelry/orderDetail")
+@CrossOrigin("http://localhost:8080/")
 public class OrderDetailController extends 
 	AABaseController<OrderDetailRequest, OrderDetailResponse, OrderDetail> {
 
@@ -30,5 +34,13 @@ public class OrderDetailController extends
 		
 		log.info("페이징 데이터 : {}", pageable);
 		return baseService.pagingRead(pageable);
+	}
+	
+	@PostMapping("/reg")
+	public Header<OrderDetailResponse> create(@RequestBody OrderDetailRequest request) {
+		Header<OrderDetailRequest> result = new Header<OrderDetailRequest>();
+		result.setData(request);
+		
+		return baseService.create(result);
 	}
 }

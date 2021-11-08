@@ -46,4 +46,6 @@ public class OrderGroupRequest {
 	private LocalDateTime arrivalDate; //상품 도착예정일
 	
 	private Long memberId; //해당 주문 회원아이디
+	
+	private LocalDateTime createdAt;
 }

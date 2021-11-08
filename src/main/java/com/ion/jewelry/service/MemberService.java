@@ -157,6 +157,7 @@ public class MemberService extends AABaseService<MemberRequest, MemberResponse, 
 					orderGroupResponse.setOrderDetailResponseList(orderDetailResList);
 					return orderGroupResponse;
 					})
+				.sorted((a, b) -> (int)(b.id - a.id))
 				.collect(Collectors.toList());
 		
 		memberResponse.setOrderGroupList(orderGroupResList);
