@@ -37,7 +37,7 @@ export default {
       this.$router.push('/admember')
     },
     adproduct () {
-      location.href = '/adproduct'
+      this.$router.push('/adproduct')
     },
     adorder () {
       this.$router.push('/adorder')

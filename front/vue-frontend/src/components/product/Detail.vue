@@ -74,7 +74,29 @@ export default {
   },
   methods: {
     cart () {
-      this.$router.push('/cart')
+      this.$swal.fire({
+        icon: 'info',
+        title: '장바구니에 넣으시겠습니까?',
+        text: 'yes를 누르시면 장바구니 페이지로 이동합니다.',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        confirmButtonColor: '#9de0f6',
+        cancelButtonColor: '#BDBDBD',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios.post('http://localhost:8000/jewelry/cart/reg', {
+            item_count: this.count,
+            member_id: this.$store.state.auth.user.id,
+            item_id: this.$store.state.item.itemId
+          }).then((response) => {
+            console.log(response)
+          }).catch((error) => {
+            console.log(error)
+          })
+          this.$router.push('/cart')
+        }
+      })
     },
     order () {
       this.$store.commit('changeCount', this.count)

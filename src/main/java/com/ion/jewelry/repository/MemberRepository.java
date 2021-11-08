@@ -2,6 +2,8 @@ package com.ion.jewelry.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -27,4 +29,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	//비밀번호찾기
 	@Query("select m from Member m where m.name = :name and m.account = :account and m.email = :email")
 	Optional<Member> findByNameAndAccountAndEmail(@Param("name")String name,@Param("account") String account,@Param("email") String email);	
+	
+	Page<Member> findByAccountContaining(String keyword, Pageable pageable);
+	Page<Member> findByNameContaining(String keyword, Pageable pageable);
+	
 }

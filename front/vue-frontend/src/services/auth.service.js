@@ -86,7 +86,6 @@ class AuthService {
       address: user.address,
       detail_address: user.detailAddress
     }).then(response => {
-      console.log('2')
       console.log(response.data)
       return response.data
     })
