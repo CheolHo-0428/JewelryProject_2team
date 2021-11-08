@@ -3,6 +3,7 @@ package com.ion.jewelry.model.entity;
 import java.math.BigDecimal;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -63,7 +64,7 @@ public class Item extends AABaseTimeEntity {
 	private List<Cart> cartList; // Cart 테이블 연관관계 설정(1:N)
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
 	private List<ImageFile> imageFileList; // ImageFile 테이블 연관관계 설정(1:N)
 	
 	@JsonManagedReference

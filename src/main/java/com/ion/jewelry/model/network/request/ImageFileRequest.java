@@ -1,7 +1,10 @@
 package com.ion.jewelry.model.network.request;
 
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.ion.jewelry.model.enums.YesNo;
-import com.ion.jewelry.model.network.response.ImageFileResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,4 +32,6 @@ public class ImageFileRequest {
 	private YesNo deleteCheck; //파일삭제여부
 	
 	private Long itemId; //해당상품 번호
+	
+	private List<MultipartFile> files;
 }
