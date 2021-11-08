@@ -1,10 +1,10 @@
 <template>
   <div class="outer">
     <p class="top">주문내역</p>
-    <p class="text">주문번호를 클릭하시면 해당 주문에 대한 상세내역을 확인하실 수 있습니다.</p>
+    <p class="text">주문내역을 클릭하시면 해당 주문에 대한 상세내역을 확인하실 수 있습니다.</p>
     <table>
       <colgroup>
-      <col width="150"/><col width="100"/><col width="450"/><col width="140"/><col width="150"/>
+      <col width="150"/><col width="110"/><col width="440"/><col width="140"/><col width="150"/>
       </colgroup>
 
       <thead>
@@ -18,12 +18,12 @@
       </thead>
 
       <tbody>
-        <tr v-for="i in 4" :key="i">
-            <td class="tdDate">2021-10-23</td>
-            <td class="tdNo" @click="detail">324382492</td>
-            <td class="tdTitle">다이아 반지 외 2개</td>
-            <td class="tdPay">12500원</td>
-            <td class="tdState">배송완료</td>
+        <tr v-for="(order, i) in orders" :key="i">
+            <td class="tdDate">{{order.created_at.split('T')[0]}}</td>
+            <td class="tdNo" @click="detail(order.id)">{{order.id}}</td>
+            <td class="tdTitle" @click="detail(order.id)" v-if="productNameList[i]">{{productNameList[i]}} 포함 총 {{productInfo[i].count}}개의 상품</td>
+            <td class="tdPay">{{order.total_price}}</td>
+            <td class="tdState">{{order.order_product_state}}</td>
         </tr>
       </tbody>
     </table>
@@ -31,9 +31,9 @@
     <!-- pagination -->
     <div class="page">
       <div class="box">
-        <a href="#" class="arrow">&laquo;</a>
-        <a href="#" class="active">1</a>
-        <a href="#" class="arrow">&raquo;</a>
+        <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
+        <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
+        <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
       </div>
     </div>
 
@@ -41,11 +41,110 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  methods: {
-    detail () {
-      location.href = '/orderdetail'
+  data () {
+    return {
+      searchPage: 0,
+      urlPage: `http://localhost:8000/jewelry/orderGroup/${this.$store.state.auth.user.id}/searchMember`,
+      originUrl: `http://localhost:8000/jewelry/orderGroup/${this.$store.state.auth.user.id}/searchMember`,
+      orders: [],
+      end: 0,
+      next: false,
+      page: 0,
+      prev: false,
+      start: 0,
+      page_list: [],
+      total_pages: 0,
+      total_elements: 0,
+      productInfo: [],
+      productNameList: []
     }
+  },
+  methods: {
+    detail (id) {
+      this.$store.commit('changeOrderId', id)
+      this.$router.push('/orderdetail')
+    },
+    changePage (page) {
+      this.urlPage = this.originUrl + `?page=${page - 1}`
+      this.orderList()
+    },
+    nextPage () {
+      this.urlPage = this.originUrl + `?page=${this.end}`
+      this.orderList()
+    },
+    prevPage () {
+      this.urlPage = this.originUrl + `?page=${this.start - 2}`
+      this.orderList()
+    },
+    orderList () {
+      return axios.get(this.urlPage)
+        .then(res => {
+          this.orders = []
+          this.orders = res.data.data
+
+          this.member_id = res.data.data[0].member_id
+
+          for (let i = 0; i < this.orders.length; i++) {
+            if (this.orders[i].order_product_state === 'BEFORE_BANK_TRANSFER') this.orders[i].order_product_state = '입금전'
+            else if (this.orders[i].order_product_state === 'READY') this.orders[i].order_product_state = '배송준비중'
+            else if (this.orders[i].order_product_state === 'SHIPPING') this.orders[i].order_product_state = '배송중'
+            else if (this.orders[i].order_product_state === 'COMPLETE') this.orders[i].order_product_state = '배송완료'
+          }
+
+          this.page = res.data.pagination.current_page + 1
+          this.total_pages = res.data.pagination.total_pages
+          this.total_elements = res.data.pagination.total_elements
+
+          let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
+          this.start = tmpEnd - 4
+          this.prev = this.start > 1
+          this.next = this.total_pages > tmpEnd
+          this.end = this.total_pages > tmpEnd ? tmpEnd : this.total_pages
+
+          this.page_list.length = 0
+          for (let i = this.start; i <= this.end; i++) {
+            this.page_list.push(i)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    product () {
+      return axios.get(`http://localhost:8000/jewelry/member/${this.$store.state.auth.user.id}/orderGroupInfo`)
+        .then(res => {
+          let orderGroup = res.data.data.member_response.order_group_list
+
+          for (let i = 0; i < orderGroup.length; i++) {
+            this.productInfo.push(
+              {id: res.data.data.member_response.order_group_list[i].order_detail_response_list[0].item_id, count: res.data.data.member_response.order_group_list[i].order_detail_response_list.length}
+            )
+          }
+          this.productName()
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    async productName () {
+      for (let i = 0; i < this.productInfo.length; i++) {
+        const id = this.productInfo[i].id
+        await axios.get(`http://localhost:8000/jewelry/item/${id}`)
+          .then(res => {
+            this.productNameList.push(res.data.data.name)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    }
+  },
+  created () {
+    this.orderList()
+    this.product()
   }
 }
 </script>
@@ -72,9 +171,11 @@ th, td {
 thead {
   background-color:#fefff2;
 }
-.tdNo{
+.tdNo,
+.tdTitle {
   cursor: pointer;
 }
+
 .page {
   display: inline-block;
   width: 900px;
@@ -98,5 +199,8 @@ thead {
 }
 .page a:hover:not(.active) {
   background-color: silver;
+}
+.pageNum {
+  cursor: pointer;
 }
 </style>

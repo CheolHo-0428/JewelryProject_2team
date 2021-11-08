@@ -54,7 +54,6 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 	
 	
 	
-	
 	//이부분 테스트 해보시라고 만든거라 나중에 제거예정입니다!
 	@Autowired
 	RoleRepository roleRepository;

@@ -2,6 +2,7 @@ package com.ion.jewelry.model.network.response;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import com.ion.jewelry.model.enums.OrderProductState;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class OrderGroupResponse {
-	private Long id;  //주문번호
+	public Long id;  //주문번호
 	
 	private BigDecimal totalPrice; //총금액
 	
@@ -47,6 +48,8 @@ public class OrderGroupResponse {
 	private LocalDateTime arrivalDate; //상품 도착예정일
 	
 	private Long memberId; //해당 주문 회원아이디
+	
+	private LocalDateTime createdAt;
 	
 	List<OrderDetailResponse> orderDetailResponseList; //주문상세 리스트
 }

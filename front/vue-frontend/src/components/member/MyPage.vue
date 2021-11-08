@@ -53,7 +53,7 @@ export default {
       location.href = '/cart'
     },
     orderList () {
-      location.href = '/orderlist'
+      this.$router.push('/orderlist')
     },
     mypage (account) {
       this.$store.commit('mypage', {account: account, urlPage: this.urlPage})

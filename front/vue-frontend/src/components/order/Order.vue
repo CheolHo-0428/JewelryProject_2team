@@ -1,60 +1,87 @@
 <template>
   <div class="outer">
     <p>주문/결제</p>
-    <div class="box" v-for="i in 2" :key="i">
-      <div class="img">
-        <div></div>
-      </div>
-      <div class="content">
-        다이아 반지
-      </div>
-      <div class="count">
-        수량
-      </div>
-      <div class="price">총 가격</div>
-    </div>
+    <table border="1" class="info">
+      <colgroup>
+        <col style="width:19%">
+        <col style="width:33%">
+        <col style="width:18%">
+        <col style="width:12%">
+        <col style="width:18%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">이미지</th>
+          <th scope="col">상품정보</th>
+          <th scope="col">판매가</th>
+          <th scope="col">수량</th>
+          <th scope="col">합계</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="img"><div></div></td>
+          <td>
+            <strong class="itemName">{{this.$store.state.order.name}}</strong>
+          </td>
+          <td>{{this.$store.state.order.price}}원</td>
+          <td>{{this.$store.state.order.count}}</td>
+          <td>{{this.$store.state.order.count * this.$store.state.order.price}}원</td>
+        </tr>
+      </tbody>
+    </table>
 
     <p class="group">주문 정보</p>
     <form>
       <p>
-        <label>이름</label>
-        <span><input class="name" type="text" value="홍길동" readonly></span>
+        <label for="name">수령인<span class="essential">*</span></label>
+        <span>
+          <input
+            v-model="recipient"
+            v-validate="'required'"
+            type="text"
+            id="name"
+            class="name"
+            minlength="3"
+            maxlength="20"
+            autocomplete="no"
+          />
+        </span>
       </p>
       <p>
-        <label>휴대폰</label>
+        <label>휴대폰<span class="essential">*</span></label>
         <span class="phone">
-          <input value="010" type="text">- <input value="0000" type="text">- <input value="1111" type="text">
-          <a class="btn btn-secondary">수정</a>
+          <input v-model="phone1" type="text" v-validate="'required'">- <input v-model="phone2" type="text" v-validate="'required'">- <input v-model="phone3" type="text" v-validate="'required'">
         </span>
       </p>
       <p>
-        <label>배송주소</label>
+        <label>배송주소<span class="essential">*</span></label>
         <span class="addr">
-          <input type="text" value="(08123)">
-          <a class="btn btn-secondary">우편번호 검색</a> <br>
-          <input type="text" class="text2" value="서울시 송파구 ㅇㅇㅇ아파트"><br>
-          <input type="text" class="text2" value="101동101호">
+          <input class="post" type="text" placeholder="우편번호 입력" v-model="postCode" :disabled="'disabled'">
+          <a class="btn btn-secondary" @click="showApi">우편번호 검색</a> <br>
+          <input type="text" class="text2 basic" v-model="address" placeholder="주소 입력" :disabled="'disabled'"><br>
+          <input type="text" class="text2 detail" autocomplete="off" placeholder="상세 주소 입력" v-validate="'required'" v-model="detailAddress">
         </span>
       </p>
       <p>
-        <label>수령인</label>
-        <span><input class="name" type="text" value="홍길동"></span>
+        <label>예금자명<span class="essential">*</span></label>
+        <span><input class="name" type="text" v-model="depositor" v-validate="'required'"></span>
       </p>
       <p>
-        <label>요청사항</label>
-        <span><input class="request" type="text" placeholder="요청사항을 입력하세요."></span>
+        <label>배송메시지</label>
+        <span><input class="request" type="text" placeholder="요청사항을 입력하세요." v-model="request"></span>
       </p>
       <p>
         <label>결제방식</label>
         <span><input class="pay" type="text" value="무통장입금" readonly></span>
       </p>
       <p>
-        <label>결제은행</label>
+        <label>결제은행<span class="essential">*</span></label>
         <span>
-          <select name="bank" class="bank">
+          <select name="bank" class="bank" @change="optionChange($event)">
             <option value="" selected>-- 선택하세요 --</option>
-            <option value="국민">국민은행000-00000000-00</option>
-            <option value="신한">신한은행111-11111111-11</option>
+            <option value="IBK">기업은행000-00000000-00</option>
+            <option value="WOORI">우리은행111-11111111-11</option>
           </select>
         </span>
       </p>
@@ -64,13 +91,13 @@
       <div class="calc">
           <table>
             <colgroup>
-              <col width="80"/><col width="10"/><col width="70"/>
+              <col width="45%"/><col width="10%"/><col width="45%"/>
             </colgroup>
             <th>총 상품금액</th>
             <th>+</th>
             <th>배송비</th>
             <tr>
-              <td>10000원</td>
+              <td>{{this.$store.state.order.count * this.$store.state.order.price}}원</td>
               <td>+</td>
               <td>2500원</td>
             </tr>
@@ -80,21 +107,132 @@
         <table>
           <th>총 주문금액</th>
           <tr>
-            <td>12500원</td>
+            <td>{{this.$store.state.order.count * this.$store.state.order.price + 2500}}원</td>
           </tr>
         </table>
       </div>
     </div>
 
     <div class="button">
-      <v-btn color="#FBEF97" x-large @click="order" href="/order_">결제하기</v-btn>
+      <v-btn color="#FBEF97" x-large @click="order">결제하기</v-btn>
     </div>
   </div>
 </template>
 
 <script>
-export default {
+import axios from 'axios'
 
+export default {
+  data () {
+    return {
+      phone1: '',
+      phone2: '',
+      phone3: '',
+      recipient: '',
+      depositor: '',
+      postCode: '',
+      address: '',
+      detailAddress: '',
+      request: '',
+      option: ''
+    }
+  },
+  methods: {
+    member () {
+      return axios.get(`http://localhost:8000/jewelry/auth/mypage?account=${this.$store.state.auth.user.account}`)
+        .then(res => {
+          this.phone1 = res.data.data.phone.substring(0, 3)
+          this.phone2 = res.data.data.phone.substring(4, 8)
+          this.phone3 = res.data.data.phone.substring(9, 13)
+          this.depositor = res.data.data.name
+          this.recipient = res.data.data.name
+          this.postCode = res.data.data.post_code
+          this.address = res.data.data.address
+          this.detailAddress = res.data.data.detail_address
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    showApi () {
+      new window.daum.Postcode({
+        oncomplete: (data) => {
+          // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+          // 도로명 주소의 노출 규칙에 따라 주소를 조합한다.
+          // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+          let fullRoadAddr = data.roadAddress
+          // 도로명 주소 변수
+          let extraRoadAddr = ''
+          // 도로명 조합형 주소 변수
+          // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+          // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+          if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+            extraRoadAddr += data.bname
+          } // 건물명이 있고, 공동주택일 경우 추가한다.
+          if (data.buildingName !== '' && data.apartment === 'Y') {
+            extraRoadAddr +=
+              extraRoadAddr !== ''
+                ? ', ' + data.buildingName
+                : data.buildingName
+          }
+          // 도로명, 지번 조합형 주소가 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+          if (extraRoadAddr !== '') {
+            extraRoadAddr = ' (' + extraRoadAddr + ')'
+          }
+          if (fullRoadAddr !== '') {
+            fullRoadAddr += extraRoadAddr
+          }
+          this.postCode = data.zonecode
+          this.address = fullRoadAddr
+          this.detailAddress = ''
+        }
+      }).open()
+    },
+    optionChange (event) {
+      this.option = event.target.value
+    },
+    order () {
+      this.$validator.validate().then((isValid) => {
+        if (isValid && this.option !== '') {
+          axios({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            url: 'http://localhost:8000/jewelry/orderGroup/reg',
+            data: JSON.stringify({
+              resipient: this.recipient,
+              depositor: this.depositor,
+              post_code: this.postCode,
+              address: this.address,
+              detail_address: this.detailAddress,
+              delivery_message: this.request,
+              pay_account: this.option,
+              phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
+              total_price: this.$store.state.order.count * this.$store.state.order.price + 2500,
+              total_count: this.$store.state.order.count,
+              member_id: this.$store.state.auth.user.id
+            })
+          }).then(res => {
+            console.log(res)
+            this.$router.push('/order_')
+          }).catch(error => {
+            console.log(error)
+          })
+        } else {
+          this.$swal.fire({
+            icon: 'warning',
+            title: '입력사항이 입력되지 않았습니다.',
+            showConfirmButton: true,
+            confirmButtonColor: '#F8BB86',
+            footer: '필수입력란을 모두 입력해주세요.'
+          })
+          this.successful = false
+        }
+      })
+    }
+  },
+  created () {
+    this.member()
+  }
 }
 </script>
 
@@ -108,32 +246,35 @@ p {
   font-weight: 700;
   font-size: 1.5rem;
 }
-.box, .bottom {
+
+.info {
+  margin-top: 3rem;
+  border-left: none;
+  border-right: none;
+}
+thead {
+  border-bottom: 1px solid black;
+}
+thead th {
+  padding: 1rem 0;
+  vertical-align: middle;
+}
+tbody td {
+  padding: 1rem 0;
+  vertical-align: middle;
+}
+
+.bottom {
   display: flex;
   margin: 3rem;
-  border-bottom: 1px solid black;;
-}
-.img, .content {
-  height: 100px;
-}
-.img {
-  width: 26%;
+  border-bottom: 1px solid black;
 }
 .img div {
   width: 90px;
   height: 90px;
   background-size: cover;
   background-image: url(https://ifh.cc/g/W8P7ct.jpg);
-  margin-left: 45px;
-}
-.count,
-.price {
-  width: 15%;
-  padding-top: 30px;
-}
-.content {
-  width: 38%;
-  padding-top: 30px;
+  margin: 0 auto;
 }
 
 .bottom {
@@ -141,18 +282,21 @@ p {
   border-top: 1px solid black;
   padding: 36px 0;
 }
-.calc,
+.calc {
+  width: 60%;
+  font-weight: 700;
+}
 .total {
-  width: 50%;
+  width: 40%;
   font-weight: 700;
 }
 table {
   width: 100%;
 }
-th {
+.bottom th {
   padding-bottom: 0.7rem;
 }
-td {
+.bottom td {
   color: #747272;
 }
 .button {
@@ -160,10 +304,11 @@ td {
   justify-content: center;
   margin-top: 2rem;
 }
-.button a {
+.button button {
   border: 1px solid black;
-  padding: 0.5rem 2rem;
+  padding: 2rem 3.5rem !important;
   font-weight: 700;
+  font-size: 1.2rem;
 }
 
 .group {
@@ -195,20 +340,40 @@ input{
   height:20px;
   margin:2px;
 }
+
+.essential {
+  padding: 0;
+  display: inline;
+  color: red;
+}
+.post {
+  margin-left: -12rem;
+}
 .text2{
+  font-size: 0.8rem;
+}
+.text2.detail {
+  border: 1px solid gray;
+  padding: 0.8rem 0;
   width:260px;
+  margin-left: -15rem;
+  font-size: 0.9rem;
 }
-.name {
-  font-size: 1rem;
+.text2.basic {
+  min-width: 500px;
 }
-.phone input {
-  font-size: 1rem;
-  width: 2.8rem;
+.name,
+.phone input,
+.request {
+  padding: 0.8rem 0;
+  border: 1px solid gray;
+  font-size: 0.8rem;
+  text-align: center;
 }
-.phone a,
 .addr a {
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;
+  cursor: pointer;
 }
 .addr input {
   font-size: 1rem;
@@ -216,9 +381,7 @@ input{
 .request {
   width: 30rem;
   font-size: 0.8rem;
-  border-radius: 2px;
-  padding: 0.8rem 0.2rem;
-  border: 1px solid black;
+  padding: 1rem 0.2rem;
 }
 .pay {
   font-size: 0.9rem;
@@ -226,11 +389,11 @@ input{
   color: #747272;
 }
 .bank {
-  border: 1px solid black;
+  border: 1px solid gray;
   width: 12rem;
   font-size: 0.8rem;
-  border-radius: 2px;
   padding: 0.2rem;
+  text-align: center;
 }
 
 </style>
