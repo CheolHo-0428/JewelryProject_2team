@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <p>상품목록</p>
-    <p class="add"><a class="btn btn-dark" href="/regproduct">상품등록</a></p>
+    <p class="add"><router-link class="btn btn-dark" to="/regproduct">상품등록</router-link></p>
     <table class="table">
       <colgroup>
         <col width="20%">
