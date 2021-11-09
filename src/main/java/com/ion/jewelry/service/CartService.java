@@ -1,5 +1,6 @@
 package com.ion.jewelry.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,14 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ion.jewelry.model.entity.Cart;
 import com.ion.jewelry.model.entity.Item;
-import com.ion.jewelry.model.entity.Member;
-import com.ion.jewelry.model.enums.ObjectStatus;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.CartRequest;
 import com.ion.jewelry.model.network.response.CartResponse;
 import com.ion.jewelry.model.network.response.ItemResponse;
-import com.ion.jewelry.model.network.response.MemberResponse;
 import com.ion.jewelry.repository.CartRepository;
 import com.ion.jewelry.repository.ItemRepository;
 
@@ -99,14 +97,12 @@ public class CartService extends AABaseService<CartRequest, CartResponse, Cart> 
 
 		return res;
 	}
-	@Transactional
-	public Header<List<CartResponse>> findByMemberId(Long member_id, Pageable pageable) {
-		Page<Cart> page = cartRepo.findByMemberId(member_id, pageable);
-		List<CartResponse> cartList = page.stream().map(item -> response(item)).collect(Collectors.toList());
-		Pagination pagination = Pagination.builder().totalPages(page.getTotalPages())
-				.totalElements(page.getTotalElements()).currentPage(page.getNumber())
-				.currentElements(page.getNumberOfElements()).build();
 
-		return Header.OK(cartList, pagination);
+	@Transactional
+	public Header<List<CartResponse>> selectCart(Long member_id) {
+		
+		List<Cart> cartList = cartRepo.findByMemberId(member_id);
+		List<CartResponse> cartResList = cartList.stream().map(cart -> response(cart)).collect(Collectors.toList());
+		return Header.OK(cartResList);
 	}
 }

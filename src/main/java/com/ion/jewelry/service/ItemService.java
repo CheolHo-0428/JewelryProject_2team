@@ -1,6 +1,8 @@
 package com.ion.jewelry.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,6 +31,7 @@ import com.ion.jewelry.model.network.response.QnaBoardReplyResponse;
 import com.ion.jewelry.model.network.response.QnaBoardResponse;
 import com.ion.jewelry.model.network.response.ReviewBoardReplyResponse;
 import com.ion.jewelry.model.network.response.ReviewBoardResponse;
+import com.ion.jewelry.repository.CartRepository;
 import com.ion.jewelry.repository.CategoryRepository;
 import com.ion.jewelry.repository.ItemRepository;
 
@@ -61,6 +64,9 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 	
 	@Autowired
 	private ItemRepository itemRepo;
+	
+	@Autowired
+	private CartRepository cartRepo;
 	
 	@Override
 	public Header<ItemResponse> create(Header<ItemRequest> request) {
@@ -307,7 +313,6 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 		return Header.OK(itemQnaBoardInfoResponse);
 	}
 	//--------------------------------------------------------------------------------------------------------------------------------------
-	
 	// 응답 메소드
 	public ItemResponse response(Item item) {
 		ItemResponse res = ItemResponse.builder()

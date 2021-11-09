@@ -1,8 +1,7 @@
 package com.ion.jewelry.controller;
 
 import java.util.List;
-
-import javax.websocket.server.PathParam;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ion.jewelry.model.entity.Cart;
-import com.ion.jewelry.model.enums.ObjectStatus;
+import com.ion.jewelry.model.entity.ImageFile;
+import com.ion.jewelry.model.entity.Item;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.CartRequest;
 import com.ion.jewelry.model.network.response.CartResponse;
-import com.ion.jewelry.model.network.response.ItemResponse;
+import com.ion.jewelry.repository.CartRepository;
+import com.ion.jewelry.repository.ImageFileRepository;
+import com.ion.jewelry.repository.ItemRepository;
 import com.ion.jewelry.service.CartService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,13 @@ import lombok.extern.slf4j.Slf4j;
 public class CartController extends AABaseController<CartRequest, CartResponse, Cart> {
 	@Autowired
 	CartService cartService;
+	@Autowired
+	ItemRepository itemRepository;
+	@Autowired
+	CartRepository cartRepository;
+	@Autowired
+	ImageFileRepository imageFileRepository;
+	
 	
 	@Override
 	@GetMapping("/paging")
@@ -43,16 +52,23 @@ public class CartController extends AABaseController<CartRequest, CartResponse, 
 	}
 	//장바구니 조회
 	@GetMapping("/selectCart")
-	public Header<List<CartResponse>> findByMemberId(@PathParam("member_id") Long member_id,@PageableDefault(size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-		return cartService.findByMemberId(member_id,pageable);
+	public Header<List<CartResponse>> selectCart(Long member_id) {
+		return cartService.selectCart(member_id);
 	}
 	//장바구니등록
 	@PostMapping("/reg")
-	public Header<CartResponse> create(@RequestBody CartRequest request) {
-		Header<CartRequest> result = new Header<CartRequest>();
-
-		result.setData(request);
+	public Header<CartResponse> reg(@RequestBody CartRequest request) {
 		
-		return baseService.create(result);
+		Header<CartRequest> result = new Header<CartRequest>();
+		if(cartRepository.existsByMemberIdAndItemId(request.getMemberId(),request.getItemId())==false){
+			result.setData(request);
+			return baseService.create(result);
+		}else {
+			Optional<Cart> cart = cartRepository.findByMemberIdAndItemId(request.getMemberId(),request.getItemId());
+			request.setId(cart.get().getId());
+			request.setItemCount(cart.get().getItemCount()+request.getItemCount());
+			result.setData(request);
+			return cartService.update(result);
+		}
 	}	
 }
