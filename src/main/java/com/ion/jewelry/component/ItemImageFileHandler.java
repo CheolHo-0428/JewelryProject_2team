@@ -3,6 +3,7 @@ package com.ion.jewelry.component;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ion.jewelry.model.entity.ImageFile;
 import com.ion.jewelry.model.enums.YesNo;
 import com.ion.jewelry.model.network.request.ImageFileRequest;
+import com.ion.jewelry.repository.ImageFileRepository;
 import com.ion.jewelry.repository.ItemRepository;
 
 @Component
@@ -21,13 +23,15 @@ public class ItemImageFileHandler {
 	
 	@Autowired
 	private ItemRepository itemRepo;
-	
+		
 	private ImageFile imageFile;
 	
-	public ImageFile parseFileInfo(
+	public List<ImageFile> parseFileInfo(
 			ImageFileRequest requestDto, 
 			List<MultipartFile> multipartFiles) throws Exception {
-	
+		
+		List<ImageFile> fileList = new ArrayList<ImageFile>();
+		
 		if(!CollectionUtils.isEmpty(multipartFiles)) {
 			LocalDateTime now = LocalDateTime.now();
 			DateTimeFormatter dateTimeFormatter = 
@@ -48,7 +52,9 @@ public class ItemImageFileHandler {
 					System.out.println("file: was not successful");
 			}
 			
-			for(MultipartFile multipartFile : multipartFiles) {
+			for(int i = 0; i < multipartFiles.size(); i++) {
+				MultipartFile multipartFile = multipartFiles.get(i);
+				
 				String originalFileExtension;
 				String contentType = multipartFile.getContentType();
 				
@@ -73,17 +79,19 @@ public class ItemImageFileHandler {
 						.originFileName(multipartFile.getOriginalFilename())
 						.storedFileName(path + File.separator + new_file_name)
 						.storedThumbnail(path + File.separator + new_file_name)
-						.delegateThumbnail(requestDto.getDelegateThumbnail())
+						.delegateThumbnail(requestDto.getDelegateThumbnailList().get(i))
 						.fileSize(multipartFile.getSize())
 						.deleteCheck(YesNo.NO)
 						.item(itemRepo.getOne(requestDto.getItemId()))
 						.build();
 				
+				fileList.add(imageFile);
+								
 				file = new File(absolutePath + path + File.separator + new_file_name);
 				multipartFile.transferTo(file);
 			}
 		}
 		
-		return imageFile;
+		return fileList;
 	}
 }

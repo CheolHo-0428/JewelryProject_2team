@@ -1,6 +1,8 @@
 package com.ion.jewelry.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -47,39 +49,65 @@ public class ImageFileController extends
 	}
 
 	@PostMapping("/regImg") //http://localhost:8000/jewelry/imageFile/reImg?files=""
-	public Header<ImageFileResponse> create(
-			@Valid @RequestParam("delegateThumbnail") String yesNo,
+	public Header<List<ImageFileResponse>> create(
+			@Valid @RequestParam("delegateThumbnail") List<String> yesNo,
 			@Valid @RequestParam("itemId") String itemId,
 			@Valid @RequestParam("file") List<MultipartFile> files
 			) throws Exception {
 		Header<ImageFileRequest> result = new Header<ImageFileRequest>();
 		ImageFileRequest request = new ImageFileRequest();
 		
-		request.setDelegateThumbnail(yesNo.equals("YES") ? YesNo.YES : YesNo.NO);
+		System.out.println("*************************" + yesNo);
+		
+		List<YesNo> yesNoList = yesNo.stream()
+				.map(yn -> 
+					yn.equals("YES") ? YesNo.YES : YesNo.NO
+				)
+				.collect(Collectors.toList());
+		
+		request.setDelegateThumbnailList(yesNoList);
 		request.setItemId(Long.parseLong(itemId));
 		
 		result.setData(request);
+				
 		return imageFileService.createImg(result, files);
 	}
-	
+	/*
 	@PutMapping("/updateImg")
 	public Header<ImageFileResponse> update(
-			@Valid @RequestParam("id") Long id,
-			@Valid @RequestParam("delegateThumbnail") YesNo ThumYesNo,
-			@Valid @RequestParam("delete_check") YesNo dcYesNo,
-			@Valid @RequestParam("itemId") Long itemId,
+			@Valid @RequestParam("id") List<String> idList,
+			@Valid @RequestParam("delegateThumbnail") List<String> tYesNoList,
+			@Valid @RequestParam("deleteCheck") List<String> dYesNoList,
+			@Valid @RequestParam("itemId") String itemId,
 			@Valid @RequestParam("file") List<MultipartFile> files
 			) throws Exception {
+		System.out.println("ID 리스트=================>" + idList);
+		System.out.println("썸네일 리스트=================>" + tYesNoList);
+		System.out.println("삭제 리스트=================>" + dYesNoList);
+		System.out.println("아이템 아이디=================>" + itemId);
+		for (int i = 0; i < files.size(); i++) {
+			System.out.println("파일 이름" + i + "=================>" + files.get(i).getOriginalFilename());
+		}
+		
 		Header<ImageFileRequest> result = new Header<ImageFileRequest>();
-		ImageFileRequest request = ImageFileRequest.builder()
-				.id(id)
-				.delegateThumbnail(ThumYesNo)
-				.delegateThumbnail(dcYesNo)
-				.itemId(itemId)
-				.build();
+		List<Long> numIdList = new ArrayList<Long>();
+		List<YesNo> tList = new ArrayList<YesNo>();
+		List<YesNo> dList = new ArrayList<YesNo>();
+		
+		for (int i = 0; i < files.size(); i++) {
+			numIdList.add(Long.parseLong(idList.get(i)));
+			tList.add(tYesNoList.get(i).equals("YES") ? YesNo.YES : YesNo.NO);
+			tList.add(dYesNoList.get(i).equals("YES") ? YesNo.YES : YesNo.NO);
+		}
+		ImageFileRequest request = new ImageFileRequest()
+				.setIdList(numIdList)
+				.setDelegateThumbnailList(tList)
+				.setDeleteCheckList(dList)
+				.setItemId(Long.parseLong(itemId));
+		
 		result.setData(request);
 		return imageFileService.updateImg(result, files);		
 	}
-	
+	*/
 	
 }

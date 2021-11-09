@@ -12,9 +12,9 @@
           <tbody>
             <tr>
               <th scope="col">상품명</th>
-              <td><input type="text" placeholder="상품명 입력" v-model="name"></td>
+              <td><input type="text" class="input" placeholder="상품명 입력" v-model="name"></td>
               <th scope="col">재고량</th>
-              <td><input type="number" placeholder="재고량 입력" v-model="stock"></td>
+              <td><input type="number" class="input" placeholder="재고량 입력" v-model="stock"></td>
             </tr>
             <tr>
               <th scope="col">상품분류</th>
@@ -28,18 +28,37 @@
                 </select>
               </td>
               <th scope="col">상품가격</th>
-              <td><input type="number" placeholder="상품가격 입력" v-model="price"></td>
+              <td><input type="number" class="input" placeholder="상품가격 입력" v-model="price"></td>
             </tr>
             <tr>
               <th scope="col">이미지</th>
               <td class="img" colspan="3">
-                <v-file-input id="file" name="files" label="File input" style="width: 200px;" multiple="multiple"></v-file-input>
-                <!-- <input type="file" multiple> -->
+                <v-file-input
+                  id="file" name="files"
+                  label="File input" style="width: 200px;"
+                  multiple="multiple" v-model="files"
+                  @click="isFileChange"
+                  >
+                </v-file-input>
+                <div v-if="isFile">
+                  <ol>
+                    <li v-for="(file, i) in files" :key="i" class="groupli">
+                      파일이름: {{ file.name }}&nbsp;&nbsp; || &nbsp;
+                      파일용량: {{ file.size * 0.001 }}kB &nbsp;&nbsp; || &nbsp;&nbsp;
+                      썸네일등록:
+                        <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
+                        <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO
+                    </li>
+                  </ol>
+                </div>
+                <!-- <p v-if="isFile">File Name : {{ files[0].name }}</p> -->
+                <!-- <p v-if="isFile">File Name : {{ files[1].name }}</p> -->
               </td>
             </tr>
           </tbody>
         </table>
       </form>
+      <span>체크리스트: {{ delegate_thumbnail_list }}</span>
     </div>
 
     <div class="button">
@@ -60,7 +79,10 @@ export default {
       price: '',
       stock: '',
       delegate_thumbnail: '',
-      item_id: ''
+      delegate_thumbnail_list: [],
+      item_id: '',
+      isFile: false,
+      files: []
     }
   },
   methods: {
@@ -121,11 +143,12 @@ export default {
           })
         let frm = new FormData()
         let imageFile = document.getElementById('file')
-        frm.append('delegateThumbnail', this.delegate_thumbnail)
+        frm.append('delegateThumbnail', this.delegate_thumbnail_list)
         frm.append('itemId', this.item_id)
-        console.log('************************', imageFile.files)
+        // console.log('************************', imageFile.files)
         for (let i = 0; i < imageFile.files.length; i++) {
           frm.append('file', imageFile.files[i])
+          // frm.append('delegateThumbnail', this.delegate_thumbnail_list[i])
         }
         if (imageFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
@@ -143,6 +166,10 @@ export default {
     },
     categoryChange (event) {
       this.category_id = event.target.value
+    },
+    isFileChange () {
+      this.isFile = true
+      this.delegate_thumbnail_list = []
     }
   }
 }
@@ -159,10 +186,12 @@ p.top {
   font-size: 1.5rem;
   margin-bottom: 3rem;
 }
-
 .group {
   float: left;
   margin-bottom: 2rem;
+}
+.groupli {
+  float: left;
 }
 .table {
   width: 850px;
@@ -170,7 +199,7 @@ p.top {
   border-bottom: 0.2rem solid black;
   margin-bottom: 5rem;
 }
-input {
+.input {
   text-align: center;
   width: 100% !important;
   font-size: 0.8rem;
@@ -206,5 +235,4 @@ th {
 .button {
   margin-bottom: 2rem;
 }
-
 </style>

@@ -60,7 +60,7 @@ public class Item extends AABaseTimeEntity {
 	private List<OrderDetail> orderDetailList; // OrderDetail 테이블 연관관계 설정(1:N)
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
 	private List<Cart> cartList; // Cart 테이블 연관관계 설정(1:N)
 	
 	@JsonManagedReference

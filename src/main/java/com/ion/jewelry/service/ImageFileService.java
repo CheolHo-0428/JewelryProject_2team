@@ -1,6 +1,8 @@
 package com.ion.jewelry.service;
 
 import java.io.File;
+import java.nio.file.spi.FileSystemProvider;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.FileHandler;
@@ -8,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -55,22 +58,77 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 	}
 	
 	@Transactional
-	public Header<ImageFileResponse> createImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {
+	public Header<List<ImageFileResponse>> createImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {
 		ImageFileRequest imageFileRequest = request.getData();
+		List<ImageFile> imageFileList = fileHandler.parseFileInfo(imageFileRequest, files);
+		List<ImageFileResponse> imageFileResList = new ArrayList<ImageFileResponse>();
 		
-		ImageFile imageFile = fileHandler.parseFileInfo(imageFileRequest, files);
-		ImageFile newImageFile = baseRepo.save(imageFile);
-		ImageFileResponse imageFileResponse = response(newImageFile);
-		
-		return Header.OK(imageFileResponse);
+		if(!imageFileList.isEmpty()) {
+			for(ImageFile image : imageFileList) {
+				ImageFile newImageFile = baseRepo.save(image);
+				ImageFileResponse imageFileResponse = response(newImageFile);
+				imageFileResList.add(imageFileResponse);
+			}		
+		}
+		return Header.OK(imageFileResList);
 	}
-	
+	/*
 	@Transactional
 	public Header<ImageFileResponse> updateImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {
-		ImageFileRequest imageFileRequest = request.getData();
-		Optional<ImageFile> optional = baseRepo.findById(imageFileRequest.getId());
 		
-		ImageFile imageFile = fileHandler.parseFileInfo(imageFileRequest, files);
+		ImageFileRequest imageFileRequest = request.getData();
+		
+		for (int i = 0; i < files.size(); i++) {
+			Long id = imageFileRequest.getIdList().get(i);
+			
+			if(id == null) {
+				System.out.println("null");
+				
+			} else {
+				YesNo deleteCheck =  imageFileRequest.getDeleteCheckList().get(i);
+				
+				Optional<ImageFile> optional = baseRepo.findById(id);
+				optional
+					.map(image -> {
+						if(deleteCheck == YesNo.YES) { // map if start
+							String path = image.getStoredFileName();
+							File file = new File(new File("").getAbsoluteFile() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+							System.out.println("!!!" + path);
+							if (file.exists()) {
+								if (file.delete()) {
+									System.out.println("파일삭제 성공");
+									delete(id);
+								} else {
+									System.out.println("파일삭제 실패");
+								}
+							} else {
+								System.out.println("파일이 존재하지 않습니다.");
+							}
+						} // map if end 
+						else {
+							image
+								.setOriginFileName(imageFileRequest.getOriginFileName())
+								.setStoredFileName(imageFileRequest.getStoredFileName())
+								.setStoredThumbnail(imageFileRequest.getStoredThumbnail())
+								.setFileSize(imageFileRequest.getFileSize())
+								.setDelegateThumbnail(imageFileRequest.getDelegateThumbnailList().get(i))
+								.setDeleteCheck(imageFileRequest.getDeleteCheckList().get(i));
+								
+							return image;
+						}
+					})
+					.map(image -> baseRepo.save(image))
+					.map(image -> response(image))
+					.map(image -> Header.OK(image))
+					.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
+			} // else end
+			
+			
+				
+		} //for end
+		
+		
+		List<ImageFile> imageFileList = fileHandler.parseFileInfo(imageFileRequest, files);
 		
 		return optional
 				.map(image -> {
@@ -104,9 +162,11 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 				.map(image -> baseRepo.save(image))
 				.map(image -> response(image))
 				.map(image -> Header.OK(image))
-				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));		
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
+						
 	}
-
+	*/
+		
 	@Override
 	public Header<ImageFileResponse> update(Header<ImageFileRequest> request) {
 		ImageFileRequest imageFileRequest = request.getData();
@@ -128,7 +188,7 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 				.map(image -> Header.OK(image))
 				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
 	}
-
+	
 	@Override
 	public Header delete(Long id) {
 		Optional<ImageFile> optional = baseRepo.findById(id);
