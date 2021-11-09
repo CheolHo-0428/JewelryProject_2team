@@ -264,6 +264,9 @@ export default {
 </script>
 
 <style scoped>
+.pageNum{
+  cursor:pointer;
+}
 .outer {
   width: 950px;
   margin: 4rem auto;

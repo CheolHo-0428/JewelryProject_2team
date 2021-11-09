@@ -96,11 +96,11 @@ export default {
             member_id: this.$store.state.auth.user.id,
             item_id: this.$store.state.item.itemId
           }).then((response) => {
+            this.$router.push('/cart')
             console.log(response)
           }).catch((error) => {
             console.log(error)
           })
-          this.$router.push('/cart')
         }
       })
     },
