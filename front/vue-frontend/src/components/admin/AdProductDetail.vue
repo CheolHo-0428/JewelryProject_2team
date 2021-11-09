@@ -57,8 +57,19 @@
             <tr>
               <th scope="col">이미지</th>
               <td class="img" colspan="3">
+                <v-file-input
+                  id="file" name="files"
+                  label="File input" style="width: 200px;"
+                  multiple="multiple"
+                >
+                </v-file-input>
+
                 <div class="imgBox">
-                  <div v-for="i in 3" :key="i"></div>
+                  <div v-for="(image, i) in image_file_list" :key="i" class="itemImage">
+                    <img :src="image.stored_file_name">
+                    <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
+                    <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO
+                  </div>
                 </div>
               </td>
             </tr>
@@ -91,7 +102,11 @@ export default {
       updated_at: '',
       status: '',
       stored_file_name: '',
-      deleteImg: false
+      stored_file_name_list: [],
+      deleteImg: false,
+      image_file_list: [],
+      files: [],
+      delegate_thumbnail_list: []
     }
   },
   methods: {
@@ -199,6 +214,16 @@ export default {
         .catch((err) => {
           console.log(err)
         })
+      await axios
+        .get(`http://localhost:8000/jewelry/item/${this.id}/itemInfo`, {
+          data: {
+            id: this.id
+          }
+        }).then((res) => {
+          this.image_file_response_list = []
+          this.image_file_list = res.data.data.item_response.image_file_response_list
+          console.log(this.image_file_list[0])
+        })
     }
   },
   categoryChange (event) {
@@ -263,14 +288,19 @@ td {
   overflow-x: scroll;
 }
 .imgBox {
-  display: flex;
+  display: block;
 }
 .imgBox div {
   width: 100px;
   height: 100px;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
-  margin-left: 35px;
+  /* background-image: url(https://ifh.cc/g/W8P7ct.jpg); */
+  /* margin-left: 35px; */
+}
+.itemImage {
+  display: flex;
+  cursor: pointer;
+  margin-bottom: 30px;
 }
 .button button {
   border: 1px solid black;
