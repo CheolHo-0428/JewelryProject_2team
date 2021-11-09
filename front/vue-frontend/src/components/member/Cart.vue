@@ -1,28 +1,43 @@
 <template>
   <div class="outer">
     <p>장바구니</p>
-    <!-- <div class="box"> -->
-    <div class="box" v-for="(cart, i) in carts" :key="i">
-      <!-- <div class="check">
-        <v-checkbox name="checkbox" v-model="check" color="#FBCD6E"></v-checkbox>
-        <label for="checkbox"></label>
-      </div> -->
-      <div class="img">
-        <div></div>
-      </div>
-      <!-- <div v-for="(name,i) in names" :key="i"  class="content" >
-        {{name}}
-      </div>       -->
-      <div class="content" >
-        {{names[i]}}
-      </div>
-      <div class="count">
-        {{cart.item_count}}
-      </div>
-      <div class="price">
-        {{prices[i]}}
-      </div>
-    </div>
+    <table border="1" class="info">
+      <colgroup>
+        <col style="width:8%">
+        <col style="width:15%">
+        <col style="width:32%">
+        <col style="width:17%">
+        <col style="width:10%">
+        <col style="width:28%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th></th>
+          <th scope="col">이미지</th>
+          <th scope="col">상품정보</th>
+          <th scope="col">판매가</th>
+          <th scope="col">수량</th>
+          <th scope="col">합계</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(cart, i) in carts" :key="i">
+          <td>
+            <div class="check">
+              <v-checkbox name="checkbox" v-model="check[i]" :value="cart.item_id" color="#FBCD6E" @change="select(i)"></v-checkbox>
+              <label for="checkbox"></label>
+            </div>
+          </td>
+          <td class="img"><div></div></td>
+          <td>
+            <strong class="itemName">{{names[i]}}</strong>
+          </td>
+          <td>{{prices[i]}}원</td>
+          <td>{{cart.item_count}}</td>
+          <td>{{prices[i] * cart.item_count}}원</td>
+        </tr>
+      </tbody>
+    </table>
 
     <div class="bottom">
       <div class="calc">
@@ -34,9 +49,9 @@
             <th>+</th>
             <th>배송비</th>
             <tr>
-              <td>{{product_total}}</td>
+              <td>{{product_total}}원</td>
               <td>+</td>
-              <td>{{delivery}}</td>
+              <td>2500원</td>
             </tr>
           </table>
       </div>
@@ -44,15 +59,15 @@
         <table>
           <th>총 주문금액</th>
           <tr>
-            <td>{{order_total}}</td>
+            <td>{{order_total}}원</td>
           </tr>
         </table>
       </div>
     </div>
 
     <div class="button">
-      <v-btn color="#FBEF97" x-large href="/order">구매하기</v-btn>
-      <v-btn color="#F4F2E7" x-large href="/">쇼핑 계속하기</v-btn>
+      <v-btn color="#FBEF97" x-large @click="order">구매하기</v-btn>
+      <v-btn color="#F4F2E7" x-large to="/">쇼핑 계속하기</v-btn>
     </div>
   </div>
 </template>
@@ -69,9 +84,8 @@ export default {
       prices: [],
       names: [],
       images: [],
-      product_total: '',
-      delivery: '',
-      order_total: ''
+      product_total: 0,
+      order_total: 2500
 
     }
   },
@@ -79,32 +93,44 @@ export default {
     this.cart()
   },
   methods: {
+    select (i) {
+      if (this.check[i]) this.product_total += (this.prices[i] * this.carts[i].item_count)
+      else this.product_total -= (this.prices[i] * this.carts[i].item_count)
+      this.order_total = this.product_total + 2500
+    },
     cart () {
       return axios.get('http://localhost:8000/jewelry/cart/selectCart?member_id=' + this.$store.state.auth.user.id)
-        .then(res => {
+        .then(async res => {
           this.carts = res.data.data
-          console.log(res.data.data)
-          console.log('길이' + this.carts.length)
-          for (let i = 0; i < this.carts.length; i++) {
-            axios.get('http://localhost:8000/jewelry/item/' + this.carts[i].item_id + '/itemInfo')
-              .then(res => {
-                this.names[i] = res.data.data.item_response.name
-                this.prices[i] = res.data.data.item_response.price
-                this.images[i] = res.data.data.item_response.image_file_response_list
 
-                console.log(res.data.data.item_response.name)
-                console.log(res.data.data.item_response.price)
-                console.log(res.data.data.item_response.image_file_response_list)
-                console.log('이름' + this.names)
-                console.log('가격' + this.prices)
+          for (let i = 0; i < this.carts.length; i++) {
+            await axios.get('http://localhost:8000/jewelry/item/' + this.carts[i].item_id + '/itemInfo')
+              .then(res => {
+                this.names.push(res.data.data.item_response.name)
+                this.prices.push(res.data.data.item_response.price)
+                this.images.push(res.data.data.item_response.image_file_response_list)
               })
           }
         })
         .catch(err => {
           console.log(err)
-        }).finally(() => {
-          console.log('여기서실행')
         })
+    },
+    order () {
+      this.$store.commit('resetCart')
+      for (let i = 0; i < this.check.length; i++) {
+        if (this.check[i]) {
+          this.$store.commit('removeCartList', this.carts[i].id)
+          this.$store.commit('cchangeCount', this.carts[i].item_count)
+          this.$store.commit('cchangeItemId', this.carts[i].item_id)
+          this.$store.commit('cchangePrice', this.prices[i])
+          this.$store.commit('cchangeName', this.names[i])
+          // console.log(this.carts[i].item_count, this.carts[i].item_id, this.prices[i], this.names[i])
+        }
+      }
+
+      this.$store.commit('changeOrderCart', true)
+      this.$router.push('/order')
     }
   }
 }
@@ -120,9 +146,29 @@ p {
   font-weight: 700;
   font-size: 1.5rem;
 }
+
+.info {
+  margin-top: 3rem;
+  border-left: none;
+  border-right: none;
+}
+.info thead {
+  border-bottom: 1px solid black;
+}
+.info thead th {
+  padding: 1rem 0;
+  vertical-align: middle;
+}
+.info tbody td {
+  padding: 0.4rem 0;
+  vertical-align: middle;
+}
+.info tr {
+  border-bottom: 0.5px solid black;
+}
+
 .box, .bottom {
   display: flex;
-  margin: 3rem;
   border-bottom: 1px solid black;;
 }
 .img, .content {
@@ -138,15 +184,12 @@ p {
   width: 18px;
   height: 18px;
 }
-.img {
-  width: 26%;
-}
 .img div {
   width: 90px;
   height: 90px;
   background-size: cover;
   background-image: url(https://ifh.cc/g/W8P7ct.jpg);
-  margin-left: 45px;
+  margin: 0 auto;
 }
 .count,
 .price {
@@ -163,16 +206,19 @@ p {
   border-top: 1px solid black;
   padding: 36px 0;
 }
-.calc,
+.calc {
+  width: 60%;
+  font-weight: 700;
+}
 .total {
-  width: 50%;
+  width: 40%;
   font-weight: 700;
 }
 table {
   width: 100%;
 }
 th {
-  padding-bottom: 0.7rem;
+  padding-bottom: 1rem;
 }
 td {
   color: #747272;
@@ -183,7 +229,8 @@ td {
   justify-content: center;
   margin-top: 2rem;
 }
-.button a {
+.button a,
+.button button {
   border: 1px solid black;
   margin: 0 0.6rem;
   padding: 0.5rem 2rem;

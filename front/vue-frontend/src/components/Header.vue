@@ -40,7 +40,7 @@
               >
             </li>
             <li class="nav-item notice">
-              <router-link to="/notice" class="nav-link">NOTICE</router-link>
+              <a class="nav-link" @click="notice">NOTICE</a>
             </li>
             <li v-if="!currentUser" class="nav-item signup">
               <router-link to="/signup" class="nav-link">SIGNUP</router-link>
@@ -112,12 +112,19 @@ export default {
         this.$router.go()
       })
       this.keyword = ''
+    },
+    notice () {
+      this.$store.commit('noticeReset')
+      this.$router.push('/notice')
     }
   }
 }
 </script>
 
 <style scoped>
+a {
+  cursor: pointer;
+}
 .container-fluid {
   padding: 5vh 2rem;
   width: fit-content;

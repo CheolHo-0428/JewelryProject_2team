@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ion.jewelry.model.entity.Member;
-import com.ion.jewelry.model.entity.NoticeBoard;
 import com.ion.jewelry.model.entity.OrderDetail;
 import com.ion.jewelry.model.entity.OrderGroup;
 import com.ion.jewelry.model.enums.OrderProductState;
@@ -21,7 +20,6 @@ import com.ion.jewelry.model.enums.PayMethod;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.OrderGroupRequest;
-import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.model.network.response.OrderDetailResponse;
 import com.ion.jewelry.model.network.response.OrderGroupOrderDetailInfoResponse;
 import com.ion.jewelry.model.network.response.OrderGroupResponse;

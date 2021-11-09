@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <p>주문/결제</p>
-    <table border="1" class="info">
+    <table border="1" class="info" v-if="!this.$store.state.order.isCart">
       <colgroup>
         <col style="width:19%">
         <col style="width:33%">
@@ -27,6 +27,36 @@
           <td>{{this.$store.state.order.price}}원</td>
           <td>{{this.$store.state.order.count}}</td>
           <td>{{this.$store.state.order.count * this.$store.state.order.price}}원</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <table border="1" class="info" v-if="this.$store.state.order.isCart">
+      <colgroup>
+        <col style="width:19%">
+        <col style="width:33%">
+        <col style="width:18%">
+        <col style="width:12%">
+        <col style="width:18%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">이미지</th>
+          <th scope="col">상품정보</th>
+          <th scope="col">판매가</th>
+          <th scope="col">수량</th>
+          <th scope="col">합계</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(c, i) in $store.state.order.cname" :key="i">
+          <td class="img"><div></div></td>
+          <td>
+            <strong class="itemName">{{$store.state.order.cname[i]}}</strong>
+          </td>
+          <td>{{$store.state.order.cprice[i]}}원</td>
+          <td>{{$store.state.order.ccount[i]}}</td>
+          <td>{{$store.state.order.ccount[i] * $store.state.order.cprice[i]}}원</td>
         </tr>
       </tbody>
     </table>
@@ -87,7 +117,7 @@
       </p>
     </form>
 
-    <div class="bottom">
+    <div class="bottom" v-if="!this.$store.state.order.isCart">
       <div class="calc">
           <table>
             <colgroup>
@@ -108,6 +138,32 @@
           <th>총 주문금액</th>
           <tr>
             <td>{{this.$store.state.order.count * this.$store.state.order.price + 2500}}원</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="bottom" v-if="this.$store.state.order.isCart">
+      <div class="calc">
+          <table>
+            <colgroup>
+              <col width="45%"/><col width="10%"/><col width="45%"/>
+            </colgroup>
+            <th>총 상품금액</th>
+            <th>+</th>
+            <th>배송비</th>
+            <tr>
+              <td>{{this.totalCart}}원</td>
+              <td>+</td>
+              <td>2500원</td>
+            </tr>
+          </table>
+      </div>
+      <div class="total">
+        <table>
+          <th>총 주문금액</th>
+          <tr>
+            <td>{{this.totalCart + 2500}}원</td>
           </tr>
         </table>
       </div>
@@ -134,10 +190,19 @@ export default {
       address: '',
       detailAddress: '',
       request: '',
-      option: ''
+      option: '',
+      totalCart: 0,
+      totalCount: 0
     }
   },
   methods: {
+    cart () {
+      let n = this.$store.state.order.ccount.length
+      for (let i = 0; i < n; i++) {
+        this.totalCart += this.$store.state.order.ccount[i] * this.$store.state.order.cprice[i]
+        this.totalCount += this.$store.state.order.ccount[i]
+      }
+    },
     member () {
       return axios.get(`http://localhost:8000/jewelry/auth/mypage?account=${this.$store.state.auth.user.account}`)
         .then(res => {
@@ -194,29 +259,55 @@ export default {
     order () {
       this.$validator.validate().then((isValid) => {
         if (isValid && this.option !== '') {
-          axios({
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            url: 'http://localhost:8000/jewelry/orderGroup/reg',
-            data: JSON.stringify({
-              resipient: this.recipient,
-              depositor: this.depositor,
-              post_code: this.postCode,
-              address: this.address,
-              detail_address: this.detailAddress,
-              delivery_message: this.request,
-              pay_account: this.option,
-              phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
-              total_price: this.$store.state.order.count * this.$store.state.order.price + 2500,
-              total_count: this.$store.state.order.count,
-              member_id: this.$store.state.auth.user.id
+          if (!this.$store.state.order.isCart) {
+            axios({
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              url: 'http://localhost:8000/jewelry/orderGroup/reg',
+              data: JSON.stringify({
+                resipient: this.recipient,
+                depositor: this.depositor,
+                post_code: this.postCode,
+                address: this.address,
+                detail_address: this.detailAddress,
+                delivery_message: this.request,
+                pay_account: this.option,
+                phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
+                total_price: this.$store.state.order.count * this.$store.state.order.price + 2500,
+                total_count: this.$store.state.order.count,
+                member_id: this.$store.state.auth.user.id
+              })
+            }).then(res => {
+              console.log(res)
+              this.$router.push('/order_')
+            }).catch(error => {
+              console.log(error)
             })
-          }).then(res => {
-            console.log(res)
-            this.$router.push('/order_')
-          }).catch(error => {
-            console.log(error)
-          })
+          } else {
+            axios({
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              url: 'http://localhost:8000/jewelry/orderGroup/reg',
+              data: JSON.stringify({
+                resipient: this.recipient,
+                depositor: this.depositor,
+                post_code: this.postCode,
+                address: this.address,
+                detail_address: this.detailAddress,
+                delivery_message: this.request,
+                pay_account: this.option,
+                phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
+                total_price: this.totalCart + 2500,
+                total_count: this.totalCount,
+                member_id: this.$store.state.auth.user.id
+              })
+            }).then(res => {
+              console.log(res)
+              this.$router.push('/order_')
+            }).catch(error => {
+              console.log(error)
+            })
+          }
         } else {
           this.$swal.fire({
             icon: 'warning',
@@ -231,6 +322,7 @@ export default {
     }
   },
   created () {
+    this.cart()
     this.member()
   }
 }

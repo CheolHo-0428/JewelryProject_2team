@@ -92,10 +92,10 @@
         </tr>
         <tr>
           <th scope="col">총 주문금액</th>
-            <td><input type="text" readonly :value="orderGroupInfo.total_price +'원'"></td>
-            <th scope="col">예금자명</th>
-            <td><input type="text" :value="orderGroupInfo.depositor" readonly></td>
-          </tr>
+          <td><input type="text" readonly :value="orderGroupInfo.total_price +'원'"></td>
+          <th scope="col">예금자명</th>
+          <td><input type="text" :value="orderGroupInfo.depositor" readonly></td>
+        </tr>
       </tbody>
     </table>
 

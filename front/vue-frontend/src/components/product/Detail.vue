@@ -109,6 +109,7 @@ export default {
       this.$store.commit('changeItemId', this.$store.state.item.itemId)
       this.$store.commit('changePrice', this.price)
       this.$store.commit('changeName', this.name)
+      this.$store.commit('changeOrderCart', false)
       this.$router.push('/order')
     },
     plus () {

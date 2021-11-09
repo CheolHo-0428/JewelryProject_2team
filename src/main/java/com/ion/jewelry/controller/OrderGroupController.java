@@ -21,7 +21,6 @@ import com.ion.jewelry.model.entity.OrderGroup;
 import com.ion.jewelry.model.enums.OrderProductState;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.OrderGroupRequest;
-import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.model.network.response.OrderGroupOrderDetailInfoResponse;
 import com.ion.jewelry.model.network.response.OrderGroupResponse;
 import com.ion.jewelry.service.OrderGroupService;
