@@ -10,14 +10,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Accessors(chain = true)
 public class ImageFileRequest {
 	
 	private Long id; //이미지번호
+	
+	private List<Long> idList; //이미지번호리스트
 	
 	private String originFileName; //원본파일이름
 	
@@ -27,9 +31,13 @@ public class ImageFileRequest {
 	
 	private YesNo delegateThumbnail; //대표썸네일여부
 	
+	private List<YesNo> delegateThumbnailList; //대표썸네일여부 리스트
+	
 	private Long fileSize; //파일크기
 	
 	private YesNo deleteCheck; //파일삭제여부
+	
+	private List<YesNo> deleteCheckList; //파일삭제여부
 	
 	private Long itemId; //해당상품 번호
 	

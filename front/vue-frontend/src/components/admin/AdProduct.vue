@@ -70,7 +70,7 @@
           <th>상품가격</th>
           <th>재고</th>
           <th>등록상태</th>
-          <th>상세보기</th>
+          <th></th>
         </tr>
       </thead>
 
