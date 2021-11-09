@@ -2,6 +2,8 @@ package com.ion.jewelry.controller;
 
 import java.util.List;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ion.jewelry.model.entity.OrderGroup;
+import com.ion.jewelry.model.enums.OrderProductState;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.OrderGroupRequest;
+import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.model.network.response.OrderGroupOrderDetailInfoResponse;
 import com.ion.jewelry.model.network.response.OrderGroupResponse;
 import com.ion.jewelry.service.OrderGroupService;
@@ -55,6 +59,24 @@ public class OrderGroupController extends
 	public Header<OrderGroupOrderDetailInfoResponse> orderDetailInfo(@PathVariable Long id){
 		log.info("read id : {}", id);
 		return orderGroupService.orderDetailInfo(id);
+	}
+	
+	@GetMapping("/searchDate") // 날짜로 찾기 & 페이징
+	public Header<List<OrderGroupResponse>> searchWriter(@PathParam("date1")String date1, @PathParam("date2")String date2, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		
+		return orderGroupService.searchDate(date1, date2, pageable);
+	}
+	
+	@GetMapping("/searchState") // 주문상태로 찾기 & 페이징
+	public Header<List<OrderGroupResponse>> searchState(@PathParam("state")OrderProductState state, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		
+		return orderGroupService.searchState(state, pageable);
+	}
+	
+	@GetMapping("/searchName") // 주문자명 찾기 & 페이징
+	public Header<List<OrderGroupResponse>> searchName(@PathParam("name")String name, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+		
+		return orderGroupService.searchName(name, pageable);
 	}
 	
 	@PostMapping("/reg")

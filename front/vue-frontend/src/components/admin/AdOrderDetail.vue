@@ -33,7 +33,7 @@
       </tbody>
     </table>
 
-    <p class="group">주문 정보</p>
+    <p class="group">주문 정보<span class="modifyText">( * 수정가능 )</span></p>
     <table class="table t2">
       <colgroup>
         <col width="20%">
@@ -41,29 +41,29 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="col">주문번호</th>
-          <td><input type="text" :value="orderGroupInfo.id" readonly></td>
+          <th scope="col">회원번호</th>
+          <td><input type="text" :value="orderGroupInfo.member_id" style="outline:none;" readonly></td>
           <th scope="col">주문일자</th>
-          <td><input type="text" :value="orderGroupInfo.created_at.split('T')[0]" readonly></td>
+          <td><input type="text" v-if="orderGroupInfo.created_at" :value="orderGroupInfo.created_at.split('T')[0]" style="outline:none;" readonly></td>
         </tr>
         <tr>
           <th scope="col">결제방법</th>
-          <td><input type="text" value="무통장입금" readonly></td>
+          <td><input type="text" value="무통장입금" style="outline:none;" readonly></td>
           <th scope="col">결제계좌</th>
-          <td><input type="text" :value="this.bank" readonly></td>
+          <td><input type="text" :value="this.bank" style="outline:none;" readonly></td>
         </tr>
         <tr>
           <th scope="col">입금자명</th>
-          <td><input type="text" :value="orderGroupInfo.depositor" readonly></td>
-          <th scope="col">전화번호</th>
-          <td><input type="text" :value="orderGroupInfo.phone"></td>
+          <td><input type="text" :value="orderGroupInfo.depositor" style="outline:none;" readonly></td>
+          <th scope="col">전화번호*</th>
+          <td><input type="text" v-model="phone"></td>
         </tr>
         <tr>
           <th scope="col">총결제금액</th>
-          <td><input type="text" :value="orderGroupInfo.total_price + '원'" readonly></td>
-          <th scope="col">주문처리상태</th>
+          <td><input type="text" :value="orderGroupInfo.total_price + '원'" style="outline:none;" readonly></td>
+          <th scope="col">주문처리상태*</th>
           <td>
-            <select name="order" class="op">
+            <select name="order" class="op" @change="optionChange($event)">
               <option value="BEFORE_BANK_TRANSFER" :selected="orderGroupInfo.order_product_state === 'order_product_state'">입금전</option>
               <option value="READY" :selected="orderGroupInfo.order_product_state === 'READY'">배송준비중</option>
               <option value="SHIPPING" :selected="orderGroupInfo.order_product_state === 'SHIPPING'">배송중</option>
@@ -74,7 +74,7 @@
       </tbody>
     </table>
 
-    <p class="group">배송 정보</p>
+    <p class="group">배송 정보<span class="modifyText">( 수정가능 )</span></p>
     <table class="table t3">
       <colgroup>
         <col width="10%">
@@ -86,8 +86,8 @@
       </colgroup>
       <tbody>
         <tr>
-          <th scope="col">주문자번호</th>
-          <td><input style="outline:none;" type="text" :value="orderGroupInfo.member_id" readonly></td>
+          <th scope="col">수령인</th>
+          <td><input type="text" v-model="recipient"></td>
           <th scope="col">우편번호</th>
           <td><input type="text" v-model="postCode"></td>
           <th scope="col">주소변경</th>
@@ -97,11 +97,11 @@
           <th scope="col">주소</th>
           <td colspan="3"><input type="text" v-model="address"></td>
           <th scope="col">상세주소</th>
-          <td><input style="outline:none;" type="text" v-model="detailAddress"></td>
+          <td><input type="text" v-model="detailAddress"></td>
         </tr>
         <tr>
           <th scope="col">요청사항</th>
-          <td colspan="5"><input type="text" :value="orderGroupInfo.delivery_message"></td>
+          <td colspan="5"><input type="text" v-model="request"></td>
         </tr>
       </tbody>
     </table>
@@ -126,10 +126,17 @@ export default {
       detailId: [],
       postCode: 0,
       address: '',
-      detailAddress: ''
+      detailAddress: '',
+      phone: '',
+      recipient: '',
+      request: '',
+      option: ''
     }
   },
   methods: {
+    optionChange (event) {
+      this.option = event.target.value
+    },
     list () {
       this.$swal.fire({
         icon: 'warning',
@@ -147,31 +154,31 @@ export default {
       })
     },
     save () {
-      // axios
-      //   .put('http://localhost:8000/jewelry/orderGroup/update', {
-      //     title: this.title,
-      //     content: this.content,
-      //     id: this.id,
-      //     writer: this.$store.state.auth.user.account
-      //   }, {
-      //     headers: {
-      //       'Authorization': 'Bearer ' + this.$store.state.auth.user.token
-      //     }
-      //   })
-      //   .then((res) => {
-      //     console.log(res)
-      //     this.$swal.fire({
-      //       icon: 'success',
-      //       title: '주문정보가 수정되었습니다.',
-      //       text: '목록으로 이동합니다.',
-      //       confirmButtonColor: '#CEF6CE'
-      //     }).then(() => {
-      //       this.$router.push('/adorder')
-      //     })
-      //   })
-      //   .catch((error) => {
-      //     console.log(error)
-      //   })
+      axios
+        .put('http://localhost:8000/jewelry/orderGroup/update', {
+          delivery_message: this.request,
+          resipient: this.recipient,
+          order_product_state: this.option,
+          post_code: this.postCode,
+          address: this.address,
+          detail_address: this.detailAddress,
+          phone: this.phone,
+          id: this.orderGroupInfo.id
+        })
+        .then((res) => {
+          console.log(res)
+          this.$swal.fire({
+            icon: 'success',
+            title: '주문정보가 수정되었습니다.',
+            text: '목록으로 이동합니다.',
+            confirmButtonColor: '#CEF6CE'
+          }).then(() => {
+            this.$router.push('/adorder')
+          })
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     },
     showApi () {
       new window.daum.Postcode({
@@ -216,6 +223,10 @@ export default {
           this.postCode = this.orderGroupInfo.post_code
           this.address = this.orderGroupInfo.address
           this.detailAddress = this.orderGroupInfo.detail_address
+          this.phone = this.orderGroupInfo.phone
+          this.recipient = this.orderGroupInfo.resipient
+          this.request = this.orderGroupInfo.delivery_message
+          this.option = this.orderGroupInfo.order_product_state
 
           for (let i = 0; i < this.orderDetailInfo.length; i++) {
             this.detailId.push(this.orderDetailInfo[i].id)
@@ -259,6 +270,10 @@ p.top {
   font-weight: 700;
   font-size: 1.5rem;
   margin-bottom: 3rem;
+}
+
+.modifyText {
+  font-size: 0.7rem;
 }
 
 .group {
@@ -318,9 +333,7 @@ input {
   width: 100% !important;
   font-size: 0.8rem;
 }
-.t2 input {
-  outline: none;
-}
+
 .table tr {
   border-bottom: 1.5px solid gray;
   border-right: 1px solid black;

@@ -1,6 +1,7 @@
 package com.ion.jewelry.service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -75,18 +76,18 @@ public class OrderGroupService extends
 		return optional
 				.map(orderGroup -> {
 					orderGroup
-					.setTotalPrice(orderGroupRequest.getTotalPrice())
-					.setTotalCount(orderGroupRequest.getTotalCount())
+//					.setTotalPrice(orderGroupRequest.getTotalPrice())
+//					.setTotalCount(orderGroupRequest.getTotalCount())
 					.setDeliveryMessage(orderGroupRequest.getDeliveryMessage())
 					.setResipient(orderGroupRequest.getResipient())
 					.setPhone(orderGroupRequest.getPhone())
 					.setOrderProductState(orderGroupRequest.getOrderProductState())
 					.setPostCode(orderGroupRequest.getPostCode())
 					.setAddress(orderGroupRequest.getAddress())
-					.setDetailAddress(orderGroupRequest.getDetailAddress())
+					.setDetailAddress(orderGroupRequest.getDetailAddress());
 					//.setPayMethod(orderGroupRequest.getPayMethod())
-					.setDepositor(orderGroupRequest.getDepositor())
-					.setPayAccount(orderGroupRequest.getPayAccount());
+//					.setDepositor(orderGroupRequest.getDepositor())
+//					.setPayAccount(orderGroupRequest.getPayAccount());
 					//.setArrivalDate(orderGroupRequest.getArrivalDate())
 					//.setMember(memberRepo.getOne(orderGroupRequest.getMemberId()));
 					return orderGroup;
@@ -142,6 +143,73 @@ public class OrderGroupService extends
 				.build();
 		
 		return Header.OK(orderGroupResList, pagination);
+	}
+	
+	@Transactional
+	public Header<List<OrderGroupResponse>> searchDate(String date1, String date2, Pageable pageable) {
+		// 문자열
+		String dateStr1 = date1 + "-00-00-00";
+		String dateStr2 = date2 + "-23-59-59";
+		// 포맷터
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm-ss");
+		// 문자열 -> Date
+		LocalDateTime dateStart = LocalDateTime.parse(dateStr1, formatter);
+		LocalDateTime dateEnd = LocalDateTime.parse(dateStr2, formatter);
+		System.out.println(dateStart);
+		System.out.println(dateEnd);
+		
+		Page<OrderGroup> page = orderGroupRepo.findByCreatedAtBetween(dateStart, dateEnd, pageable);
+		
+		List<OrderGroupResponse> OrderGroupResList = page.stream()
+				.map(OrderGroup -> response(OrderGroup))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(OrderGroupResList, pagination);
+	}
+	
+	@Transactional
+	public Header<List<OrderGroupResponse>> searchState(OrderProductState state, Pageable pageable) {
+		
+		Page<OrderGroup> page = orderGroupRepo.findByOrderProductState(state, pageable);
+		
+		List<OrderGroupResponse> OrderGroupResList = page.stream()
+				.map(OrderGroup -> response(OrderGroup))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(OrderGroupResList, pagination);
+	}
+	
+	@Transactional
+	public Header<List<OrderGroupResponse>> searchName(String name, Pageable pageable) {
+		
+		Page<OrderGroup> page = orderGroupRepo.findByResipientContaining(name, pageable);
+		
+		List<OrderGroupResponse> OrderGroupResList = page.stream()
+				.map(OrderGroup -> response(OrderGroup))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(OrderGroupResList, pagination);
 	}
 	
 	@Transactional

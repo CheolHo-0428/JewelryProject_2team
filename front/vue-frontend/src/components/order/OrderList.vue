@@ -153,6 +153,7 @@ export default {
 .outer {
   width: 900px;
   margin: 4rem auto;
+  min-height: 50vh;
 }
 p.top {
   font-weight: 700;
