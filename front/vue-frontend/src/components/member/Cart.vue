@@ -1,20 +1,27 @@
 <template>
   <div class="outer">
     <p>장바구니</p>
+    <!-- <div class="box"> -->
     <div class="box" v-for="(cart, i) in carts" :key="i">
-      <div class="check">
-        <v-checkbox color="#FBCD6E"></v-checkbox>
-      </div>
+      <!-- <div class="check">
+        <v-checkbox name="checkbox" v-model="check" color="#FBCD6E"></v-checkbox>
+        <label for="checkbox"></label>
+      </div> -->
       <div class="img">
         <div></div>
       </div>
-      <div class="content">
-        다이아 반지
+      <!-- <div v-for="(name,i) in names" :key="i"  class="content" >
+        {{name}}
+      </div>       -->
+      <div class="content" >
+        {{names[i]}}
       </div>
       <div class="count">
-        수량
+        {{cart.item_count}}
       </div>
-      <div class="price">총 가격</div>
+      <div class="price">
+        {{prices[i]}}
+      </div>
     </div>
 
     <div class="bottom">
@@ -27,9 +34,9 @@
             <th>+</th>
             <th>배송비</th>
             <tr>
-              <td>10000원</td>
+              <td>{{product_total}}</td>
               <td>+</td>
-              <td>2500원</td>
+              <td>{{delivery}}</td>
             </tr>
           </table>
       </div>
@@ -37,7 +44,7 @@
         <table>
           <th>총 주문금액</th>
           <tr>
-            <td>12500원</td>
+            <td>{{order_total}}</td>
           </tr>
         </table>
       </div>
@@ -51,25 +58,54 @@
 </template>
 
 <script>
-// import axios from 'axios'
+import axios from 'axios'
 
 export default {
   data () {
     return {
+      check: [],
       carts: [],
-      end: 0,
-      next: false,
-      page: 0,
-      prev: false,
-      start: 0,
-      page_list: [],
-      total_pages: 0,
-      total_elements: 0,
-      searchPage: 0
+      items: [],
+      prices: [],
+      names: [],
+      images: [],
+      product_total: '',
+      delivery: '',
+      order_total: ''
+
     }
   },
   created () {
-    // this.cart()
+    this.cart()
+  },
+  methods: {
+    cart () {
+      return axios.get('http://localhost:8000/jewelry/cart/selectCart?member_id=' + this.$store.state.auth.user.id)
+        .then(res => {
+          this.carts = res.data.data
+          console.log(res.data.data)
+          console.log('길이' + this.carts.length)
+          for (let i = 0; i < this.carts.length; i++) {
+            axios.get('http://localhost:8000/jewelry/item/' + this.carts[i].item_id + '/itemInfo')
+              .then(res => {
+                this.names[i] = res.data.data.item_response.name
+                this.prices[i] = res.data.data.item_response.price
+                this.images[i] = res.data.data.item_response.image_file_response_list
+
+                console.log(res.data.data.item_response.name)
+                console.log(res.data.data.item_response.price)
+                console.log(res.data.data.item_response.image_file_response_list)
+                console.log('이름' + this.names)
+                console.log('가격' + this.prices)
+              })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        }).finally(() => {
+          console.log('여기서실행')
+        })
+    }
   }
 }
 </script>

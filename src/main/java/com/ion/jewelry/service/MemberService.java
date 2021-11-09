@@ -1,6 +1,5 @@
 package com.ion.jewelry.service;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ion.jewelry.model.entity.Member;
-import com.ion.jewelry.model.entity.NoticeBoard;
-import com.ion.jewelry.model.entity.NoticeBoardReply;
 import com.ion.jewelry.model.entity.OrderGroup;
 import com.ion.jewelry.model.enums.ObjectStatus;
 import com.ion.jewelry.model.network.Header;
@@ -21,9 +18,6 @@ import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.MemberRequest;
 import com.ion.jewelry.model.network.response.MemberGroupOrderInfoResponse;
 import com.ion.jewelry.model.network.response.MemberResponse;
-import com.ion.jewelry.model.network.response.NoticeBoardReplyInfoResponse;
-import com.ion.jewelry.model.network.response.NoticeBoardReplyResponse;
-import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.model.network.response.OrderDetailResponse;
 import com.ion.jewelry.model.network.response.OrderGroupResponse;
 import com.ion.jewelry.repository.MemberRepository;

@@ -22,10 +22,8 @@ import com.ion.jewelry.model.entity.Item;
 import com.ion.jewelry.model.enums.ObjectStatus;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.request.ItemRequest;
-import com.ion.jewelry.model.network.request.NoticeBoardRequest;
 import com.ion.jewelry.model.network.response.ItemInfoResponse;
 import com.ion.jewelry.model.network.response.ItemResponse;
-import com.ion.jewelry.model.network.response.NoticeBoardResponse;
 import com.ion.jewelry.service.ItemService;
 
 import lombok.extern.slf4j.Slf4j;

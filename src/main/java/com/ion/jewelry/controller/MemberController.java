@@ -8,12 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ion.jewelry.model.entity.Member;
 import com.ion.jewelry.model.network.Header;
-import com.ion.jewelry.model.network.request.ItemRequest;
 import com.ion.jewelry.model.network.request.MemberRequest;
-import com.ion.jewelry.model.network.response.ItemResponse;
 import com.ion.jewelry.model.network.response.MemberGroupOrderInfoResponse;
 import com.ion.jewelry.model.network.response.MemberResponse;
-import com.ion.jewelry.repository.RoleRepository;
 import com.ion.jewelry.service.MemberService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -74,35 +69,4 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 		return memberService.updateMemo(result);
 		
 	}
-
-	//이부분 테스트 해보시라고 만든거라 나중에 제거예정입니다!
-	@Autowired
-	RoleRepository roleRepository;
-
-	@GetMapping("/all")
-	public String allAccess() {
-
-		System.out.println("all 권한 들어옴");
-
-		return "Public Content.";
-	}
-
-	@PostMapping("/user")						//유저권한을 넣을 경우 
-	@PreAuthorize("hasRole('USER')")			//USER가아닌 권한의 이용자 들어올시 forbidden 호출
-	public String userAccess() {				//이런식으로 화면 연결되는  URL호출하면 됩니다.
-												//enum의 ROLE_USER인데 왜 USER만 적은 이유는 hasRole()자체에서 ROLE이 들어가 있기때문에 이렇게 명명해서 데이터 가져옵니다.
-		System.out.println("user call~");		
-
-		return "User Content.";
-	}
-
-	@GetMapping("/admin")						//관리자권한을 넣는경우
-	@PreAuthorize("hasRole('ADMIN')")			//ADMIN이 아닌 권한의 이용자 들어올시 forbidden 호출
-	public String adminAccess() {
-
-		System.out.println("admin !!!");
-
-		return "Admin Board.";
-	}
-
 }

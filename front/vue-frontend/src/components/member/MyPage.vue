@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     cart () {
-      location.href = '/cart'
+      this.$router.push('/cart')
     },
     orderList () {
       this.$router.push('/orderlist')

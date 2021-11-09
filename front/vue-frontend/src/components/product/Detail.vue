@@ -28,7 +28,7 @@
         <div class="totPrice">총 상품금액 - {{totalPrice}}원</div>
         <div class="button">
           <v-btn color="#FBEF97" x-large @click="order">구매하기</v-btn>
-          <v-btn color="#F4F2E7" x-large @click="cart">장바구니</v-btn>
+          <v-btn v-if="currentUser" color="#F4F2E7" x-large @click="cart">장바구니</v-btn>
         </div>
       </div>
     </div>
@@ -69,7 +69,13 @@ export default {
       name: '',
       price: 0,
       count: 1,
-      totalPrice: 0
+      totalPrice: 0,
+      id: 0
+    }
+  },
+  computed: {
+    currentUser () {
+      return this.$store.state.auth.user
     }
   },
   methods: {
@@ -120,7 +126,6 @@ export default {
       axios.get(`http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}`)
         .then(res => {
           let info = res.data.data
-
           this.name = info.name
           this.price = info.price
           this.totalPrice = info.price
