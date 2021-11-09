@@ -72,7 +72,7 @@ public class ImageFileController extends
 				
 		return imageFileService.createImg(result, files);
 	}
-	/*
+	
 	@PutMapping("/updateImg")
 	public Header<ImageFileResponse> update(
 			@Valid @RequestParam("id") List<String> idList,
@@ -108,6 +108,6 @@ public class ImageFileController extends
 		result.setData(request);
 		return imageFileService.updateImg(result, files);		
 	}
-	*/
+	
 	
 }

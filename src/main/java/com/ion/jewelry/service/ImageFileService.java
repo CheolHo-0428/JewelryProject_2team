@@ -1,16 +1,13 @@
 package com.ion.jewelry.service;
 
 import java.io.File;
-import java.nio.file.spi.FileSystemProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.FileHandler;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
-import org.hibernate.internal.build.AllowSysOut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,8 +33,7 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 	private ItemRepository itemRepo;
 	
 	private final ItemImageFileHandler fileHandler;
-	
-	
+		
 	@Override
 	public Header<ImageFileResponse> create(Header<ImageFileRequest> request) {
 		ImageFileRequest imageFileRequest = request.getData();
@@ -72,100 +68,57 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 		}
 		return Header.OK(imageFileResList);
 	}
-	/*
+	
 	@Transactional
 	public Header<ImageFileResponse> updateImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {
 		
 		ImageFileRequest imageFileRequest = request.getData();
+		List<ImageFile> imageFileList = fileHandler.parseFileUpdateInfo(imageFileRequest, files);
 		
 		for (int i = 0; i < files.size(); i++) {
-			Long id = imageFileRequest.getIdList().get(i);
+			Long id = imageFileList.get(i).getId();
 			
 			if(id == null) {
 				System.out.println("null");
 				
-			} else {
-				YesNo deleteCheck =  imageFileRequest.getDeleteCheckList().get(i);
+			} else { // first else start
+				YesNo deleteCheck =  imageFileList.get(i).getDeleteCheck();
+				ImageFile image = baseRepo.getOne(id);
 				
-				Optional<ImageFile> optional = baseRepo.findById(id);
-				optional
-					.map(image -> {
-						if(deleteCheck == YesNo.YES) { // map if start
-							String path = image.getStoredFileName();
-							File file = new File(new File("").getAbsoluteFile() + File.separator + "front\\vue-frontend\\" + File.separator + path);
-							System.out.println("!!!" + path);
-							if (file.exists()) {
-								if (file.delete()) {
-									System.out.println("파일삭제 성공");
-									delete(id);
-								} else {
-									System.out.println("파일삭제 실패");
-								}
-							} else {
-								System.out.println("파일이 존재하지 않습니다.");
-							}
-						} // map if end 
-						else {
-							image
-								.setOriginFileName(imageFileRequest.getOriginFileName())
-								.setStoredFileName(imageFileRequest.getStoredFileName())
-								.setStoredThumbnail(imageFileRequest.getStoredThumbnail())
-								.setFileSize(imageFileRequest.getFileSize())
-								.setDelegateThumbnail(imageFileRequest.getDelegateThumbnailList().get(i))
-								.setDeleteCheck(imageFileRequest.getDeleteCheckList().get(i));
-								
-							return image;
-						}
-					})
-					.map(image -> baseRepo.save(image))
-					.map(image -> response(image))
-					.map(image -> Header.OK(image))
-					.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
-			} // else end
-			
-			
-				
-		} //for end
-		
-		
-		List<ImageFile> imageFileList = fileHandler.parseFileInfo(imageFileRequest, files);
-		
-		return optional
-				.map(image -> {
-					System.out.println("!!!" + imageFileRequest.getDeleteCheck());
-					if(imageFileRequest.getDeleteCheck() == YesNo.YES) {
-						String path = image.getStoredFileName();
-						
-						File file = new File(new File("").getAbsoluteFile() + File.separator + "front\\vue-frontend\\" + File.separator + path);
-						System.out.println("!!!" + path);
-						if(file.exists()) {
-							if(file.delete()) {
-								System.out.println("파일삭제 성공");
-								delete(imageFileRequest.getId());
-							} else {
-								System.out.println("파일삭제 실패");
-							}
+				if(deleteCheck == YesNo.YES) { // second if start
+					String path = image.getStoredFileName();
+					File file = new File(new File("").getAbsoluteFile() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+					System.out.println("!!!" + path);
+					if(file.exists()) {
+						if (file.delete()) {
+							System.out.println("파일삭제 성공");
+							delete(id);
 						} else {
-							System.out.println("파일이 존재하지 않습니다.");
+							System.out.println("파일삭제 실패");
 						}
+					} else {
+						System.out.println("파일이 존재하지 않습니다.");
 					}
+				} // second if end
+				else { // second else start 
 					image
-					.setOriginFileName(imageFileRequest.getOriginFileName())
-					.setStoredFileName(imageFileRequest.getStoredFileName())
-					.setStoredThumbnail(imageFileRequest.getStoredThumbnail())
-					.setDelegateThumbnail(imageFileRequest.getDelegateThumbnail())
-					.setFileSize(imageFileRequest.getFileSize())
-					.setDeleteCheck(imageFileRequest.getDeleteCheck())
-					.setItem(itemRepo.getOne(imageFileRequest.getItemId()));
-					return image;
-				})
-				.map(image -> baseRepo.save(image))
-				.map(image -> response(image))
-				.map(image -> Header.OK(image))
-				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
-						
+					.setOriginFileName(imageFileList.get(i).getOriginFileName())
+					.setStoredFileName(imageFileList.get(i).getStoredFileName())
+					.setStoredThumbnail(imageFileList.get(i).getStoredThumbnail())
+					.setFileSize(imageFileList.get(i).getFileSize())
+					.setDelegateThumbnail(imageFileList.get(i).getDelegateThumbnail())
+					.setDeleteCheck(imageFileList.get(i).getDeleteCheck());
+					
+					baseRepo.save(image);
+					// ImageFile updateImage = baseRepo.save(image);
+					// ImageFileResponse res = response(updateImage);
+					// return Header.OK(res);
+				} // second else end			
+			} 
+		}//for end
+		return Header.OK();
 	}
-	*/
+
 		
 	@Override
 	public Header<ImageFileResponse> update(Header<ImageFileRequest> request) {
