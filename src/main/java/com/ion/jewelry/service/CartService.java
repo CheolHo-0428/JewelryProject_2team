@@ -97,8 +97,6 @@ public class CartService extends AABaseService<CartRequest, CartResponse, Cart> 
 
 		return res;
 	}
-
-	@Transactional
 	public Header<List<CartResponse>> selectCart(Long member_id) {
 		
 		List<Cart> cartList = cartRepo.findByMemberId(member_id);
