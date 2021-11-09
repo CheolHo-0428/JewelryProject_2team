@@ -8,6 +8,9 @@ const notice = {
     noticeDetail (state, ob) {
       state.noticeId = ob.id
       state.noticePageUrl = ob.urlPage
+    },
+    noticeReset (state) {
+      state.noticePageUrl = 'http://localhost:8000/jewelry/noticeBoard/paging'
     }
   },
   actions: {

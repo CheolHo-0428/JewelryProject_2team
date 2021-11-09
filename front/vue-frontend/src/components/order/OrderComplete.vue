@@ -40,21 +40,57 @@ export default {
       this.$router.push('/orderdetail')
     },
     orderDetail () {
-      axios({
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        url: 'http://localhost:8000/jewelry/orderDetail/reg',
-        data: JSON.stringify({
-          item_id: this.$store.state.order.itemId,
-          order_count: this.$store.state.order.count,
-          order_price: this.$store.state.order.price,
-          order_group_id: this.orderInfo.id
+      if (!this.$store.state.order.isCart) {
+        axios({
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          url: 'http://localhost:8000/jewelry/orderDetail/reg',
+          data: JSON.stringify({
+            item_id: this.$store.state.order.itemId,
+            order_count: this.$store.state.order.count,
+            order_price: this.$store.state.order.price,
+            order_group_id: this.orderInfo.id
+          })
+        }).then(res => {
+          console.log(res)
+        }).catch(error => {
+          console.log(error)
         })
-      }).then(res => {
-        console.log(res)
-      }).catch(error => {
-        console.log(error)
-      })
+      } else {
+        let n = this.$store.state.order.ccount.length
+        for (let i = 0; i < n; i++) {
+          axios({
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            url: 'http://localhost:8000/jewelry/orderDetail/reg',
+            data: JSON.stringify({
+              item_id: this.$store.state.order.citemId[i],
+              order_count: this.$store.state.order.ccount[i],
+              order_price: this.$store.state.order.cprice[i],
+              order_group_id: this.orderInfo.id
+            })
+          }).then(res => {
+            console.log(res)
+            let n = this.$store.state.order.cartId.length
+            for (let i = 0; i < n; i++) {
+              axios
+                .delete(`http://localhost:8000/jewelry/cart/${this.$store.state.order.cartId[i]}`, {
+                  data: {
+                    id: this.$store.state.order.cartId[i]
+                  }
+                })
+                .then(function (response) {
+                  console.log(response)
+                })
+                .catch(function (error) {
+                  console.log(error)
+                })
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        }
+      }
     },
     orderGroup () {
       return axios.get(`http://localhost:8000/jewelry/member/${this.$store.state.auth.user.id}/orderGroupInfo`)
