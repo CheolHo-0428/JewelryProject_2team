@@ -24,7 +24,7 @@
       <p class="cat">RING</p>
       <div class="box">
         <div v-for="i in 4" :key="i" class="list">
-          <div class="img" @click="change(ring_response_list[i-1].id)"></div>
+          <div class="img" @click="change(ring_response_list[i-1].id)"><img :src="rstored_file_name[i-1]" /></div>
           <div class="product">
             <p class="name" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].name}}</p>
             <p class="price" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].price}}원</p>
@@ -34,7 +34,7 @@
       <p class="cat">EARRINGS</p>
       <div class="box">
         <div v-for="i in 4" :key="i" class="list">
-          <div class="img" @click="change(earrings_response_list[i-1].id)"></div>
+          <div class="img" @click="change(earrings_response_list[i-1].id)"><img :src="estored_file_name[i-1]" /></div>
           <div class="product">
             <p class="name" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].name}}</p>
             <p class="price" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].price}}원</p>
@@ -44,7 +44,7 @@
       <p class="cat">BRACELET</p>
       <div class="box">
         <div v-for="i in 4" :key="i" class="list">
-          <div class="img" @click="change(bracelet_response_list[i-1].id)"></div>
+          <div class="img" @click="change(bracelet_response_list[i-1].id)"><img :src="bstored_file_name[i-1]" /></div>
           <div class="product">
             <p class="name" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].name}}</p>
             <p class="price" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].price}}원</p>
@@ -54,7 +54,7 @@
       <p class="cat">NECKLACE</p>
       <div class="box">
         <div v-for="i in 4" :key="i" class="list">
-          <div class="img" @click="change(necklace_response_list[i-1].id)"></div>
+          <div class="img" @click="change(necklace_response_list[i-1].id)"><img :src="nstored_file_name[i-1]" /></div>
           <div class="product">
             <p class="name" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].name}}</p>
             <p class="price" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].price}}원</p>
@@ -74,7 +74,11 @@ export default {
       ring_response_list: [],
       earrings_response_list: [],
       bracelet_response_list: [],
-      necklace_response_list: []
+      necklace_response_list: [],
+      rstored_file_name: [],
+      estored_file_name: [],
+      nstored_file_name: [],
+      bstored_file_name: []
     }
   },
   methods: {
@@ -84,36 +88,72 @@ export default {
       this.$router.push('/detail')
     },
     ring () {
+      this.rstored_file_name = []
       axios.get('http://localhost:8000/jewelry/category/4/itemInfo')
         .then(res => {
           this.ring_response_list = res.data.data.category_response.item_response_list
+          for (let i = 0; i < 4; i++) {
+            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+              (i) => i.delegate_thumbnail === 'YES'
+            )
+            if (tmp === -1) this.rstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+            else this.rstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+          }
+          // console.log(this.rstored_file_name)
         })
         .catch(err => {
           console.log(err)
         })
     },
     earrings () {
+      this.estored_file_name = []
       axios.get('http://localhost:8000/jewelry/category/2/itemInfo')
         .then(res => {
           this.earrings_response_list = res.data.data.category_response.item_response_list
+          for (let i = 0; i < 4; i++) {
+            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+              (i) => i.delegate_thumbnail === 'YES'
+            )
+            if (tmp === -1) this.estored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+            else this.estored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+          }
+          // console.log(this.estored_file_name)
         })
         .catch(err => {
           console.log(err)
         })
     },
     bracelet () {
+      this.bstored_file_name = []
       axios.get('http://localhost:8000/jewelry/category/1/itemInfo')
         .then(res => {
           this.bracelet_response_list = res.data.data.category_response.item_response_list
+          for (let i = 0; i < 4; i++) {
+            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+              (i) => i.delegate_thumbnail === 'YES'
+            )
+            if (tmp === -1) this.bstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+            else this.bstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+          }
+          // console.log(this.bstored_file_name)
         })
         .catch(err => {
           console.log(err)
         })
     },
     necklace () {
+      this.nstored_file_name = []
       axios.get('http://localhost:8000/jewelry/category/3/itemInfo')
         .then(res => {
           this.necklace_response_list = res.data.data.category_response.item_response_list
+          for (let i = 0; i < 4; i++) {
+            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+              (i) => i.delegate_thumbnail === 'YES'
+            )
+            if (tmp === -1) this.nstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+            else this.nstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+          }
+          // console.log(this.nstored_file_name)
         })
         .catch(err => {
           console.log(err)
@@ -183,15 +223,14 @@ export default {
 .list {
   width: 25%;
 }
-.img {
+img {
   width: 230px;
   height: 230px;
   margin: 2rem auto 1rem;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   cursor: pointer;
 }
-.img:hover {
+img:hover {
   transform:scale(1.01);
   transition: 0.2s;
 }
