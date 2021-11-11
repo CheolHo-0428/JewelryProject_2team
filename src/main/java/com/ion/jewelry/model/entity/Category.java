@@ -2,6 +2,7 @@ package com.ion.jewelry.model.entity;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -42,7 +43,7 @@ public class Category extends AABaseTimeEntity {
 	private CategoryType categoryType; //카테고리 타입
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "category", cascade = CascadeType.ALL)
 	private List<Item> itemList; // item 테이블 연관관계 설정(1:N)
 	
 }
