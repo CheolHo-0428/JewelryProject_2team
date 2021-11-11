@@ -195,14 +195,21 @@ router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/signup', '/', '/mypage', '/notice', '/ring', '/earrings', '/bracelet', '/necklace', '/detail', '/cart', '/order', '/order_', '/orderlist', '/orderdetail', '/ordercancle', '/modify', '/regnotice', '/notice_', '/review_', '/qna_', '/admember', '/adminpage', '/adproduct', '/regproduct', '/adorder_', '/searchid', '/searchpw', '/findid', '/findpw', '/regreview', '/regqna', '/adsales', '/admember_', '/adproduct_', '/adorder']
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user')
-  const a = auth.state.user.roles[0]
-  console.log(a)
   // trying to access a restricted page + not logged in
   // redirect to login page
   // console.log($state.state.auth.user)
   if (authRequired && !loggedIn) {
     next('/')
   } else {
+    console.log('로그인상태' + loggedIn)
+    if (loggedIn) {
+      const role = auth.state.user.roles[0]
+      console.log(role)
+      if (role !== 'ROLE_ADMIN') {
+        next()
+      }
+    }
+    console.log('user')
     next()
   }
 })
