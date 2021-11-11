@@ -58,7 +58,7 @@
           </tbody>
         </table>
       </form>
-      <span>체크리스트: {{ delegate_thumbnail_list }}</span>
+      <!-- <span>체크리스트: {{ delegate_thumbnail_list }}</span> -->
     </div>
 
     <div class="button">

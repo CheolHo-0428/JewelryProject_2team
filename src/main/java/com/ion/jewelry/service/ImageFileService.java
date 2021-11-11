@@ -70,56 +70,45 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 	}
 	
 	@Transactional
-	public Header<ImageFileResponse> updateImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {
-		
+	public Header<ImageFileResponse> updateImg(Header<ImageFileRequest> request, List<MultipartFile> files) throws Exception {		
 		ImageFileRequest imageFileRequest = request.getData();
-		List<ImageFile> imageFileList = fileHandler.parseFileUpdateInfo(imageFileRequest, files);
+		Optional<ImageFile> optional = baseRepo.findById(imageFileRequest.getId());
 		
-		for (int i = 0; i < files.size(); i++) {
-			Long id = imageFileList.get(i).getId();
-			
-			if(id == null) {
-				System.out.println("null");
+		ImageFile imageFile = fileHandler.parseFileInfo_single(imageFileRequest, files);
 				
-			} else { // first else start
-				YesNo deleteCheck =  imageFileList.get(i).getDeleteCheck();
-				ImageFile image = baseRepo.getOne(id);
-				
-				if(deleteCheck == YesNo.YES) { // second if start
-					String path = image.getStoredFileName();
-					File file = new File(new File("").getAbsoluteFile() + File.separator + "front\\vue-frontend\\" + File.separator + path);
-					System.out.println("!!!" + path);
-					if(file.exists()) {
-						if (file.delete()) {
-							System.out.println("파일삭제 성공");
-							delete(id);
+		return optional
+				.map(image -> {
+					if(imageFileRequest.getDeleteCheck() == YesNo.YES) {
+						String path = image.getStoredFileName();
+						
+						File file = new File(new File("").getAbsolutePath() + File.separator + "front\\vue-frontend\\" + File.separator + path);
+						if(file.exists()) {
+							if(file.delete()) {
+								//delete(imageFileRequest.getId());
+								System.out.println("파일삭제 성공");
+							} else {
+								System.out.println("파일삭제 실패");
+							}
 						} else {
-							System.out.println("파일삭제 실패");
+							System.out.println("파일이 존재하지 않습니다.");
 						}
-					} else {
-						System.out.println("파일이 존재하지 않습니다.");
 					}
-				} // second if end
-				else { // second else start 
 					image
-					.setOriginFileName(imageFileList.get(i).getOriginFileName())
-					.setStoredFileName(imageFileList.get(i).getStoredFileName())
-					.setStoredThumbnail(imageFileList.get(i).getStoredThumbnail())
-					.setFileSize(imageFileList.get(i).getFileSize())
-					.setDelegateThumbnail(imageFileList.get(i).getDelegateThumbnail())
-					.setDeleteCheck(imageFileList.get(i).getDeleteCheck());
-					
-					baseRepo.save(image);
-					// ImageFile updateImage = baseRepo.save(image);
-					// ImageFileResponse res = response(updateImage);
-					// return Header.OK(res);
-				} // second else end			
-			} 
-		}//for end
-		return Header.OK();
+					.setOriginFileName(imageFile.getOriginFileName())
+					.setStoredFileName(imageFile.getStoredFileName())
+					.setStoredThumbnail(imageFile.getStoredThumbnail())
+					.setDelegateThumbnail(imageFile.getDelegateThumbnail())
+					.setFileSize(imageFile.getFileSize())
+					.setDeleteCheck(imageFile.getDeleteCheck())
+					.setItem(imageFile.getItem());
+				return image;
+				})
+				.map(image -> baseRepo.save(image))
+				.map(image -> response(image))
+				.map(image -> Header.OK(image))
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다."));
 	}
-
-		
+	
 	@Override
 	public Header<ImageFileResponse> update(Header<ImageFileRequest> request) {
 		ImageFileRequest imageFileRequest = request.getData();
@@ -127,13 +116,13 @@ public class ImageFileService extends AABaseService<ImageFileRequest, ImageFileR
 		return optional
 				.map(image -> {
 					image
-					.setOriginFileName(imageFileRequest.getOriginFileName())
-					.setStoredFileName(imageFileRequest.getStoredFileName())
-					.setStoredThumbnail(imageFileRequest.getStoredThumbnail())
-					.setDelegateThumbnail(imageFileRequest.getDelegateThumbnail())
-					.setFileSize(imageFileRequest.getFileSize())
-					.setDeleteCheck(imageFileRequest.getDeleteCheck())
-					.setItem(itemRepo.getOne(imageFileRequest.getItemId()));
+//					.setOriginFileName(imageFileRequest.getOriginFileName())
+//					.setStoredFileName(imageFileRequest.getStoredFileName())
+//					.setStoredThumbnail(imageFileRequest.getStoredThumbnail())
+					.setDelegateThumbnail(imageFileRequest.getDelegateThumbnail());
+//					.setFileSize(imageFileRequest.getFileSize())
+//					.setDeleteCheck(imageFileRequest.getDeleteCheck())
+//					.setItem(itemRepo.getOne(imageFileRequest.getItemId()));
 					return image;
 				})
 				.map(image -> baseRepo.save(image))
