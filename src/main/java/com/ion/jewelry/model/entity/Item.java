@@ -56,7 +56,7 @@ public class Item extends AABaseTimeEntity {
 	private Category category; //카테고리번호(fk), category 테이블 연관관계 설정(N:1)
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
 	private List<OrderDetail> orderDetailList; // OrderDetail 테이블 연관관계 설정(1:N)
 	
 	@JsonManagedReference
