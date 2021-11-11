@@ -6,7 +6,7 @@
 
     <div class="boxs" v-if="current_elements !== 0">
       <div v-for="(list, i) in response_list" :key="i" class="list" :style="computedStyledObject">
-        <div class="img" @click="change(list.id)"></div>
+        <div class="img" @click="change(list.id)"><img :src="stored_file_name[i]" /></div>
         <div class="product">
           <p class="name">{{list.name}}</p>
           <p class="price">{{list.price}}원</p>
@@ -44,7 +44,8 @@ export default {
       page_list: [],
       total_pages: 0,
       total_elements: 0,
-      current_elements: 0
+      current_elements: 0,
+      stored_file_name: []
     }
   },
   methods: {
@@ -66,9 +67,20 @@ export default {
       this.bracelet()
     },
     bracelet () {
+      this.stored_file_name = []
       return axios.get(this.urlPage)
         .then(res => {
           this.response_list = res.data.data.category_response.item_response_list
+
+          for (let i = 0; i < this.response_list.length; i++) {
+            if (this.response_list[i].image_file_response_list.length !== 0) {
+              let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+                (i) => i.delegate_thumbnail === 'YES'
+              )
+              if (tmp === -1) this.stored_file_name.push(this.response_list[i].image_file_response_list[0].stored_file_name)
+              else this.stored_file_name.push(this.response_list[i].image_file_response_list[tmp].stored_file_name)
+            }
+          }
 
           this.page = res.data.pagination.current_page + 1
           this.total_pages = res.data.pagination.total_pages
@@ -127,15 +139,14 @@ export default {
   min-width: 1110px;
   margin: 0 auto;
 }
-.img {
+img {
   width: 230px;
   height: 230px;
   margin: 2rem auto 1rem;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   cursor: pointer;
 }
-.img:hover {
+img:hover {
   transform:scale(1.01);
   transition: 0.2s;
 }
