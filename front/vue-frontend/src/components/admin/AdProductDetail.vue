@@ -57,19 +57,54 @@
             <tr>
               <th scope="col">이미지</th>
               <td class="img" colspan="3">
-                <v-file-input
-                  id="file" name="files"
-                  label="File input" style="width: 200px;"
-                  multiple="multiple"
-                >
-                </v-file-input>
-
                 <div class="imgBox">
-                  <div v-for="(image, i) in image_file_list" :key="i" class="itemImage">
-                    <img :src="image.stored_file_name">
-                    <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
-                    <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO
+                  <div v-for="(image, i) in stored_file_name_list" :key="i" class="itemImage">
+                    <img :src="image" v-if="stored_file_name_list[i]">
+                    <div v-if="!stored_file_name_list[i]">
+                      <v-file-input
+                        v-bind:id="'file'+i"
+                        name="files"
+                        label="File input"
+                        multiple="multiple"
+                        style="width: 200px;"
+                      >
+                      </v-file-input>
+                    </div>
+                    <div>
+                      <input type="radio" v-bind:id="'thumnailInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
+                      <input type="radio" v-bind:id="'thumnailInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO
+                    </div>
+                    <!-- <div>
+                      <input type="radio" v-bind:id="'deleteInfo'+i" value="YES" v-model="delete_check_list[i]"> YES
+                      <input type="radio" v-bind:id="'deleteInfo'+i" value="NO" v-model="delete_check_list[i]"> NO
+                    </div> -->
+                    <a @click="imgfun(i)">삭제</a>
                   </div>
+                  <!-- <p>썸네일리스트: {{ delegate_thumbnail_list }}</p> -->
+                  <!-- <p>deleteImg_list: {{ deleteImg_list }}</p> -->
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="col">이미지추가</th>
+              <td class="img" colspan="3">
+                <v-file-input
+                  id="addFile" name="addFiles"
+                  label="addFile input" style="width: 200px;"
+                  multiple="multiple" v-model="files"
+                  @click="isFileChange"
+                  >
+                </v-file-input>
+                <div v-if="isFile">
+                  <ol>
+                    <li v-for="(file, i) in files" :key="i" class="groupli">
+                      파일이름: {{ file.name }}&nbsp;&nbsp; || &nbsp;
+                      파일용량: {{ file.size * 0.001 }}kB &nbsp;&nbsp; || &nbsp;&nbsp;
+                      썸네일등록:
+                        <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="addDelegate_thumbnail_list[i]"> YES
+                        <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="addDelegate_thumbnail_list[i]"> NO
+                    </li>
+                  </ol>
                 </div>
               </td>
             </tr>
@@ -101,15 +136,22 @@ export default {
       created_by: '',
       updated_at: '',
       status: '',
-      stored_file_name: '',
       stored_file_name_list: [],
-      deleteImg: false,
+      deleteImg_list: [],
       image_file_list: [],
+      delegate_thumbnail_list: [],
+      id_list: [],
+      item_id: '',
       files: [],
-      delegate_thumbnail_list: []
+      isFile: false,
+      addDelegate_thumbnail_list: []
     }
   },
   methods: {
+    imgfun (i) {
+      this.$set(this.deleteImg_list, i, true)
+      this.$set(this.stored_file_name_list, i, false)
+    },
     list () {
       this.$swal.fire({
         icon: 'warning',
@@ -136,7 +178,7 @@ export default {
         this.$router.push('/adproduct')
       })
     },
-    mod () {
+    async mod () {
       if (!this.name || !this.price || !this.stock) {
         this.$swal.fire({
           icon: 'info',
@@ -144,7 +186,7 @@ export default {
           confirmButtonColor: '#A9E2F3'
         })
       } else {
-        axios
+        await axios
           .put('http://localhost:8000/jewelry/item/update', {
             id: this.id,
             name: this.name,
@@ -159,6 +201,71 @@ export default {
           .catch((error) => {
             console.log(error)
           })
+        for (let i = 0; i < this.deleteImg_list.length; i++) {
+          if (this.deleteImg_list[i]) {
+            let frm = new FormData()
+            let imageFile = document.getElementById('file' + i)
+            console.log('****************************' + 'file' + i)
+            // console.log('****************************' + imageFile.files[0].name)
+            if (imageFile.files[0]) {
+              console.log('파일이 있어요~~~~~~~~')
+              frm.append('id', this.id_list[i])
+              frm.append('delegateThumbnail', this.delegate_thumbnail_list[i])
+              frm.append('deleteCheck', 'YES')
+              frm.append('itemId', this.item_id)
+              frm.append('file', imageFile.files[0])
+              axios.put('http://localhost:8000/jewelry/imageFile/updateImg', frm, {
+                headers: {
+                  'Content-Type': 'multipart/form-data'
+                }
+              }).then((response) => {
+                console.log(response)
+              }).catch((error) => {
+                console.log(error)
+              })
+            } else {
+              axios.delete(`http://localhost:8000/jewelry/imageFile/${this.id_list[i]}`, {
+                data: {
+                  id: this.id_list[i]
+                }
+              }).then((res) => {
+                console.log(res)
+              }).catch((error) => {
+                console.log(error)
+              })
+            }
+          } else {
+            let frm = new FormData()
+            frm.append('id', this.id_list[i])
+            frm.append('delegateThumbnail', this.delegate_thumbnail_list[i])
+            frm.append('deleteCheck', 'NO')
+            frm.append('itemId', this.item_id)
+            axios.put('http://localhost:8000/jewelry/imageFile/update', frm, {
+            }).then((response) => {
+              console.log(response)
+            }).catch((error) => {
+              console.log(error)
+            })
+          }
+        }
+        let frm = new FormData()
+        let imageFile = document.getElementById('addFile')
+        frm.append('delegateThumbnail', this.addDelegate_thumbnail_list)
+        frm.append('itemId', this.item_id)
+        for (let i = 0; i < imageFile.files.length; i++) {
+          frm.append('file', imageFile.files[i])
+        }
+        if (imageFile.files[0]) {
+          axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then((response) => {
+            console.log(response)
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
         this.save()
       }
     },
@@ -220,17 +327,32 @@ export default {
             id: this.id
           }
         }).then((res) => {
-          this.image_file_response_list = []
+          this.item_id = ''
+          this.deleteImg_list = []
+          this.stored_file_name_list = []
+          this.delegate_thumbnail_list = []
+          this.id_list = []
+          this.image_file_list = []
+          this.item_id = res.data.data.item_response.id
           this.image_file_list = res.data.data.item_response.image_file_response_list
-          console.log(this.image_file_list[0])
+          for (let i = 0; i < this.image_file_list.length; i++) {
+            this.deleteImg_list.push(false)
+            this.stored_file_name_list.push(this.image_file_list[i].stored_file_name)
+            this.delegate_thumbnail_list.push(this.image_file_list[i].delegate_thumbnail)
+            this.id_list.push(this.image_file_list[i].id)
+          }
         })
+    },
+    categoryChange (event) {
+      this.category_id = event.target.value
+    },
+    statusChange (event) {
+      this.status = event.target.value
+    },
+    isFileChange () {
+      this.isFile = true
+      this.addDelegate_thumbnail_list = []
     }
-  },
-  categoryChange (event) {
-    this.category_id = event.target.value
-  },
-  statusChange (event) {
-    this.status = event.target.value
   },
   created () {
     this.item()
@@ -289,17 +411,20 @@ td {
 }
 .imgBox {
   display: block;
+  /* background-color: thistle; */
 }
 .imgBox div {
-  width: 100px;
+  width: 300px;
   height: 100px;
   background-size: cover;
+  /* background-color: yellowgreen; */
   /* background-image: url(https://ifh.cc/g/W8P7ct.jpg); */
   /* margin-left: 35px; */
 }
 .itemImage {
   display: flex;
   cursor: pointer;
+  width: 200px;
   margin-bottom: 30px;
 }
 .button button {
@@ -324,5 +449,8 @@ td {
   text-align: center;
   padding-top: 1%;
   border: 0px;
+}
+.groupli {
+  float: left;
 }
 </style>
