@@ -68,10 +68,10 @@ public class Item extends AABaseTimeEntity {
 	private List<ImageFile> imageFileList; // ImageFile 테이블 연관관계 설정(1:N)
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
 	private List<ReviewBoard> reviewBoardList; // ReviewBoard 테이블 연관관계 설정(1:N)
 	
 	@JsonManagedReference
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.ALL)
 	private List<QnaBoard> qnaBoardList; // QnaBoard 테이블 연관관계 설정(1:N)
 }
