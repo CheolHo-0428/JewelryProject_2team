@@ -28,7 +28,7 @@
               <label for="checkbox"></label>
             </div>
           </td>
-          <td class="img"><div></div></td>
+          <td class="img"><img :src="stored_thumbnail[i]" /></td>
           <td>
             <strong class="itemName">{{names[i]}}</strong>
           </td>
@@ -85,8 +85,8 @@ export default {
       names: [],
       images: [],
       product_total: 0,
-      order_total: 2500
-
+      order_total: 2500,
+      stored_thumbnail: []
     }
   },
   created () {
@@ -99,6 +99,7 @@ export default {
       this.order_total = this.product_total + 2500
     },
     cart () {
+      this.stored_thumbnail = []
       return axios.get('http://localhost:8000/jewelry/cart/selectCart?member_id=' + this.$store.state.auth.user.id)
         .then(async res => {
           this.carts = res.data.data
@@ -109,6 +110,14 @@ export default {
                 this.names.push(res.data.data.item_response.name)
                 this.prices.push(res.data.data.item_response.price)
                 this.images.push(res.data.data.item_response.image_file_response_list)
+
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                }
               })
           }
         })
@@ -184,11 +193,10 @@ p {
   width: 18px;
   height: 18px;
 }
-.img div {
+img {
   width: 90px;
   height: 90px;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   margin: 0 auto;
 }
 .count,

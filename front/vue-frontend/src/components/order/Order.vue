@@ -192,15 +192,29 @@ export default {
       request: '',
       option: '',
       totalCart: 0,
-      totalCount: 0
+      totalCount: 0,
+      stored_thumbnail: []
     }
   },
   methods: {
-    cart () {
+    async cart () {
+      this.stored_thumbnail = []
       let n = this.$store.state.order.ccount.length
       for (let i = 0; i < n; i++) {
         this.totalCart += this.$store.state.order.ccount[i] * this.$store.state.order.cprice[i]
         this.totalCount += this.$store.state.order.ccount[i]
+
+        // await axios.get('http://localhost:8000/jewelry/item/' + this.$store.state.order.citemid[i] + '/itemInfo')
+        //   .then(res => {
+
+        //     let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+        //       (i) => i.delegate_thumbnail === 'YES'
+        //     )
+        //     if (res.data.data.item_response.image_file_response_list.length !== 0) {
+        //       if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+        //       else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+        //     }
+        //   })
       }
     },
     member () {
@@ -354,6 +368,9 @@ thead th {
 tbody td {
   padding: 1rem 0;
   vertical-align: middle;
+}
+.info tr {
+  border-bottom: 0.5px solid black;
 }
 
 .bottom {

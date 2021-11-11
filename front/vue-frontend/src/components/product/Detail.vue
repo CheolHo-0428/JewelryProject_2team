@@ -3,7 +3,7 @@
     <div class="sideBanner"></div>
     <div class="topContent">
       <div class="topBox left">
-        <div class="imageBox"></div>
+        <div class="imageBox"><img :src="stored_thumbnail" /></div>
       </div>
       <div class="topBox right">
         <div class="name">{{this.name}}</div>
@@ -70,7 +70,8 @@ export default {
       price: 0,
       count: 1,
       totalPrice: 0,
-      id: 0
+      id: 0,
+      stored_thumbnail: ''
     }
   },
   computed: {
@@ -124,12 +125,20 @@ export default {
       this.$store.commit('changeVersion', index)
     },
     detail () {
-      axios.get(`http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}`)
+      axios.get(`http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}/itemInfo`)
         .then(res => {
-          let info = res.data.data
+          let info = res.data.data.item_response
           this.name = info.name
           this.price = info.price
           this.totalPrice = info.price
+
+          let imageList = info.image_file_response_list
+
+          let tmp = imageList.findIndex(
+            (i) => i.delegate_thumbnail === 'YES'
+          )
+          if (tmp === -1) this.stored_thumbnail = imageList[0].stored_file_name
+          else this.stored_thumbnail = imageList[tmp].stored_file_name
         })
         .catch(err => {
           console.log(err)
@@ -180,12 +189,11 @@ export default {
   width: 33rem;
   padding-bottom: 2rem;
 }
-.imageBox {
+img {
   width: 460px;
   height: 480px;
   margin: 4rem auto;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/K3vlNQ.jpg);
 }
 .name {
   font-weight: 700;
