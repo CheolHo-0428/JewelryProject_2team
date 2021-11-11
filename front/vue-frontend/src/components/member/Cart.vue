@@ -12,7 +12,7 @@
       </colgroup>
       <thead>
         <tr>
-          <th></th>
+          <th><v-checkbox class="selectAll" color="#FBCD6E" @change="selectAll()"></v-checkbox></th>
           <th scope="col">이미지</th>
           <th scope="col">상품정보</th>
           <th scope="col">판매가</th>
@@ -33,11 +33,16 @@
             <strong class="itemName">{{names[i]}}</strong>
           </td>
           <td>{{prices[i]}}원</td>
-          <td>{{cart.item_count}}</td>
+          <td>{{cart.item_count}}
+            <span class="countBtn"><button @click="countminus(i)">▼</button><button @click="cart.item_count++">▲</button></span>
+          </td>
           <td>{{prices[i] * cart.item_count}}원</td>
         </tr>
       </tbody>
     </table>
+    <div class="button remove">
+      <v-btn color="#F4F2E7" large @click="remove">선택상품 삭제</v-btn>
+    </div>
 
     <div class="bottom">
       <div class="calc">
@@ -86,20 +91,43 @@ export default {
       images: [],
       product_total: 0,
       order_total: 2500,
-      stored_thumbnail: []
+      stored_thumbnail: [],
+      allCheck: false
     }
   },
   created () {
     this.cart()
   },
   methods: {
+    countminus (i) {
+      if (this.carts[i].item_count > 1) {
+        this.carts[i].item_count--
+      }
+    },
     select (i) {
       if (this.check[i]) this.product_total += (this.prices[i] * this.carts[i].item_count)
       else this.product_total -= (this.prices[i] * this.carts[i].item_count)
       this.order_total = this.product_total + 2500
     },
+    selectAll () {
+      for (let i = 0; i < this.carts.length; i++) {
+        if (!this.allCheck) {
+          this.check[i] = this.carts[i].item_id
+          this.product_total += (this.prices[i] * this.carts[i].item_count)
+        } else {
+          this.check[i] = null
+          this.product_total -= (this.prices[i] * this.carts[i].item_count)
+        }
+        this.order_total = this.product_total + 2500
+      }
+      this.allCheck = !this.allCheck
+    },
     cart () {
       this.stored_thumbnail = []
+      this.names = []
+      this.prices = []
+      this.images = []
+      this.check = []
       return axios.get('http://localhost:8000/jewelry/cart/selectCart?member_id=' + this.$store.state.auth.user.id)
         .then(async res => {
           this.carts = res.data.data
@@ -140,6 +168,25 @@ export default {
 
       this.$store.commit('changeOrderCart', true)
       this.$router.push('/order')
+    },
+    async remove () {
+      for (let i = 0; i < this.check.length; i++) {
+        if (this.check[i]) {
+          await axios
+            .delete(`http://localhost:8000/jewelry/cart/${this.carts[i].id}`, {
+              data: {
+                id: this.carts[i].id
+              }
+            })
+            .then(function (response) {
+              console.log(response)
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+        }
+      }
+      this.cart()
     }
   }
 }
@@ -193,6 +240,10 @@ p {
   width: 18px;
   height: 18px;
 }
+.selectAll {
+  margin-left: 5px;
+}
+
 img {
   width: 90px;
   height: 90px;
@@ -207,6 +258,9 @@ img {
 .content {
   width: 38%;
   padding-top: 30px;
+}
+.countBtn {
+  color: black;
 }
 
 .bottom {
@@ -243,5 +297,8 @@ td {
   margin: 0 0.6rem;
   padding: 0.5rem 2rem;
   font-weight: 700;
+}
+.button.remove {
+  justify-content: right;
 }
 </style>

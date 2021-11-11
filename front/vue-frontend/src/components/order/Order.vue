@@ -20,7 +20,7 @@
       </thead>
       <tbody>
         <tr>
-          <td class="img"><div></div></td>
+          <td class="img"><img :src="thumbnail" /></td>
           <td>
             <strong class="itemName">{{this.$store.state.order.name}}</strong>
           </td>
@@ -50,7 +50,7 @@
       </thead>
       <tbody>
         <tr v-for="(c, i) in $store.state.order.cname" :key="i">
-          <td class="img"><div></div></td>
+          <td class="img"><img :src="stored_thumbnail[i]" /></td>
           <td>
             <strong class="itemName">{{$store.state.order.cname[i]}}</strong>
           </td>
@@ -193,10 +193,26 @@ export default {
       option: '',
       totalCart: 0,
       totalCount: 0,
-      stored_thumbnail: []
+      stored_thumbnail: [],
+      thumbnail: ''
     }
   },
   methods: {
+    nCart () {
+      if (!this.$store.state.order.isCart) {
+        this.thumbnail = ''
+        axios.get('http://localhost:8000/jewelry/item/' + this.$store.state.order.itemId + '/itemInfo')
+          .then(res => {
+            let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+              (i) => i.delegate_thumbnail === 'YES'
+            )
+            if (res.data.data.item_response.image_file_response_list.length !== 0) {
+              if (tmp === -1) this.thumbnail = res.data.data.item_response.image_file_response_list[0].stored_file_name
+              else this.thumbnail = res.data.data.item_response.image_file_response_list[tmp].stored_file_name
+            }
+          })
+      }
+    },
     async cart () {
       this.stored_thumbnail = []
       let n = this.$store.state.order.ccount.length
@@ -204,17 +220,16 @@ export default {
         this.totalCart += this.$store.state.order.ccount[i] * this.$store.state.order.cprice[i]
         this.totalCount += this.$store.state.order.ccount[i]
 
-        // await axios.get('http://localhost:8000/jewelry/item/' + this.$store.state.order.citemid[i] + '/itemInfo')
-        //   .then(res => {
-
-        //     let tmp = res.data.data.item_response.image_file_response_list.findIndex(
-        //       (i) => i.delegate_thumbnail === 'YES'
-        //     )
-        //     if (res.data.data.item_response.image_file_response_list.length !== 0) {
-        //       if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
-        //       else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
-        //     }
-        //   })
+        await axios.get('http://localhost:8000/jewelry/item/' + this.$store.state.order.citemId[i] + '/itemInfo')
+          .then(res => {
+            let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+              (i) => i.delegate_thumbnail === 'YES'
+            )
+            if (res.data.data.item_response.image_file_response_list.length !== 0) {
+              if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+              else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+            }
+          })
       }
     },
     member () {
@@ -293,6 +308,18 @@ export default {
               })
             }).then(res => {
               console.log(res)
+
+              axios
+                .put('http://localhost:8000/jewelry/item/update/stockminus', {
+                  id: this.$store.state.order.itemId,
+                  stock: this.$store.state.order.count
+                })
+                .then((res) => {
+                  console.log(res)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
               this.$router.push('/order_')
             }).catch(error => {
               console.log(error)
@@ -317,6 +344,20 @@ export default {
               })
             }).then(res => {
               console.log(res)
+              let n = this.$store.state.order.cartId.length
+              for (let i = 0; i < n; i++) {
+                axios
+                  .put('http://localhost:8000/jewelry/item/update/stockminus', {
+                    id: this.$store.state.order.citemId[i],
+                    stock: this.$store.state.order.ccount[i]
+                  })
+                  .then((res) => {
+                    console.log(res)
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  })
+              }
               this.$router.push('/order_')
             }).catch(error => {
               console.log(error)
@@ -338,6 +379,7 @@ export default {
   created () {
     this.cart()
     this.member()
+    this.nCart()
   }
 }
 </script>
@@ -378,11 +420,10 @@ tbody td {
   margin: 3rem;
   border-bottom: 1px solid black;
 }
-.img div {
+img {
   width: 90px;
   height: 90px;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   margin: 0 auto;
 }
 
