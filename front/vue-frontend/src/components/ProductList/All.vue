@@ -213,7 +213,7 @@ export default {
   margin: 3rem 0 -1rem;
   font-size: larger;
   text-decoration-line: underline;
-  text-decoration-color: rgb(255, 245, 188);
+  text-decoration-color: rgb(238, 222, 129);
 }
 .box {
   display: flex;

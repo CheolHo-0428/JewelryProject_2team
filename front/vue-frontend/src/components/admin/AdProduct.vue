@@ -83,7 +83,7 @@
             <td v-else-if="item.category_id === 3">NECKLACE</td>
             <td v-else-if="item.category_id === 4">RING</td>
             <td v-else>OTHER</td>
-            <td class="img"><div></div></td>
+            <td class="img"><img :src="stored_thumbnail[i]" /></td>
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.stock }}</td>
@@ -100,7 +100,7 @@
             <td v-else-if="item.category_id === 3">NECKLACE</td>
             <td v-else-if="item.category_id === 4">RING</td>
             <td v-else>OTHER</td>
-            <td class="img"><div></div></td>
+            <td class="img"><img :src="stored_thumbnail[i]" /></td>
             <td>{{ item.name }}</td>
             <td>{{ item.price }}</td>
             <td>{{ item.stock }}</td>
@@ -131,7 +131,6 @@ export default {
     return {
       urlPage: this.$store.state.item.itemPageUrl,
       items: [],
-      allItems: [],
       end: 0,
       next: false,
       page: 0,
@@ -148,7 +147,8 @@ export default {
       isCategoryId: false,
       isStatus: false,
       total_elements: 0,
-      searchPage: 0
+      searchPage: 0,
+      stored_thumbnail: []
     }
   },
   methods: {
@@ -241,7 +241,7 @@ export default {
       this.isCategoryId = false
       this.isStatus = false
       return axios.get(this.urlPage)
-        .then(res => {
+        .then(async res => {
           this.items = res.data.data
           this.page = res.data.pagination.current_page + 1
           this.total_pages = res.data.pagination.total_pages
@@ -257,15 +257,19 @@ export default {
           for (let i = this.start; i <= this.end; i++) {
             this.page_list.push(i)
           }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-    itemAll () {
-      axios.get('http://localhost:8000/jewelry/item/')
-        .then(res => {
-          this.allItems = res.data.data
+          this.stored_thumbnail = []
+          for (let i = 0; i < this.items.length; i++) {
+            await axios.get('http://localhost:8000/jewelry/item/' + this.items[i].id + '/itemInfo')
+              .then(res => {
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                }
+              })
+          }
         })
         .catch(err => {
           console.log(err)
@@ -281,7 +285,7 @@ export default {
       this.isCategoryId = false
       this.isStatus = false
       return axios.get(`http://localhost:8000/jewelry/item/search?keyword=${this.keyword}&page=${this.searchPage}`)
-        .then(res => {
+        .then(async res => {
           this.searchedData = []
           this.searchedData = res.data.data
 
@@ -298,6 +302,19 @@ export default {
           this.page_list.length = 0
           for (let i = this.start; i <= this.end; i++) {
             this.page_list.push(i)
+          }
+          this.stored_thumbnail = []
+          for (let i = 0; i < this.searchedData.length; i++) {
+            await axios.get('http://localhost:8000/jewelry/item/' + this.searchedData[i].id + '/itemInfo')
+              .then(res => {
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                }
+              })
           }
         })
         .catch(err => {
@@ -311,7 +328,7 @@ export default {
       this.isCategoryId = false
       this.isStatus = false
       return axios.get(`http://localhost:8000/jewelry/item/searchId?keyword=${this.keyword}&page=${this.searchPage}`)
-        .then(res => {
+        .then(async res => {
           this.searchedData = []
           this.searchedData = res.data.data
 
@@ -328,6 +345,19 @@ export default {
           this.page_list.length = 0
           for (let i = this.start; i <= this.end; i++) {
             this.page_list.push(i)
+          }
+          this.stored_thumbnail = []
+          for (let i = 0; i < this.searchedData.length; i++) {
+            await axios.get('http://localhost:8000/jewelry/item/' + this.searchedData[i].id + '/itemInfo')
+              .then(res => {
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                }
+              })
           }
         })
         .catch(err => {
@@ -341,7 +371,7 @@ export default {
       this.isCategoryId = true
       this.isStatus = false
       return axios.get(`http://localhost:8000/jewelry/item/searchCategoryId?keyword=${this.keyword}&page=${this.searchPage}`)
-        .then(res => {
+        .then(async res => {
           this.searchedData = []
           this.searchedData = res.data.data
 
@@ -359,6 +389,19 @@ export default {
           for (let i = this.start; i <= this.end; i++) {
             this.page_list.push(i)
           }
+          this.stored_thumbnail = []
+          for (let i = 0; i < this.searchedData.length; i++) {
+            await axios.get('http://localhost:8000/jewelry/item/' + this.searchedData[i].id + '/itemInfo')
+              .then(res => {
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                }
+              })
+          }
         })
         .catch(err => {
           console.log(err)
@@ -371,7 +414,7 @@ export default {
       this.isCategoryId = false
       this.isStatus = true
       return axios.get(`http://localhost:8000/jewelry/item/searchStatus?keyword=${this.keyword}&page=${this.searchPage}`)
-        .then(res => {
+        .then(async res => {
           this.searchedData = []
           this.searchedData = res.data.data
 
@@ -388,6 +431,19 @@ export default {
           this.page_list.length = 0
           for (let i = this.start; i <= this.end; i++) {
             this.page_list.push(i)
+          }
+          this.stored_thumbnail = []
+          for (let i = 0; i < this.searchedData.length; i++) {
+            await axios.get('http://localhost:8000/jewelry/item/' + this.searchedData[i].id + '/itemInfo')
+              .then(res => {
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                }
+              })
           }
         })
         .catch(err => {
@@ -413,7 +469,6 @@ export default {
   },
   created () {
     this.item()
-    this.itemAll()
   },
   mounted () {
     window.scrollTo(0, 0)
@@ -486,12 +541,10 @@ p {
   font-size: 1.5rem;
   margin-bottom: 3rem;
 }
-.img div {
+img {
   width: 100px;
   height: 100px;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
-  /* margin-left: 35px; */
 }
 .list th,
 .list td {
