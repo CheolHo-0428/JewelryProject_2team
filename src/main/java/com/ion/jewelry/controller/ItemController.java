@@ -104,4 +104,22 @@ public class ItemController extends AABaseController<ItemRequest, ItemResponse, 
 
 		return baseService.update(result);
 	}
+	
+	@PutMapping("/update/stockminus")
+	public Header<ItemResponse> updateStockMinus(@RequestBody ItemRequest request) {
+
+		Header<ItemRequest> result = new Header<ItemRequest>();
+		result.setData(request);
+
+		return itemService.updateStockMinus(result);
+	}
+	
+	@PutMapping("/update/stockplus")
+	public Header<ItemResponse> updateStockPlus(@RequestBody ItemRequest request) {
+
+		Header<ItemRequest> result = new Header<ItemRequest>();
+		result.setData(request);
+
+		return itemService.updateStockPlus(result);
+	}
 }

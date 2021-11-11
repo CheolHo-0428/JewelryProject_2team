@@ -22,7 +22,7 @@
       </thead>
       <tbody>
         <tr v-for="(order, i) in orderDetailInfo" :key="i">
-          <td class="img"><div></div></td>
+          <td class="img"><img :src="stored_thumbnail[i]" /></td>
           <td>
             <strong class="itemName" v-if="productNameList[i]">{{productNameList[i]}}</strong>
           </td>
@@ -130,7 +130,8 @@ export default {
       phone: '',
       recipient: '',
       request: '',
-      option: ''
+      option: '',
+      stored_thumbnail: []
     }
   },
   methods: {
@@ -215,8 +216,9 @@ export default {
       }).open()
     },
     orderDetail () {
+      this.stored_thumbnail = []
       return axios.get(`http://localhost:8000/jewelry/orderGroup/${this.$store.state.order.orderId}/orderDetailInfo`)
-        .then(res => {
+        .then(async res => {
           this.orderGroupInfo = res.data.data.order_group_response
           this.orderDetailInfo = res.data.data.order_group_response.order_detail_response_list
 
@@ -230,6 +232,17 @@ export default {
 
           for (let i = 0; i < this.orderDetailInfo.length; i++) {
             this.detailId.push(this.orderDetailInfo[i].id)
+
+            await axios.get('http://localhost:8000/jewelry/item/' + this.orderDetailInfo[i].item_id + '/itemInfo')
+              .then(res => {
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                }
+              })
           }
 
           if (this.orderGroupInfo.pay_account === 'IBK') this.bank = '기업은행000-00000000-00'
@@ -296,12 +309,10 @@ p.top {
 .img {
   width: 20%;
 }
-.img div {
+img {
   width: 90px;
   height: 90px;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
-  margin-left: 45px;
 }
 .count,
 .price {

@@ -112,6 +112,36 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 				.map(item -> Header.OK(item))
 				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다"));
 	}
+	public Header<ItemResponse> updateStockMinus(Header<ItemRequest> request) {
+		ItemRequest itemRequest = request.getData();
+		Optional<Item> optional = baseRepo.findById(itemRequest.getId());
+		
+		return optional
+				.map(item -> {
+					item
+						.setStock(item.getStock() - itemRequest.getStock());
+					return item;
+				})
+				.map(item -> baseRepo.save(item))
+				.map(item -> response(item))
+				.map(item -> Header.OK(item))
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다"));
+	}
+	public Header<ItemResponse> updateStockPlus(Header<ItemRequest> request) {
+		ItemRequest itemRequest = request.getData();
+		Optional<Item> optional = baseRepo.findById(itemRequest.getId());
+		
+		return optional
+				.map(item -> {
+					item
+						.setStock(item.getStock() + itemRequest.getStock());
+					return item;
+				})
+				.map(item -> baseRepo.save(item))
+				.map(item -> response(item))
+				.map(item -> Header.OK(item))
+				.orElseGet(() -> Header.ERROR("업데이트할 데이터가 없습니다"));
+	}
 
 	@Override
 	public Header delete(Long id) {

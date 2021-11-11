@@ -1,3 +1,4 @@
+import { auth } from '../store/auth.module'
 import ALL from '../components/ProductList/All.vue'
 import RING from '../components/ProductList/Ring.vue'
 import EARRINGS from '../components/ProductList/Earrings.vue'
@@ -190,11 +191,12 @@ const router = new VueRouter({
 })
 // 무단 액세스 처리
 // 탐색 작업이 트리거될 때마다 승인됨 상태를 확인하려면 다음과 같이 src/router.jsrouter.beforeEach() 끝에 추가하기만 하면 됩니다 .
-
 router.beforeEach((to, from, next) => {
   const publicPages = ['/login', '/signup', '/', '/mypage', '/notice', '/ring', '/earrings', '/bracelet', '/necklace', '/detail', '/cart', '/order', '/order_', '/orderlist', '/orderdetail', '/ordercancle', '/modify', '/regnotice', '/notice_', '/review_', '/qna_', '/admember', '/adminpage', '/adproduct', '/regproduct', '/adorder_', '/searchid', '/searchpw', '/findid', '/findpw', '/regreview', '/regqna', '/adsales', '/admember_', '/adproduct_', '/adorder']
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user')
+  const a = auth.state.user.roles[0]
+  console.log(a)
   // trying to access a restricted page + not logged in
   // redirect to login page
   // console.log($state.state.auth.user)
