@@ -110,7 +110,7 @@ export default {
       this.$swal
         .fire({
           icon: 'warning',
-          title: '해당상품이 삭제됩니다.',
+          title: '해당유저가 삭제됩니다.',
           text: '목록으로 이동하시겠습니까?',
           showCancelButton: true,
           confirmButtonText: 'Yes',
