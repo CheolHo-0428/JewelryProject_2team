@@ -1,8 +1,6 @@
 package com.ion.jewelry.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -118,8 +116,11 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 		
 		return optional
 				.map(item -> {
+					if(item.getStock() - itemRequest.getStock() == 0) itemRequest.setStatus(ObjectStatus.UNREGISTERED);
+					else itemRequest.setStatus(ObjectStatus.REGISTERED);
 					item
-						.setStock(item.getStock() - itemRequest.getStock());
+						.setStock(item.getStock() - itemRequest.getStock())
+						.setStatus(itemRequest.getStatus());
 					return item;
 				})
 				.map(item -> baseRepo.save(item))
@@ -133,8 +134,11 @@ public class ItemService extends AABaseService<ItemRequest, ItemResponse, Item> 
 		
 		return optional
 				.map(item -> {
+					if(item.getStock() + itemRequest.getStock() > 0) itemRequest.setStatus(ObjectStatus.REGISTERED);
+					else itemRequest.setStatus(ObjectStatus.UNREGISTERED);
 					item
-						.setStock(item.getStock() + itemRequest.getStock());
+						.setStock(item.getStock() + itemRequest.getStock())
+						.setStatus(itemRequest.getStatus());
 					return item;
 				})
 				.map(item -> baseRepo.save(item))

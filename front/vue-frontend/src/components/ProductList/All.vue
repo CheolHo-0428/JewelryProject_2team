@@ -26,8 +26,8 @@
         <div v-for="i in 4" :key="i" class="list">
           <div class="img" @click="change(ring_response_list[i-1].id)"><img :src="rstored_file_name[i-1]" /></div>
           <div class="product">
-            <p class="name" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].name}}</p>
-            <p class="price" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].price}}원</p>
+            <p class="name" @click="change(ring_response_list[i-1].id)" :class="{unreg : rstatus[i-1] === 'UNREGISTERED'}" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].name}} <span v-if="rstatus[i-1] === 'UNREGISTERED'" style="color:#DF0101;font-size:0.95rem;">&nbsp; 일시품절</span></p>
+            <p class="price" :class="{unreg : rstatus[i-1] === 'UNREGISTERED'}" v-if="ring_response_list[i-1]">{{ring_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
@@ -36,8 +36,8 @@
         <div v-for="i in 4" :key="i" class="list">
           <div class="img" @click="change(earrings_response_list[i-1].id)"><img :src="estored_file_name[i-1]" /></div>
           <div class="product">
-            <p class="name" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].name}}</p>
-            <p class="price" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].price}}원</p>
+            <p class="name" @click="change(earrings_response_list[i-1].id)" :class="{unreg : estatus[i-1] === 'UNREGISTERED'}" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].name}} <span v-if="estatus[i-1] === 'UNREGISTERED'" style="color:#DF0101;font-size:0.95rem;">&nbsp; 일시품절</span></p>
+            <p class="price" :class="{unreg : estatus[i-1] === 'UNREGISTERED'}" v-if="earrings_response_list[i-1]">{{earrings_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
@@ -46,8 +46,8 @@
         <div v-for="i in 4" :key="i" class="list">
           <div class="img" @click="change(bracelet_response_list[i-1].id)"><img :src="bstored_file_name[i-1]" /></div>
           <div class="product">
-            <p class="name" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].name}}</p>
-            <p class="price" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].price}}원</p>
+            <p class="name" @click="change(bracelet_response_list[i-1].id)" :class="{unreg : bstatus[i-1] === 'UNREGISTERED'}" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].name}} <span v-if="bstatus[i-1] === 'UNREGISTERED'" style="color:#DF0101;font-size:0.95rem;">&nbsp; 일시품절</span></p>
+            <p class="price" :class="{unreg : bstatus[i-1] === 'UNREGISTERED'}" v-if="bracelet_response_list[i-1]">{{bracelet_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
@@ -56,8 +56,8 @@
         <div v-for="i in 4" :key="i" class="list">
           <div class="img" @click="change(necklace_response_list[i-1].id)"><img :src="nstored_file_name[i-1]" /></div>
           <div class="product">
-            <p class="name" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].name}}</p>
-            <p class="price" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].price}}원</p>
+            <p class="name" @click="change(necklace_response_list[i-1].id)" :class="{unreg : nstatus[i-1] === 'UNREGISTERED'}" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].name}} <span v-if="nstatus[i-1] === 'UNREGISTERED'" style="color:#DF0101;font-size:0.95rem;">&nbsp; 일시품절</span></p>
+            <p class="price" :class="{unreg : nstatus[i-1] === 'UNREGISTERED'}" v-if="necklace_response_list[i-1]">{{necklace_response_list[i-1].price}}원</p>
           </div>
         </div>
       </div>
@@ -78,7 +78,11 @@ export default {
       rstored_file_name: [],
       estored_file_name: [],
       nstored_file_name: [],
-      bstored_file_name: []
+      bstored_file_name: [],
+      rstatus: [],
+      estatus: [],
+      bstatus: [],
+      nstatus: []
     }
   },
   methods: {
@@ -89,15 +93,21 @@ export default {
     },
     ring () {
       this.rstored_file_name = []
+      this.rstatus = []
       axios.get('http://localhost:8000/jewelry/category/4/itemInfo')
         .then(res => {
           this.ring_response_list = res.data.data.category_response.item_response_list
           for (let i = 0; i < 4; i++) {
-            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
-              (i) => i.delegate_thumbnail === 'YES'
-            )
-            if (tmp === -1) this.rstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
-            else this.rstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            if (res.data.data.category_response.item_response_list[i].image_file_response_list.length !== 0) {
+              let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+                (i) => i.delegate_thumbnail === 'YES'
+              )
+              if (tmp === -1) this.rstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+              else this.rstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            } else {
+              this.rstored_file_name.push(null)
+            }
+            this.rstatus.push(res.data.data.category_response.item_response_list[i].status)
           }
           // console.log(this.rstored_file_name)
         })
@@ -107,15 +117,21 @@ export default {
     },
     earrings () {
       this.estored_file_name = []
+      this.estatus = []
       axios.get('http://localhost:8000/jewelry/category/2/itemInfo')
         .then(res => {
           this.earrings_response_list = res.data.data.category_response.item_response_list
           for (let i = 0; i < 4; i++) {
-            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
-              (i) => i.delegate_thumbnail === 'YES'
-            )
-            if (tmp === -1) this.estored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
-            else this.estored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            if (res.data.data.category_response.item_response_list[i].image_file_response_list.length !== 0) {
+              let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+                (i) => i.delegate_thumbnail === 'YES'
+              )
+              if (tmp === -1) this.estored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+              else this.estored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            } else {
+              this.estored_file_name.push(null)
+            }
+            this.estatus.push(res.data.data.category_response.item_response_list[i].status)
           }
           // console.log(this.estored_file_name)
         })
@@ -125,15 +141,21 @@ export default {
     },
     bracelet () {
       this.bstored_file_name = []
+      this.bstatus = []
       axios.get('http://localhost:8000/jewelry/category/1/itemInfo')
         .then(res => {
           this.bracelet_response_list = res.data.data.category_response.item_response_list
           for (let i = 0; i < 4; i++) {
-            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
-              (i) => i.delegate_thumbnail === 'YES'
-            )
-            if (tmp === -1) this.bstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
-            else this.bstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            if (res.data.data.category_response.item_response_list[i].image_file_response_list.length !== 0) {
+              let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+                (i) => i.delegate_thumbnail === 'YES'
+              )
+              if (tmp === -1) this.bstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+              else this.bstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            } else {
+              this.bstored_file_name.push(null)
+            }
+            this.bstatus.push(res.data.data.category_response.item_response_list[i].status)
           }
           // console.log(this.bstored_file_name)
         })
@@ -143,15 +165,21 @@ export default {
     },
     necklace () {
       this.nstored_file_name = []
+      this.nstatus = []
       axios.get('http://localhost:8000/jewelry/category/3/itemInfo')
         .then(res => {
           this.necklace_response_list = res.data.data.category_response.item_response_list
           for (let i = 0; i < 4; i++) {
-            let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
-              (i) => i.delegate_thumbnail === 'YES'
-            )
-            if (tmp === -1) this.nstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
-            else this.nstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            if (res.data.data.category_response.item_response_list[i].image_file_response_list.length !== 0) {
+              let tmp = res.data.data.category_response.item_response_list[i].image_file_response_list.findIndex(
+                (i) => i.delegate_thumbnail === 'YES'
+              )
+              if (tmp === -1) this.nstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[0].stored_thumbnail)
+              else this.nstored_file_name.push(res.data.data.category_response.item_response_list[i].image_file_response_list[tmp].stored_thumbnail)
+            } else {
+              this.nstored_file_name.push(null)
+            }
+            this.nstatus.push(res.data.data.category_response.item_response_list[i].status)
           }
           // console.log(this.nstored_file_name)
         })
@@ -196,6 +224,10 @@ export default {
   font-size: 1.4rem;
   margin-bottom: 1rem;
   text-decoration-line: underline;
+}
+
+.unreg {
+  color: #747272;
 }
 
 .boxs {

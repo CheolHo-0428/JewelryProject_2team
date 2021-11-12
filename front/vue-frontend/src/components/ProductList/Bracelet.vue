@@ -8,8 +8,8 @@
       <div v-for="(list, i) in response_list" :key="i" class="list" :style="computedStyledObject">
         <div class="img" @click="change(list.id)"><img :src="stored_file_name[i]" /></div>
         <div class="product">
-          <p class="name">{{list.name}}</p>
-          <p class="price">{{list.price}}원</p>
+          <p class="name" @click="change(list.id)" :class="{unreg : status[i] === 'UNREGISTERED'}">{{list.name}} <span v-if="status[i] === 'UNREGISTERED'" style="color:#DF0101;font-size:0.95rem;">&nbsp; 일시품절</span></p>
+          <p class="price" :class="{unreg : status[i] === 'UNREGISTERED'}">{{list.price}}원</p>
         </div>
       </div>
     </div>
@@ -45,7 +45,8 @@ export default {
       total_pages: 0,
       total_elements: 0,
       current_elements: 0,
-      stored_file_name: []
+      stored_file_name: [],
+      status: []
     }
   },
   methods: {
@@ -68,6 +69,7 @@ export default {
     },
     bracelet () {
       this.stored_file_name = []
+      this.status = []
       return axios.get(this.urlPage)
         .then(res => {
           this.response_list = res.data.data.category_response.item_response_list
@@ -79,7 +81,10 @@ export default {
               )
               if (tmp === -1) this.stored_file_name.push(this.response_list[i].image_file_response_list[0].stored_file_name)
               else this.stored_file_name.push(this.response_list[i].image_file_response_list[tmp].stored_file_name)
+            } else {
+              this.stored_file_name.push(null)
             }
+            this.status.push(this.response_list[i].status)
           }
 
           this.page = res.data.pagination.current_page + 1
@@ -126,6 +131,10 @@ export default {
   font-size: 1.4rem;
   margin-bottom: 1rem;
   text-decoration-line: underline;
+}
+
+.unreg {
+  color: #747272;
 }
 
 .boxs {

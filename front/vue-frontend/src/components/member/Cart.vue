@@ -154,20 +154,34 @@ export default {
         })
     },
     order () {
+      let count = 0
       this.$store.commit('resetCart')
       for (let i = 0; i < this.check.length; i++) {
         if (this.check[i]) {
-          this.$store.commit('removeCartList', this.carts[i].id)
-          this.$store.commit('cchangeCount', this.carts[i].item_count)
-          this.$store.commit('cchangeItemId', this.carts[i].item_id)
-          this.$store.commit('cchangePrice', this.prices[i])
-          this.$store.commit('cchangeName', this.names[i])
-          // console.log(this.carts[i].item_count, this.carts[i].item_id, this.prices[i], this.names[i])
+          count++
         }
       }
-
-      this.$store.commit('changeOrderCart', true)
-      this.$router.push('/order')
+      if (count === 0) {
+        this.$swal.fire({
+          icon: 'warning',
+          title: '구매할 상품을 선택하세요.',
+          confirmButtonColor: '#FE9A2E'
+        })
+      } else {
+        for (let i = 0; i < this.check.length; i++) {
+          if (this.check[i]) {
+            count++
+            this.$store.commit('removeCartList', this.carts[i].id)
+            this.$store.commit('cchangeCount', this.carts[i].item_count)
+            this.$store.commit('cchangeItemId', this.carts[i].item_id)
+            this.$store.commit('cchangePrice', this.prices[i])
+            this.$store.commit('cchangeName', this.names[i])
+            // console.log(this.carts[i].item_count, this.carts[i].item_id, this.prices[i], this.names[i])
+          }
+        }
+        this.$store.commit('changeOrderCart', true)
+        this.$router.push('/order')
+      }
     },
     async remove () {
       for (let i = 0; i < this.check.length; i++) {
@@ -212,7 +226,7 @@ p {
   border-bottom: 1px solid black;
 }
 .info thead th {
-  padding: 1rem 0;
+  padding: 0.1rem 0;
   vertical-align: middle;
 }
 .info tbody td {

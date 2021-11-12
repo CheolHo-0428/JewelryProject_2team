@@ -267,6 +267,8 @@ export default {
                 if (res.data.data.item_response.image_file_response_list.length !== 0) {
                   if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
                   else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                } else {
+                  this.stored_thumbnail.push(null)
                 }
               })
           }
@@ -313,6 +315,8 @@ export default {
                 if (res.data.data.item_response.image_file_response_list.length !== 0) {
                   if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
                   else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                } else {
+                  this.stored_thumbnail.push(null)
                 }
               })
           }
@@ -356,6 +360,8 @@ export default {
                 if (res.data.data.item_response.image_file_response_list.length !== 0) {
                   if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
                   else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                } else {
+                  this.stored_thumbnail.push(null)
                 }
               })
           }
@@ -399,6 +405,8 @@ export default {
                 if (res.data.data.item_response.image_file_response_list.length !== 0) {
                   if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
                   else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                } else {
+                  this.stored_thumbnail.push(null)
                 }
               })
           }
@@ -442,6 +450,8 @@ export default {
                 if (res.data.data.item_response.image_file_response_list.length !== 0) {
                   if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
                   else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                } else {
+                  this.stored_thumbnail.push(null)
                 }
               })
           }

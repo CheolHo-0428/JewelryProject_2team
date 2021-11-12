@@ -308,7 +308,6 @@ export default {
               })
             }).then(res => {
               console.log(res)
-
               axios
                 .put('http://localhost:8000/jewelry/item/update/stockminus', {
                   id: this.$store.state.order.itemId,
