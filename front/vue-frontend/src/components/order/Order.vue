@@ -103,9 +103,13 @@
       </p>
       <p>
         <label>결제방식</label>
-        <span><input class="pay" type="text" value="무통장입금" readonly></span>
+        <select id="pay_method"  @change="optionChangePay()">
+          <option value = "무통장입금" selected>무통장입금</option>
+          <option value = "카드">카드</option>
+        </select>
+        <!-- <span><input class="pay" type="text" value="무통장입금" readonly></span> -->
       </p>
-      <p>
+      <p class="pay_bank">
         <label>결제은행<span class="essential">*</span></label>
         <span>
           <select name="bank" class="bank" @change="optionChange($event)">
@@ -194,7 +198,8 @@ export default {
       totalCart: 0,
       totalCount: 0,
       stored_thumbnail: [],
-      thumbnail: ''
+      thumbnail: '',
+      cardOk: false
     }
   },
   methods: {
@@ -284,6 +289,14 @@ export default {
     },
     optionChange (event) {
       this.option = event.target.value
+    },
+    optionChangePay () {
+      const payMethod = $('#pay_method option:selected').val()
+      if (payMethod === '카드') {
+        $('.pay_bank').hide()
+      } else if (payMethod === '무통장입금') {
+        $('.pay_bank').show()
+      }
     },
     order () {
       this.$validator.validate().then((isValid) => {
@@ -544,5 +557,4 @@ input{
   padding: 0.2rem;
   text-align: center;
 }
-
 </style>

@@ -1,10 +1,8 @@
-import { auth } from '../store/auth.module'
 import ALL from '../components/ProductList/All.vue'
 import RING from '../components/ProductList/Ring.vue'
 import EARRINGS from '../components/ProductList/Earrings.vue'
 import BRACELET from '../components/ProductList/Bracelet.vue'
 import NECKLACE from '../components/ProductList/Necklace.vue'
-
 import DETAIL from '../components/product/Detail.vue'
 import CART from '../components/member/Cart'
 import SIGNUP from '../components/member/Signup.vue'
@@ -192,24 +190,29 @@ const router = new VueRouter({
 // 무단 액세스 처리
 // 탐색 작업이 트리거될 때마다 승인됨 상태를 확인하려면 다음과 같이 src/router.jsrouter.beforeEach() 끝에 추가하기만 하면 됩니다 .
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/signup', '/', '/mypage', '/notice', '/ring', '/earrings', '/bracelet', '/necklace', '/detail', '/cart', '/order', '/order_', '/orderlist', '/orderdetail', '/ordercancle', '/modify', '/regnotice', '/notice_', '/review_', '/qna_', '/admember', '/adminpage', '/adproduct', '/regproduct', '/adorder_', '/searchid', '/searchpw', '/findid', '/findpw', '/regreview', '/regqna', '/adsales', '/admember_', '/adproduct_', '/adorder']
+  const publicPages = ['/login', '/signup', '/', '/mypage', '/notice', '/ring', '/earrings', '/bracelet', '/necklace', '/detail', '/cart', '/order', '/order_', '/orderlist', '/orderdetail', '/ordercancle', '/modify', '/regnotice', '/notice_', '/review_', '/qna_', '/regproduct', '/searchid', '/searchpw', '/findid', '/findpw', '/regreview', '/regqna', '/admember', '/adminpage', '/adproduct', '/adorder_', '/adsales', '/admember_', '/adproduct_', '/adorder']
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user')
   // trying to access a restricted page + not logged in
   // redirect to login page
-  // console.log($state.state.auth.user)
   if (authRequired && !loggedIn) {
     next('/')
   } else {
-    console.log('로그인상태' + loggedIn)
     if (loggedIn) {
-      const role = auth.state.user.roles[0]
-      console.log(role)
-      if (role !== 'ROLE_ADMIN') {
-        next()
+      if (loggedIn.includes('ROLE_ADMIN') === false) {
+        if (to.path === '/admember' || to.path === '/adminpage' || to.path === '/adproduct' || to.path === '/adorder_' || to.path === '/adsales' || to.path === '/admember_' || to.path === '/adproduct_' || to.path === '/adorder') {
+          next('/')
+        } else if (authRequired && loggedIn) {
+          next('/')
+        }
+      } else if (authRequired && loggedIn) {
+        next('/')
+      }
+    } else if (!loggedIn) {
+      if (to.path === '/admember' || to.path === '/adminpage' || to.path === '/adproduct' || to.path === '/adorder_' || to.path === '/adsales' || to.path === '/admember_' || to.path === '/adproduct_' || to.path === '/adorder') {
+        next('/')
       }
     }
-    console.log('user')
     next()
   }
 })
