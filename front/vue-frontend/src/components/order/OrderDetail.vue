@@ -101,7 +101,7 @@
 
     <div class="button">
       <v-btn color="#FBEF97" x-large to="/orderlist">주문목록</v-btn>
-      <v-btn color="#D1CFC4" x-large @click="ordercancle">주문취소</v-btn>
+      <v-btn color="#D1CFC4" v-if="orderGroupInfo.order_product_state === '입금전'" x-large @click="ordercancle">주문취소</v-btn>
     </div>
   </div>
 </template>

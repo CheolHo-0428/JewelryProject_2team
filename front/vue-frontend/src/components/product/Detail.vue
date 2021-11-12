@@ -15,20 +15,21 @@
           <p><span class="info">배송비 </span><span class="info2">2500원</span></p>
         </div>
         <hr>
-        <div class="count">
+        <div class="count" :class="{unreg : status === 'UNREGISTERED'}">
           <tr>
             <td class="text">수량</td>
             <td>
-                <button type ="button" @click="minus">-</button>
+                <button type ="button" @click="minus" :disabled="status === 'UNREGISTERED'">-</button>
                 <input type="text" readonly="readonly" :value="`${this.count}`">
-                <button type="button" @click="plus">+</button>
+                <button type="button" @click="plus" :disabled="status === 'UNREGISTERED'">+</button>
             </td>
           </tr>
         </div>
-        <div class="totPrice">총 상품금액 - {{totalPrice}}원</div>
+        <div class="totPrice" :class="{unreg : status === 'UNREGISTERED'}">총 상품금액 - {{totalPrice}}원</div>
+        <div class="totPrice" v-if="status === 'UNREGISTERED'" style="color:#DF0101;">일시품절</div>
         <div class="button">
-          <v-btn color="#FBEF97" x-large @click="order">구매하기</v-btn>
-          <v-btn v-if="currentUser" color="#F4F2E7" x-large @click="cart">장바구니</v-btn>
+          <v-btn color="#FBEF97" x-large @click="order" :disabled="status === 'UNREGISTERED'">구매하기</v-btn>
+          <v-btn v-if="currentUser" color="#F4F2E7" x-large @click="cart" :disabled="status === 'UNREGISTERED'">장바구니</v-btn>
         </div>
       </div>
     </div>
@@ -71,7 +72,9 @@ export default {
       count: 1,
       totalPrice: 0,
       id: 0,
-      stored_thumbnail: ''
+      stored_thumbnail: '',
+      status: '',
+      stock: 0
     }
   },
   computed: {
@@ -81,37 +84,55 @@ export default {
   },
   methods: {
     cart () {
-      this.$swal.fire({
-        icon: 'info',
-        title: '장바구니에 넣으시겠습니까?',
-        text: 'yes를 누르시면 장바구니 페이지로 이동합니다.',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        confirmButtonColor: '#9de0f6',
-        cancelButtonColor: '#BDBDBD',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          axios.post('http://localhost:8000/jewelry/cart/reg', {
-            item_count: this.count,
-            member_id: this.$store.state.auth.user.id,
-            item_id: this.$store.state.item.itemId
-          }).then((response) => {
-            this.$router.push('/cart')
-            console.log(response)
-          }).catch((error) => {
-            console.log(error)
-          })
-        }
-      })
+      if (this.count > this.stock) {
+        this.$swal.fire({
+          icon: 'warning',
+          title: '상품의 재고량보다 많습니다.',
+          text: `해당상품 남은 재고 : ${this.stock}`,
+          confirmButtonColor: '#FE9A2E'
+        })
+      } else {
+        this.$swal.fire({
+          icon: 'info',
+          title: '장바구니에 넣으시겠습니까?',
+          text: 'yes를 누르시면 장바구니 페이지로 이동합니다.',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          confirmButtonColor: '#9de0f6',
+          cancelButtonColor: '#BDBDBD',
+          cancelButtonText: 'No'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            axios.post('http://localhost:8000/jewelry/cart/reg', {
+              item_count: this.count,
+              member_id: this.$store.state.auth.user.id,
+              item_id: this.$store.state.item.itemId
+            }).then((response) => {
+              this.$router.push('/cart')
+              console.log(response)
+            }).catch((error) => {
+              console.log(error)
+            })
+          }
+        })
+      }
     },
     order () {
-      this.$store.commit('changeCount', this.count)
-      this.$store.commit('changeItemId', this.$store.state.item.itemId)
-      this.$store.commit('changePrice', this.price)
-      this.$store.commit('changeName', this.name)
-      this.$store.commit('changeOrderCart', false)
-      this.$router.push('/order')
+      if (this.count > this.stock) {
+        this.$swal.fire({
+          icon: 'warning',
+          title: '상품의 재고량보다 많습니다.',
+          text: `해당상품 남은 재고 : ${this.stock}`,
+          confirmButtonColor: '#FE9A2E'
+        })
+      } else {
+        this.$store.commit('changeCount', this.count)
+        this.$store.commit('changeItemId', this.$store.state.item.itemId)
+        this.$store.commit('changePrice', this.price)
+        this.$store.commit('changeName', this.name)
+        this.$store.commit('changeOrderCart', false)
+        this.$router.push('/order')
+      }
     },
     plus () {
       this.count++
@@ -131,6 +152,8 @@ export default {
           this.name = info.name
           this.price = info.price
           this.totalPrice = info.price
+          this.status = info.status
+          this.stock = info.stock
 
           let imageList = info.image_file_response_list
 
@@ -177,6 +200,17 @@ export default {
   margin-left: 20px;
   background-size: cover;
   background-image: url(https://ifh.cc/g/AyICP7.jpg);
+}
+
+.unreg {
+  color: #747272;
+}
+.unreg button {
+  border-color: #747272 !important;
+}
+.unreg input {
+  border-color: #747272 !important;
+  color: #747272;
 }
 
 .topContent {
