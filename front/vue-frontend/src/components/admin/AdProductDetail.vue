@@ -21,7 +21,6 @@
             </tr>
             <tr>
               <th scope="col">상품분류</th>
-
               <td>
                 <!-- <input type="text" v-model="category_id"> -->
                 <select name="category_id" id="category_id" v-model="category_id" class="op" @change="categoryChange($event)">
@@ -31,7 +30,6 @@
                   <option value="4">RING</option>
                 </select>
               </td>
-
               <th scope="col">상품가격</th>
               <td><input type="text" v-model="price"></td>
             </tr>
@@ -47,72 +45,146 @@
               </td>
             </tr>
             <tr>
-              <!-- <th scope="col">등록자</th>
-              <td><input type="text" v-model="created_by" disabled></td> -->
               <th scope="col">등록날짜</th>
               <td><input type="text" v-model="created_at" disabled></td>
               <th scope="col">수정날짜</th>
               <td><input type="text" v-model="updated_at" disabled></td>
             </tr>
+            <!-- 여기서부터 테스트 -->
             <tr>
-              <th scope="col">이미지</th>
+              <th scope="col">이미지 수정</th>
               <td class="img" colspan="3">
-                <div class="imgBox">
-                  <div v-for="(image, i) in stored_file_name_list" :key="i" class="itemImage">
-                    <img :src="image" v-if="stored_file_name_list[i]">
-                    <div v-if="!stored_file_name_list[i]">
-                      <v-file-input
-                        v-bind:id="'file'+i"
-                        name="files"
-                        label="File input"
-                        multiple="multiple"
-                        style="width: 200px;"
-                      >
-                      </v-file-input>
+                <div class="main-container">
+                  <div class="room-deal-information-container">
+                    <div class="room-deal-information-title">이미지 수정</div>
+                    <div class="room-picture-notice">
+                      <ul class="room-write-wrapper" style="margin:0px">
+                        <li style="text-align:left">이미지 삭제 후 새로운 이미지 추가 가능합니다.</li>
+                        <li style="text-align:left">썸네일 이미지는 1개만 선택해주세요.(다중체크일 경우 가장 상단 이미지가 선택됩니다.)</li>
+                      </ul>
                     </div>
-                    <div>
-                      <input type="radio" v-bind:id="'thumnailInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
-                      <input type="radio" v-bind:id="'thumnailInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO
+                    <div class="room-file-upload-wrapper" style="background:white">
+                      <div class="room-file-upload-example-container">
+                        <div class="room-file-upload-example">
+                          <div class="room-file-notice-item room-file-upload-button">
+                            <div class="image-box">
+                              <table style="border:solid 1px;" width="500">
+                                <colgroup>
+                                  <col width="15%">
+                                  <col width="10%">
+                                  <col width="10%">
+                                </colgroup>
+                                <tbody>
+                                  <tr height="20">
+                                    <th scope="col" style="border:none; font-size: 12px; padding: 2px;">이미지</th>
+                                    <th scope="col" style="border:none; font-size: 12px; padding: 2px;">썸네일등록</th>
+                                    <th scope="col" style="border:none; font-size: 12px; padding: 2px;">삭제</th>
+                                  </tr>
+                                  <tr v-for="(image, i) in stored_file_name_list" :key="i">
+                                    <td>
+                                      <img :src="image" v-if="stored_file_name_list[i]" style="width:auto; height:100px">
+                                      <div v-if="!stored_file_name_list[i]">
+                                        <v-file-input
+                                          v-bind:id="'file'+i"
+                                          name="files"
+                                          label="File input"
+                                          multiple="multiple"
+                                          style="width: 200px;"
+                                        >
+                                        </v-file-input>
+                                      </div>
+                                    </td>
+                                    <td>
+                                      <input type="checkbox" v-bind:id="'updateImageInfo'+i" v-model="del_true_false_list[i]">
+                                    </td>
+                                    <td>
+                                      <a @click="imgfun(i)" style="cursor:pointer; font-size:13px;">삭제</a>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <!-- <div>
-                      <input type="radio" v-bind:id="'deleteInfo'+i" value="YES" v-model="delete_check_list[i]"> YES
-                      <input type="radio" v-bind:id="'deleteInfo'+i" value="NO" v-model="delete_check_list[i]"> NO
-                    </div> -->
-                    <a @click="imgfun(i)">삭제</a>
                   </div>
-                  <!-- <p>썸네일리스트: {{ delegate_thumbnail_list }}</p> -->
-                  <!-- <p>deleteImg_list: {{ deleteImg_list }}</p> -->
                 </div>
               </td>
             </tr>
+            <!-- 여기서부터 -->
             <tr>
-              <th scope="col">이미지추가</th>
-              <td class="img" colspan="3">
-                <v-file-input
-                  id="addFile" name="addFiles"
-                  label="addFile input" style="width: 200px;"
-                  multiple="multiple" v-model="files"
-                  @click="isFileChange"
-                  >
-                </v-file-input>
-                <div v-if="isFile">
-                  <ol>
-                    <li v-for="(file, i) in files" :key="i" class="groupli">
-                      파일이름: {{ file.name }}&nbsp;&nbsp; || &nbsp;
-                      파일용량: {{ file.size * 0.001 }}kB &nbsp;&nbsp; || &nbsp;&nbsp;
-                      썸네일등록:
-                        <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="addDelegate_thumbnail_list[i]"> YES
-                        <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="addDelegate_thumbnail_list[i]"> NO
-                    </li>
-                  </ol>
+            <th scope="col">이미지 추가</th>
+            <td class="img" colspan="3">
+                <div class="main-container">
+                  <div class="room-deal-information-container">
+                    <div class="room-deal-information-title">이미지 추가</div>
+                    <div class="room-picture-notice">
+                      <ul class="room-write-wrapper" style="margin:0px">
+                        <li style="text-align:left">가로 이미지를 권장합니다. (가로 사이즈 최소 800px)</li>
+                        <li style="text-align:left">사진 용량은 사진 한 장당 10MB 까지 등록이 가능합니다.</li>
+                      </ul>
+                    </div>
+                    <div class="room-file-upload-wrapper">
+                      <div class="room-file-upload-example-container">
+                        <div class="room-file-upload-example">
+                          <div class="room-file-image-example-wrapper">이미지</div>
+                          <div class="room-file-notice-item">
+                            실사진 최소 3장 이상 등록하셔야 하며, 가로사진을 권장합니다.
+                          </div>
+                          <div class="room-file-notice-item room-file-notice-item-red">
+                            불필요한 정보(워터마크,상호,전화번호 등)가 있는 이미지는 업로드 금지
+                          </div>
+                          <div class="room-file-notice-item room-file-upload-button">
+                            <div class="image-box">
+                              <!-- <label for="file" style="font-size:13px">이미지 등록</label> -->
+                              <v-file-input
+                                id="addFile" name="addFiles"
+                                color="deep-purple accent-4"
+                                prepend-icon="mdi-paperclip"
+                                style="width:180px; margin-left:100px;"
+                                label="File input"
+                                multiple
+                                placeholder="Select your files"
+                                v-model="files"
+                                @click="isFileChange"
+                              >
+                              </v-file-input>
+                              <table v-if="isFile" style="border:solid 1px;">
+                                <colgroup>
+                                  <col width="15%">
+                                  <col width="10%">
+                                  <col width="10%">
+                                </colgroup>
+                                <tbody>
+                                  <tr height="10">
+                                    <th scope="col" style="border:none; font-size: 12px; padding: 2px">파일명</th>
+                                    <th scope="col" style="border:none; font-size: 12px; padding: 2px">용량</th>
+                                    <th scope="col" style="border:none; font-size: 12px; padding: 2px">썸네일등록</th>
+                                  </tr>
+                                  <tr v-for="(file, i) in files" :key="i">
+                                    <td>{{ file.name }}</td>
+                                    <td>{{ file.size * 0.001 }}kB</td>
+                                    <td>
+                                      <input type="checkbox" v-bind:id="'imageInfo'+i" v-model="true_false_list[i]">
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                              <!-- <P>{{ true_false_list }}</P> -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-              </td>
-            </tr>
+            </td>
+          </tr>
           </tbody>
         </table>
       </form>
     </div>
-
     <div class="button">
       <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>
       <v-btn color="#FBEF97" x-large @click="mod">저장</v-btn>
@@ -139,11 +211,13 @@ export default {
       stored_file_name_list: [],
       deleteImg_list: [],
       image_file_list: [],
+      del_true_false_list: [],
       delegate_thumbnail_list: [],
       id_list: [],
       item_id: '',
       files: [],
       isFile: false,
+      true_false_list: [],
       addDelegate_thumbnail_list: []
     }
   },
@@ -179,6 +253,13 @@ export default {
       })
     },
     async mod () {
+      for (let i = 0; i < this.del_true_false_list.length; i++) {
+        if (this.del_true_false_list[i] === true) {
+          this.delegate_thumbnail_list[i] = 'YES'
+        } else {
+          this.delegate_thumbnail_list[i] = 'NO'
+        }
+      }
       if (!this.name || !this.price || !this.stock) {
         this.$swal.fire({
           icon: 'info',
@@ -208,7 +289,6 @@ export default {
             console.log('****************************' + 'file' + i)
             // console.log('****************************' + imageFile.files[0].name)
             if (imageFile.files[0]) {
-              console.log('파일이 있어요~~~~~~~~')
               frm.append('id', this.id_list[i])
               frm.append('delegateThumbnail', this.delegate_thumbnail_list[i])
               frm.append('deleteCheck', 'YES')
@@ -250,11 +330,19 @@ export default {
         }
         let frm = new FormData()
         let imageFile = document.getElementById('addFile')
-        frm.append('delegateThumbnail', this.addDelegate_thumbnail_list)
-        frm.append('itemId', this.item_id)
         for (let i = 0; i < imageFile.files.length; i++) {
+          if (this.true_false_list[i] === true) {
+            this.addDelegate_thumbnail_list.push('YES')
+          } else {
+            this.addDelegate_thumbnail_list.push('NO')
+          }
           frm.append('file', imageFile.files[i])
         }
+        frm.append('delegateThumbnail', this.addDelegate_thumbnail_list)
+        frm.append('itemId', this.item_id)
+        // for (let i = 0; i < imageFile.files.length; i++) {
+        //   frm.append('file', imageFile.files[i])
+        // }
         if (imageFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
             headers: {
@@ -338,8 +426,13 @@ export default {
           for (let i = 0; i < this.image_file_list.length; i++) {
             this.deleteImg_list.push(false)
             this.stored_file_name_list.push(this.image_file_list[i].stored_file_name)
-            this.delegate_thumbnail_list.push(this.image_file_list[i].delegate_thumbnail)
             this.id_list.push(this.image_file_list[i].id)
+            this.delegate_thumbnail_list.push(this.image_file_list[i].delegate_thumbnail)
+            if (this.image_file_list[i].delegate_thumbnail === 'YES') {
+              this.del_true_false_list.push(true)
+            } else {
+              this.del_true_false_list.push(false)
+            }
           }
         })
     },
@@ -452,5 +545,311 @@ td {
 }
 .groupli {
   float: left;
+}
+
+/* 여기서부터 이미지테이블 css      */
+.room-deal-information-container {
+  /* margin-top: 50px; */
+  margin-top: 10px;
+  color: #222222;
+  border: 1px solid #dddddd;
+}
+
+.room-deal-information-title {
+  text-align: center;
+  /* font-size: 18px; */
+  font-size: 15px;
+  font-weight: bolder;
+  /* line-height: 60px; */
+  line-height: 40px;
+  border-bottom: 1px solid #dddddd;
+}
+
+.room-deal-information-content-wrapper {
+  min-height: 50px;
+  display: flex;
+}
+
+.room-deal-informtaion-content-title {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  background-color: #f9f9f9;
+}
+
+.room-deal-information-content {
+  width: 100%;
+  font-size: 14px;
+}
+
+.room-deal-option-selector {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+}
+
+.room-deal-option-item {
+  width: 100px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.room-deal-option-item:last-child {
+  margin-left: 10px;
+}
+
+.room-deal-option-notice {
+  margin-left: auto;
+  font-size: 14px;
+  color: #888888;
+}
+
+.room-deal-option-item-deposit {
+  margin-left: 10px;
+}
+
+.room-deal-information-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.room-deal-information-option {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.room-deal-information-option:last-child {
+  border-bottom: 1px solid #dddddd;
+}
+
+.room-deal-information-item-type {
+  font-size: 13px;
+  color: #fff;
+  background-color: #61b6e5;
+  min-width: 50px;
+  height: 26px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+}
+
+.room-deal-information-item-wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  height: 46px;
+  width: 100%;
+}
+
+.room-deal-information-item-wrapper>input {
+  border: 1px solid #dddddd;
+  width: 140px;
+  height: 100%;
+  padding: 0 15px;
+  font-size: 15px;
+}
+
+.room-deal-inforamtion-won {
+  margin: 0 10px;
+}
+
+.room-deal-information-example {
+  color: #888888;
+}
+
+.room-deal-information-option:not(:first-child) {
+  margin-top: 10px;
+}
+
+.room-deal-inforamtion-divide {
+  font-size: 22px;
+  margin: 0 8px;
+  color: #222222;
+  font-weight: 100;
+}
+
+.room-deal-close-button-wrapper {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.room-deal-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background-color: #666666;
+  color: rgb(220, 220, 220);
+}
+
+.room-deal-cliked {
+  background-color: rgb(235, 235, 235);
+  color: rgb(170, 170, 170);
+}
+
+.room-file-upload-example {
+  height: 100%;
+}
+
+.room-write-content-container {
+  border-top: 1px solid #dddddd;
+  min-height: 260px;
+}
+
+.room-picture-notice {
+  font-size: 13px;
+  margin: 20px;
+  /* padding: 20px 40px; */
+  padding: 20px 20px;
+  border: 1px solid #dddddd;
+}
+
+.file-preview-content-container {
+  height: 100%;
+}
+
+.room-file-upload-wrapper {
+  margin: 20px;
+  border: 1px solid #dddddd;
+  background-color: #f4f4f4;
+  /* min-height: 350px; */
+  min-height: 210px;
+  font-size: 15px;
+  color: #888888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.room-file-upload-example-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* height: 100%;
+width: 100%; */
+}
+
+.room-file-image-example-wrapper {
+  text-align: center;
+  font-size: 13px;
+}
+
+.room-file-notice-item {
+  margin-top: 5px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.room-file-notice-item-red {
+  color: #ef4351;
+}
+
+.image-box {
+  /* margin-top: 30px; */
+  padding-bottom: 20px;
+  text-align: center;
+}
+
+.image-box input[type='file'] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+
+.image-box label {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #232d4a;
+  color: #fff;
+  vertical-align: middle;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.file-preview-wrapper {
+  padding: 10px;
+  position: relative;
+}
+
+.file-preview-wrapper>img {
+  position: relative;
+  width: 190px;
+  height: 130px;
+  z-index: 10;
+}
+
+.file-close-button {
+  position: absolute;
+  /* align-items: center; */
+  line-height: 18px;
+  z-index: 99;
+  font-size: 18px;
+  right: 5px;
+  top: 10px;
+  color: #fff;
+  font-weight: bold;
+  background-color: #666666;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.file-preview-container {
+  height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.file-preview-wrapper-upload {
+  margin: 10px;
+  padding-top: 20px;
+  background-color: #888888;
+  width: 190px;
+  height: 130px;
+}
+
+.room-write-button-wrapper {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #222222;
+}
+
+.room-write-button-wrapper>div {
+  width: 160px;
+  height: 50px;
+  border: 1px solid #dddddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.room-write-button {
+  margin-left: 15px;
+  color: #fff;
+  background-color: #1564f9;
+}
+
+.room-write-button:hover {
+  opacity: 0.8;
 }
 </style>
