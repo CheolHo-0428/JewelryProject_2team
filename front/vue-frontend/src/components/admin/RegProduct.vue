@@ -30,7 +30,7 @@
               <th scope="col">상품가격</th>
               <td><input type="number" class="input" placeholder="상품가격 입력" v-model="price"></td>
             </tr>
-            <tr>
+            <!-- <tr>
               <th scope="col">이미지</th>
               <td class="img" colspan="3">
                 <v-file-input
@@ -51,13 +51,11 @@
                     </li>
                   </ol>
                 </div>
-                <!-- <p v-if="isFile">File Name : {{ files[0].name }}</p> -->
-                <!-- <p v-if="isFile">File Name : {{ files[1].name }}</p> -->
               </td>
-            </tr>
+            </tr> -->
             <!-- ****************여기서부터 테스트**************** -->
             <tr>
-              <th scope="col">이미지 테스트</th>
+              <th scope="col">이미지</th>
               <td class="img" colspan="3">
                  <div class="main-container">
                    <div class="room-deal-information-container">
@@ -85,7 +83,6 @@
                                   id="file" name="files"
                                   color="deep-purple accent-4"
                                   prepend-icon="mdi-paperclip"
-                                  counter
                                   style="width:180px; margin-left:100px;"
                                   label="File input"
                                   multiple
@@ -96,26 +93,28 @@
                                 </v-file-input>
                                 <table v-if="isFile" style="border:solid 1px;">
                                   <colgroup>
-                                    <col width="10%">
-                                    <col width="5%">
                                     <col width="15%">
+                                    <col width="10%">
+                                    <col width="10%">
                                   </colgroup>
                                   <tbody>
-                                    <tr>
-                                      <th scope="col" style="border:none;">파일이름</th>
-                                      <th scope="col" style="border:none">파일용량</th>
-                                      <th scope="col" style="border:none">썸네일등록</th>
+                                    <tr height="10">
+                                      <th scope="col" style="border:none; font-size: 12px; padding: 2px">파일명</th>
+                                      <th scope="col" style="border:none; font-size: 12px; padding: 2px">용량</th>
+                                      <th scope="col" style="border:none; font-size: 12px; padding: 2px">썸네일등록</th>
                                     </tr>
                                     <tr v-for="(file, i) in files" :key="i">
                                       <td>{{ file.name }}</td>
                                       <td>{{ file.size * 0.001 }}kB</td>
                                       <td>
-                                        <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
-                                        <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO
+                                        <!-- <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
+                                        <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO -->
+                                        <input type="checkbox" v-bind:id="'imageInfo'+i" v-model="true_false_list[i]">
                                       </td>
                                     </tr>
                                   </tbody>
                                 </table>
+                                <!-- <P>{{ true_false_list }}</P> -->
                               </div>
                             </div>
                           </div>
@@ -131,7 +130,6 @@
       </form>
       <!-- <span>체크리스트: {{ delegate_thumbnail_list }}</span> -->
     </div>
-
     <div class="button">
       <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>
       <v-btn color="#FBEF97" x-large @click="addItem">등록</v-btn>
@@ -150,6 +148,7 @@ export default {
       price: '',
       stock: '',
       delegate_thumbnail: '',
+      true_false_list: [],
       delegate_thumbnail_list: [],
       item_id: '',
       isFile: false,
@@ -157,6 +156,13 @@ export default {
     }
   },
   methods: {
+    clickFunc (event) {
+      for (let i = 0; i < this.true_false_list.length; i++) {
+        if (this.true_false_list[i] !== event.target.value) {
+          this.true_false_list[i] = !this.true_false_list[i]
+        }
+      }
+    },
     list () {
       this.$swal.fire({
         icon: 'warning',
@@ -214,13 +220,17 @@ export default {
           })
         let frm = new FormData()
         let imageFile = document.getElementById('file')
+        for (let i = 0; i < imageFile.files.length; i++) {
+          if (this.true_false_list[i] === true) {
+            this.delegate_thumbnail_list.push('YES')
+          } else {
+            this.delegate_thumbnail_list.push('NO')
+          }
+          frm.append('file', imageFile.files[i])
+        }
         frm.append('delegateThumbnail', this.delegate_thumbnail_list)
         frm.append('itemId', this.item_id)
-        // console.log('************************', imageFile.files)
-        for (let i = 0; i < imageFile.files.length; i++) {
-          frm.append('file', imageFile.files[i])
-          // frm.append('delegateThumbnail', this.delegate_thumbnail_list[i])
-        }
+        // console.log('**********************' + this.delegate_thumbnail_list)
         if (imageFile.files[0]) {
           axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
             headers: {
@@ -240,6 +250,7 @@ export default {
     },
     isFileChange () {
       this.isFile = true
+      this.true_false_list = []
       this.delegate_thumbnail_list = []
     }
   }
@@ -314,7 +325,7 @@ th {
   margin: 0 auto;
 }
 
-/* 여기서부터 퍼온거       */
+/* 여기서부터 이미지테이블 css      */
 .room-deal-information-container {
   /* margin-top: 50px; */
   margin-top: 10px;
