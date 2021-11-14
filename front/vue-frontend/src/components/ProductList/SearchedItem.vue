@@ -6,7 +6,7 @@
 
     <div class="boxs">
       <div v-for="(list, i) in searchedData" :key="i" class="list" :style="computedStyledObject">
-        <div class="img" @click="change(list.id)"></div>
+        <div class="img" @click="change(list.id)"><img :src="stored_thumbnail[i]" /></div>
         <div class="product">
           <p class="name">{{list.name}}</p>
           <p class="price">{{list.price}}원</p>
@@ -43,7 +43,8 @@ export default {
       total_pages: 0,
       total_elements: 0,
       current_elements: 0,
-      searchPage: 0
+      searchPage: 0,
+      stored_thumbnail: []
     }
   },
   methods: {
@@ -65,10 +66,26 @@ export default {
       this.serchItem()
     },
     serchItem () {
+      this.stored_thumbnail = []
       return axios.get(`http://localhost:8000/jewelry/item/search?keyword=${this.$store.state.item.searchedItem}&page=${this.searchPage}`)
-        .then(res => {
+        .then(async res => {
           this.searchedData = []
           this.searchedData = res.data.data
+
+          for (let i = 0; i < this.searchedData.length; i++) {
+            await axios.get('http://localhost:8000/jewelry/item/' + this.searchedData[i].id + '/itemInfo')
+              .then(res => {
+                let tmp = res.data.data.item_response.image_file_response_list.findIndex(
+                  (i) => i.delegate_thumbnail === 'YES'
+                )
+                if (res.data.data.item_response.image_file_response_list.length !== 0) {
+                  if (tmp === -1) this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[0].stored_file_name)
+                  else this.stored_thumbnail.push(res.data.data.item_response.image_file_response_list[tmp].stored_file_name)
+                } else {
+                  this.stored_thumbnail.push(null)
+                }
+              })
+          }
 
           this.page = res.data.pagination.current_page + 1
           this.total_pages = res.data.pagination.total_pages
@@ -133,15 +150,14 @@ export default {
   min-width: 1110px;
   margin: 0 auto;
 }
-.img {
+img {
   width: 230px;
   height: 230px;
   margin: 2rem auto 1rem;
   background-size: cover;
-  background-image: url(https://ifh.cc/g/W8P7ct.jpg);
   cursor: pointer;
 }
-.img:hover {
+img:hover {
   transform:scale(1.01);
   transition: 0.2s;
 }

@@ -34,7 +34,7 @@ import FINDID from '../components/member/FindID.vue'
 import FINDPW from '../components/member/FindPW.vue'
 import REGREVIEW from '../components/product/RegReview.vue'
 import REGQNA from '../components/product/RegQna.vue'
-import SEARCHEDITEM from '../components/ProductList/SearchedItem.vue'
+import SEARCHEDITEM from '../components/ProductList/searchedItem.vue'
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -178,7 +178,7 @@ const route = [
     component: REGQNA
   },
   {
-    path: '/searchedItem',
+    path: '/searcheditem',
     component: SEARCHEDITEM
   }
 ]
@@ -190,7 +190,7 @@ const router = new VueRouter({
 // 무단 액세스 처리
 // 탐색 작업이 트리거될 때마다 승인됨 상태를 확인하려면 다음과 같이 src/router.jsrouter.beforeEach() 끝에 추가하기만 하면 됩니다 .
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/signup', '/', '/mypage', '/notice', '/ring', '/earrings', '/bracelet', '/necklace', '/detail', '/cart', '/order', '/order_', '/orderlist', '/orderdetail', '/ordercancle', '/modify', '/regnotice', '/notice_', '/review_', '/qna_', '/regproduct', '/searchid', '/searchpw', '/findid', '/findpw', '/regreview', '/regqna', '/admember', '/adminpage', '/adproduct', '/adorder_', '/adsales', '/admember_', '/adproduct_', '/adorder']
+  const publicPages = ['/searcheditem', '/login', '/signup', '/', '/mypage', '/notice', '/ring', '/earrings', '/bracelet', '/necklace', '/detail', '/cart', '/order', '/order_', '/orderlist', '/orderdetail', '/ordercancle', '/modify', '/regnotice', '/notice_', '/review_', '/qna_', '/regproduct', '/searchid', '/searchpw', '/findid', '/findpw', '/regreview', '/regqna', '/admember', '/adminpage', '/adproduct', '/adorder_', '/adsales', '/admember_', '/adproduct_', '/adorder']
   const authRequired = !publicPages.includes(to.path)
   const loggedIn = localStorage.getItem('user')
   // trying to access a restricted page + not logged in
