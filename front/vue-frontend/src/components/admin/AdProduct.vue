@@ -129,7 +129,7 @@ const url = 'http://localhost:8000/jewelry/item/paging'
 export default {
   data () {
     return {
-      urlPage: this.$store.state.item.itemPageUrl,
+      urlPage: 'http://localhost:8000/jewelry/item/paging',
       items: [],
       end: 0,
       next: false,
@@ -180,7 +180,6 @@ export default {
       window.scrollTo(0, 0)
       if (!this.isSearch) {
         this.urlPage = url + `?page=${page - 1}`
-        this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
         this.item()
       } else if (!this.isId && !this.isCategoryId && !this.isStatus) {
         this.searchPage = page - 1
@@ -199,7 +198,6 @@ export default {
     nextPage () {
       if (!this.isSearch) {
         this.urlPage = url + `?page=${this.end}`
-        this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
         this.item()
       } else if (!this.isId && !this.isCategoryId && !this.isStatus) {
         this.searchPage = this.end
@@ -218,7 +216,6 @@ export default {
     prevPage () {
       if (!this.isSearch) {
         this.urlPage = url + `?page=${this.start - 2}`
-        this.$store.commit('itemDetail', {id: 0, urlPage: this.urlPage})
         this.item()
       } else if (!this.isId && !this.isCategoryId && !this.isStatus) {
         this.searchPage = this.start - 2

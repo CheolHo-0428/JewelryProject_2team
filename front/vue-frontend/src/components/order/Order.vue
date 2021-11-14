@@ -103,10 +103,12 @@
       </p>
       <p>
         <label>결제방식</label>
-        <select id="pay_method"  @change="optionChangePay()">
-          <option value = "무통장입금" selected>무통장입금</option>
-          <option value = "카드">카드</option>
-        </select>
+        <span>
+          <select id="pay_method" class="bank"  @change="optionChangePay()">
+            <option value = "무통장입금" selected>무통장입금</option>
+            <option value = "카드">카드</option>
+          </select>
+        </span>
         <!-- <span><input class="pay" type="text" value="무통장입금" readonly></span> -->
       </p>
       <p class="pay_bank">

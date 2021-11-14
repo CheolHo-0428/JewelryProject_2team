@@ -29,7 +29,7 @@
       <p>비밀번호 설정</p>
       <span class="material-icons-outlined">lock</span>
       <div>
-        <input type="password" id="pwd" v-model="password">
+        <input type="password" id="pwd" v-model="password" autocomplete="new-password">
       </div>
     </div>
 
@@ -80,7 +80,7 @@ export default {
         let photoFile = document.getElementById('file')
         frm.append('title', this.title)
         frm.append('content', this.content)
-        frm.append('writer', 'testUser')
+        frm.append('writer', this.$store.state.auth.user.account)
         frm.append('file', photoFile.files[0])
         frm.append('password', this.password)
         frm.append('item', this.$store.state.item.itemId)
@@ -102,7 +102,7 @@ export default {
             data: JSON.stringify({
               title: this.title,
               content: this.content,
-              writer: 'testUser',
+              writer: this.$store.state.auth.user.account,
               password: this.password,
               item_id: this.$store.state.item.itemId
             })

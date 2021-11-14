@@ -184,6 +184,7 @@ export default {
       }
     },
     async remove () {
+      this.product_total = 0
       for (let i = 0; i < this.check.length; i++) {
         if (this.check[i]) {
           await axios

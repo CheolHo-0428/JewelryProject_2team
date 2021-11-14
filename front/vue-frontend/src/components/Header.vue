@@ -145,7 +145,7 @@ export default {
     },
     search () {
       this.$store.commit('searchItem', this.keyword)
-      this.$router.push('/searchedItem').catch(() => {
+      this.$router.push('/searcheditem').catch(() => {
         this.$router.go()
       })
       this.keyword = ''
