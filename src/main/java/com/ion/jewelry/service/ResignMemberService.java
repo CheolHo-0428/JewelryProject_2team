@@ -4,20 +4,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.ion.jewelry.model.entity.Member;
 import com.ion.jewelry.model.entity.ResignMember;
 import com.ion.jewelry.model.network.Header;
 import com.ion.jewelry.model.network.Pagination;
 import com.ion.jewelry.model.network.request.ResignMemberRequest;
+import com.ion.jewelry.model.network.response.MemberResponse;
 import com.ion.jewelry.model.network.response.ResignMemberResponse;
+import com.ion.jewelry.repository.ResignMemberRepository;
 
 @Service
 public class ResignMemberService extends 
 	AABaseService<ResignMemberRequest, ResignMemberResponse, ResignMember> {
-
+	@Autowired
+	ResignMemberRepository resignRepository;
 	@Override
 	public Header<ResignMemberResponse> create(Header<ResignMemberRequest> request) {
 		// 사용하지마세요~
@@ -98,5 +103,39 @@ public class ResignMemberService extends
 				.build();
 		
 		return res;
+	}
+
+	public Header<List<ResignMemberResponse>> searchAccount(String keyword, Pageable pageable) {
+		Page<ResignMember> page = resignRepository.findByAccountContaining(keyword, pageable);
+		
+		List<ResignMemberResponse> admemberList = page.stream()
+				.map(member -> response(member))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(admemberList, pagination);
+	}
+
+	public Header<List<ResignMemberResponse>> searchName(String keyword, Pageable pageable) {
+		Page<ResignMember> page = resignRepository.findByNameContaining(keyword, pageable);
+		
+		List<ResignMemberResponse> admemberList = page.stream()
+				.map(member -> response(member))
+				.collect(Collectors.toList());
+		
+		Pagination pagination = Pagination.builder()
+				.totalPages(page.getTotalPages())
+				.totalElements(page.getTotalElements())
+				.currentPage(page.getNumber())
+				.currentElements(page.getNumberOfElements())
+				.build();
+		
+		return Header.OK(admemberList, pagination);
 	}
 }

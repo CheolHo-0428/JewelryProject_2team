@@ -296,13 +296,15 @@ export default {
       const payMethod = $('#pay_method option:selected').val()
       if (payMethod === '카드') {
         $('.pay_bank').hide()
+        this.cardOk = 'true'
       } else if (payMethod === '무통장입금') {
         $('.pay_bank').show()
+        this.cardOk = 'false'
       }
     },
     order () {
       this.$validator.validate().then((isValid) => {
-        if (isValid && this.option !== '') {
+        if (!this.cardOk && isValid && this.option !== '') {
           if (!this.$store.state.order.isCart) {
             axios({
               method: 'POST',
@@ -351,6 +353,81 @@ export default {
                 detail_address: this.detailAddress,
                 delivery_message: this.request,
                 pay_account: this.option,
+                phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
+                total_price: this.totalCart + 2500,
+                total_count: this.totalCount,
+                member_id: this.$store.state.auth.user.id
+              })
+            }).then(res => {
+              console.log(res)
+              let n = this.$store.state.order.cartId.length
+              for (let i = 0; i < n; i++) {
+                axios
+                  .put('http://localhost:8000/jewelry/item/update/stockminus', {
+                    id: this.$store.state.order.citemId[i],
+                    stock: this.$store.state.order.ccount[i]
+                  })
+                  .then((res) => {
+                    console.log(res)
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  })
+              }
+              this.$router.push('/order_')
+            }).catch(error => {
+              console.log(error)
+            })
+          }
+        } else if (this.cardOk && isValid) {
+          if (!this.$store.state.order.isCart) {
+            axios({
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              url: 'http://localhost:8000/jewelry/orderGroup/reg',
+              data: JSON.stringify({
+                resipient: this.recipient,
+                depositor: this.depositor,
+                post_code: this.postCode,
+                address: this.address,
+                detail_address: this.detailAddress,
+                delivery_message: this.request,
+                pay_account: null,
+                phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
+                total_price: this.$store.state.order.count * this.$store.state.order.price + 2500,
+                total_count: this.$store.state.order.count,
+                member_id: this.$store.state.auth.user.id
+              })
+            }).then(res => {
+              console.log(res)
+              axios
+                .put('http://localhost:8000/jewelry/item/update/stockminus', {
+                  id: this.$store.state.order.itemId,
+                  stock: this.$store.state.order.count
+                })
+                .then((res) => {
+                  console.log(res)
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+              this.$router.push('/order_')
+            }).catch(error => {
+              console.log(error)
+            })
+          } else {
+            axios({
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              url: 'http://localhost:8000/jewelry/orderGroup/reg',
+              data: JSON.stringify({
+                resipient: this.recipient,
+                depositor: this.depositor,
+                post_code: this.postCode,
+                address: this.address,
+                detail_address: this.detailAddress,
+                delivery_message: this.request,
+                pay_account: null,
                 phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
                 total_price: this.totalCart + 2500,
                 total_count: this.totalCount,

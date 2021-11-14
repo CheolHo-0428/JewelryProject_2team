@@ -40,7 +40,6 @@ public class OrderDetailController extends
 	public Header<OrderDetailResponse> create(@RequestBody OrderDetailRequest request) {
 		Header<OrderDetailRequest> result = new Header<OrderDetailRequest>();
 		result.setData(request);
-		
 		return baseService.create(result);
 	}
 }

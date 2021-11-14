@@ -110,7 +110,7 @@ export default {
       this.$swal
         .fire({
           icon: 'warning',
-          title: '해당상품이 삭제됩니다.',
+          title: '해당유저가 삭제됩니다.',
           text: '목록으로 이동하시겠습니까?',
           showCancelButton: true,
           confirmButtonText: 'Yes',
@@ -154,6 +154,7 @@ export default {
           this.created_at = res.data.data[index].created_at.split('T')[0] + ' ' + res.data.data[index].created_at.split('T')[1].split('.')[0]
           this.email = res.data.data[index].email
           this.admin_message = res.data.data[index].admin_message
+          console.log(this.id)
           if (this.account === 'admin') {
             this.role = '관리자'
           } else {

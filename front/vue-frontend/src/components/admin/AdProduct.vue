@@ -243,7 +243,7 @@ export default {
           this.page = res.data.pagination.current_page + 1
           this.total_pages = res.data.pagination.total_pages
           this.total_elements = res.data.pagination.total_elements
-
+          console.log(res.data.pagination)
           let tmpEnd = parseInt(Math.ceil(this.page / 5.0) * 5)
           this.start = tmpEnd - 4
           this.prev = this.start > 1
