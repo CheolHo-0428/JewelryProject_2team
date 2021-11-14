@@ -11,6 +11,7 @@ public enum OrderProductState {
 	READY(1, "배송준비증", "상품 배송준비중"),
 	SHIPPING(2, "배송중", "상품 배송중"),
 	COMPLETE(3, "배송완료", "상품 배송완료");
+//	CARD(4,"카드결제완료","카드결제완료");
 	
 	private Integer id;
 	

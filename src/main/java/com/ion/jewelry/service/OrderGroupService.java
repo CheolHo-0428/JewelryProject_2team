@@ -42,29 +42,47 @@ public class OrderGroupService extends
 	@Override
 	public Header<OrderGroupResponse> create(Header<OrderGroupRequest> request) {
 		OrderGroupRequest orderGroupRequest = request.getData();
-		
-		OrderGroup orderGroup = OrderGroup.builder()
-				.totalPrice(orderGroupRequest.getTotalPrice())
-				.totalCount(orderGroupRequest.getTotalCount())
-				.deliveryMessage(orderGroupRequest.getDeliveryMessage())
-				.resipient(orderGroupRequest.getResipient())
-				.Phone(orderGroupRequest.getPhone())
-				.orderProductState(OrderProductState.BEFORE_BANK_TRANSFER)
-				.postCode(orderGroupRequest.getPostCode())
-				.address(orderGroupRequest.getAddress())
-				.detailAddress(orderGroupRequest.getDetailAddress())
-				.payMethod(PayMethod.BANK_TRANSFER)
-				.depositor(orderGroupRequest.getDepositor())
-				.payAccount(orderGroupRequest.getPayAccount())
-				.arrivalDate(LocalDateTime.now().plusDays(2))
-				.member(memberRepo.getOne(orderGroupRequest.getMemberId()))
-				.build();
-				
-		OrderGroup newOrderGroup = baseRepo.save(orderGroup);
-		OrderGroupResponse orderGroupResponse = response(newOrderGroup);
-		
-		return Header.OK(orderGroupResponse);
-	}
+//		if(request.getData().getPayAccount() == null) {
+//			
+//			OrderGroup orderGroup = OrderGroup.builder()
+//					.totalPrice(orderGroupRequest.getTotalPrice())
+//					.totalCount(orderGroupRequest.getTotalCount())
+//					.deliveryMessage(orderGroupRequest.getDeliveryMessage())
+//					.resipient(orderGroupRequest.getResipient())
+//					.Phone(orderGroupRequest.getPhone())
+//					.orderProductState(OrderProductState.CARD)
+//					.postCode(orderGroupRequest.getPostCode())
+//					.address(orderGroupRequest.getAddress())
+//					.detailAddress(orderGroupRequest.getDetailAddress())
+//					.payMethod(PayMethod.CARD)
+//					.depositor(orderGroupRequest.getDepositor())
+//					.payAccount(orderGroupRequest.getPayAccount())
+//					.arrivalDate(LocalDateTime.now().plusDays(2))
+//					.member(memberRepo.getOne(orderGroupRequest.getMemberId()))
+//					.build();
+//					
+//			OrderGroup newOrderGroup = baseRepo.save(orderGroup);
+//			OrderGroupResponse orderGroupResponse = response(newOrderGroup);
+//			
+//			return Header.OK(orderGroupResponse);			
+//		}else {
+			
+			OrderGroup orderGroup = OrderGroup.builder().totalPrice(orderGroupRequest.getTotalPrice())
+					.totalCount(orderGroupRequest.getTotalCount())
+					.deliveryMessage(orderGroupRequest.getDeliveryMessage()).resipient(orderGroupRequest.getResipient())
+					.Phone(orderGroupRequest.getPhone()).orderProductState(OrderProductState.BEFORE_BANK_TRANSFER)
+					.postCode(orderGroupRequest.getPostCode()).address(orderGroupRequest.getAddress())
+					.detailAddress(orderGroupRequest.getDetailAddress()).payMethod(PayMethod.BANK_TRANSFER)
+					.depositor(orderGroupRequest.getDepositor()).payAccount(orderGroupRequest.getPayAccount())
+					.arrivalDate(LocalDateTime.now().plusDays(2))
+					.member(memberRepo.getOne(orderGroupRequest.getMemberId())).build();
+
+			OrderGroup newOrderGroup = baseRepo.save(orderGroup);
+			OrderGroupResponse orderGroupResponse = response(newOrderGroup);
+
+			return Header.OK(orderGroupResponse);
+		}
+//	}
 
 	@Override
 	public Header<OrderGroupResponse> update(Header<OrderGroupRequest> request) {

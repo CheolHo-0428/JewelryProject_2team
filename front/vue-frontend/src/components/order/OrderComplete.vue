@@ -13,11 +13,18 @@
         <label>최종 결제금액</label>
         <span><input class="pay" type="text" :value="orderInfo.total_price" readonly></span>
       </p>
-      <p>
+      <p v-if="this.bank !== '카드'">
         <label>결제수단</label>
         <span class="info">
           <p>무통장입금</p>
           <p>입금자 : <input type="text" readonly :value="orderInfo.depositor">, 계좌번호 : <input type="text" readonly v-model="bank"> </p>
+        </span>
+      </p>
+      <p v-if="this.bank === '카드'">
+        <label>결제수단</label>
+        <span class="info">
+          <p>카드</p>
+          <p>입금자 : <input type="text" readonly :value="orderInfo.depositor"></p>
         </span>
       </p>
     </form>
@@ -96,9 +103,13 @@ export default {
       return axios.get(`http://localhost:8000/jewelry/member/${this.$store.state.auth.user.id}/orderGroupInfo`)
         .then(res => {
           this.orderInfo = res.data.data.member_response.order_group_list[0]
-
-          if (this.orderInfo.pay_account === 'IBK') this.bank = '기업은행000-00000000-00'
-          else this.bank = '우리은행111-11111111-11'
+          if (this.orderInfo.pay_account === 'IBK') {
+            this.bank = '기업은행000-00000000-00'
+          } else if (this.orderInfo.pay_account === 'WOORI') {
+            this.bank = '우리은행111-11111111-11'
+          } else {
+            this.bank = '카드'
+          }
         })
         .catch(err => {
           console.log(err)

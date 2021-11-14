@@ -81,9 +81,8 @@ public class OrderGroupController extends
 	@PostMapping("/reg")
 	public Header<OrderGroupResponse> create(@RequestBody OrderGroupRequest request) {
 		Header<OrderGroupRequest> result = new Header<OrderGroupRequest>();
-		result.setData(request);
-		
-		return baseService.create(result);
+			result.setData(request);
+			return baseService.create(result);
 	}
 	
 	@PutMapping("/update")

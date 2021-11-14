@@ -154,6 +154,7 @@ export default {
           this.created_at = res.data.data[index].created_at.split('T')[0] + ' ' + res.data.data[index].created_at.split('T')[1].split('.')[0]
           this.email = res.data.data[index].email
           this.admin_message = res.data.data[index].admin_message
+          console.log(this.id)
           if (this.account === 'admin') {
             this.role = '관리자'
           } else {
