@@ -1,41 +1,13 @@
 <template>
   <div>
     <footer class="text-center text-lg-start bg-light text-muted">
-      <!-- Section: Social media -->
-      <section class="footer1 d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
-        <div class="me-5 d-none d-lg-block">
-          <span>Get connected with us on social networks:</span>
-        </div>
-
-        <div>
-          <!-- <a href="" class="me-4 text-reset">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a href="" class="me-4 text-reset">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="" class="me-4 text-reset">
-            <i class="fab fa-linkedin"></i>
-          </a> -->
-          <a href="" class="me-4 text-reset">
-            <i class="fab fa-google"></i>
-          </a>
-          <a href="" class="me-4 text-reset">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="" class="me-4 text-reset">
-            <i class="fab fa-github"></i>
-          </a>
-        </div>
-      </section>
-
       <!-- Section: Links  -->
       <section class="footer2">
         <div class="container text-center text-md-start mt-5">
           <div class="row mt-3">
             <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
               <h6 class="text-uppercase fw-bold mb-4">
-                <i class="fas fa-gem me-3"></i>ION - TEAM 2
+                <i class="fas fa-gem me-3"></i>GGULUCK
               </h6>
               <p class="explane">
                 악세사리를 판매하는 쇼핑몰 입니다 :)
@@ -44,31 +16,32 @@
 
             <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
               <h6 class="text-uppercase fw-bold mb-4">
-                Products
+                Category
               </h6>
               <p>
-                <a href="#!" class="text-reset explane">Angular</a>
+                <router-link to="/ring" class="text-reset explane">Ring</router-link>
+                <router-link to="/earrings" class="c1 text-reset explane">Earrings</router-link>
               </p>
               <p>
-                <a href="#!" class="text-reset explane">React</a>
-              </p>
-              <p>
-                <a href="#!" class="text-reset explane">Vue</a>
+                <router-link to="/bracelet" class="text-reset explane">Bracelet</router-link>
+                <router-link to="/necklace" class="c2 text-reset explane">Necklace</router-link>
               </p>
             </div>
 
             <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
               <h6 class="text-uppercase fw-bold mb-4">
-                Useful links
+                Member
+              </h6>
+              <p class="member">
+                <router-link to="https://github.com/CheolHo-0428" target="_blank" class="mem text-reset explane"><i class="fab fa-github"></i> 조철호</router-link>
+                &nbsp;<router-link to="https://github.com/Lee-YongJun" target="_blank" class="mem text-reset explane"><i class="fab fa-github"></i> 이용준</router-link>
+                &nbsp;<router-link to="https://github.com/eunnjin" target="_blank" class="mem text-reset explane"><i class="fab fa-github"></i> 박은진</router-link>
+              </p>
+              <h6 class="text-uppercase fw-bold mb-4">
+                TEAM
               </h6>
               <p>
-                <a href="#!" class="text-reset explane">Pricing</a>
-              </p>
-              <p>
-                <a href="#!" class="text-reset explane">Orders</a>
-              </p>
-              <p>
-                <a href="#!" class="text-reset explane">Help</a>
+                <router-link to="https://github.com/CheolHo-0428/JewelryProject_2team" target="_blank" class="mem text-reset explane"><i class="fab fa-github"></i> JewelryProject</router-link>
               </p>
             </div>
 
@@ -76,7 +49,7 @@
               <h6 class="text-uppercase fw-bold mb-4">
                 Contact
               </h6>
-              <p class="explane"><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+              <p class="explane"><i class="fas fa-home me-3"></i>서울특별시 송파구 중대로 135</p>
               <p class="explane">
                 <i class="fas fa-envelope me-3"></i>
                 info@example.com
@@ -89,7 +62,7 @@
       <!-- Copyright -->
       <div class="text-center p-4 footer3" style="background-color: rgba(0, 0, 0, 0.05);">
         Copyright ©
-        <a class="text-reset fw-bold" href="#">ion-communications</a>
+        <router-link class="text-reset fw-bold" to="/">gguluck</router-link>
       </div>
     </footer>
   </div>
@@ -102,14 +75,26 @@ export default {
 </script>
 
 <style scoped>
-.footer1 {
-  padding: 0.6rem 6rem !important;
-}
 .footer2 {
   margin: -1.4rem 0rem -0.2rem 0rem;
 }
+.footer2 .container {
+  margin-top: 1rem !important;
+}
+.member {
+  margin-bottom: 0.7rem !important;
+}
+.mem {
+  text-decoration: none;
+}
+.c1 {
+  padding-left: 1.9rem;
+}
+.c2 {
+  padding-left: 0.7rem;
+}
 .footer3 {
-  padding: 1.3rem !important;
+  padding: 0.8rem !important;
   font-size: 0.8rem;
 }
 .explane {
@@ -117,5 +102,14 @@ export default {
 }
 .mx-auto P {
   margin-bottom: 0.4rem;
+}
+.mb-4 {
+  margin-bottom: 0.2rem !important;
+}
+h6 {
+  font-size: 0.9rem;
+}
+.mt-3 {
+  margin-top: 0.4rem !important;
 }
 </style>

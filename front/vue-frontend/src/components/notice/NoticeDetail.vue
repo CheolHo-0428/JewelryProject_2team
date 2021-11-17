@@ -530,7 +530,7 @@ a:active {
 }
 .tbAdd td textarea {
   width: 100%;
-  min-height: 250px;
+  min-height: 260px;
   padding: 10px;
   box-sizing: border-box;
 }

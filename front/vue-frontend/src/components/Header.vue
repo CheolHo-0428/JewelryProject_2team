@@ -1,8 +1,40 @@
 <template>
   <div class="header">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
+      <div class="container-fluid headerTop">
         <router-link to="/" class="navbar-brand">GGULUCK</router-link>
+        <form class="d-flex">
+            <input class="form-control me-2" @keypress.enter="search" type="search" v-model="keyword" aria-label="Search"/>
+            <div class="search" @click="search">
+              <span class="material-icons-outlined">search</span>
+            </div>
+          </form>
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li v-if="!currentUser" class="signup">
+              <router-link to="/signup" class="nav-link">SIGNUP</router-link>
+            </li>
+            <li v-if="!currentUser" class="login">
+              <router-link to="/login" class="nav-link">LOGIN</router-link>
+            </li>
+            <li v-if="currentUser" class="mypage">
+              <router-link to="/mypage" class="nav-link">MYPAGE</router-link>
+            </li>
+            <li v-if="currentUser && findRole" class="adminpage">
+              <router-link to="/adminpage" class="nav-link">MANAGE</router-link>
+            </li>
+            <li v-if="currentUser" class="name">
+              <router-link to="/mypage" class="nav-link"
+                >{{ currentUser.account }}님</router-link
+              >
+            </li>
+            <li v-if="currentUser" class="logout">
+              <a class="nav-link" href @click.prevent="logOut">LOGOUT</a>
+            </li>
+          </ul>
+      </div>
+    </nav>
+    <nav class="headerB navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
         <button
           class="navbar-toggler"
           type="button"
@@ -42,33 +74,7 @@
             <li class="nav-item notice">
               <a class="nav-link" @click="notice">NOTICE</a>
             </li>
-            <li v-if="!currentUser" class="nav-item signup">
-              <router-link to="/signup" class="nav-link">SIGNUP</router-link>
-            </li>
-            <li v-if="!currentUser" class="nav-item login">
-              <router-link to="/login" class="nav-link">LOGIN</router-link>
-            </li>
-            <li v-if="currentUser" class="nav-item mypage">
-              <router-link to="/mypage" class="nav-link">MYPAGE</router-link>
-            </li>
-            <li v-if="currentUser && findRole" class="nav-item adminpage">
-              <router-link to="/adminpage" class="nav-link">MANAGEMENT</router-link>
-            </li>
-            <li v-if="currentUser" class="nav-item name">
-              <router-link to="/mypage" class="nav-link"
-                >{{ currentUser.account }}님</router-link
-              >
-            </li>
-            <li v-if="currentUser" class="nav-item logout">
-              <a class="nav-link" href @click.prevent="logOut">LOGOUT</a>
-            </li>
           </ul>
-          <form class="d-flex">
-            <input class="form-control me-2" @keypress.enter="search" type="search" placeholder="제품명 입력" v-model="keyword" aria-label="Search"/>
-            <div class="search" @click="search">
-              <span class="material-icons-outlined">search</span>
-            </div>
-          </form>
         </div>
       </div>
     </nav>
@@ -159,16 +165,25 @@ export default {
 </script>
 
 <style scoped>
+.headerTop .navbar-nav,
+.headerTop form {
+  margin-left: 2.4rem;
+}
 a {
   cursor: pointer;
 }
+.headerB .container-fluid {
+  padding: 1vh 2rem !important;
+}
 .container-fluid {
-  padding: 5vh 2rem;
+  padding: 2vh 2rem;
   width: fit-content;
   margin: 0 auto;
 }
+.headerTop .container-fluid {
+  padding: 3vh 2rem 0 !important;
+}
 .navbar-brand {
-  padding-right: 4rem;
   font-size: 2rem;
   font-family: "Bad Script", cursive;
   font-weight: 700;
@@ -176,28 +191,36 @@ a {
   text-underline-position: under;
 }
 .form-control {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   min-width: 12rem;
-  height: 1.8rem;
+  width: 16rem;
+  height: 2.6rem;
   border-radius: 2rem;
-  border: none;
+  border: 2px solid rgba(146, 146, 146, 0.55);
   outline: none;
 }
 .form-control:focus {
   box-shadow: none;
   border: 1px solid #ced4da;
 }
-.navbar-nav {
-  margin-right: 5rem !important;
-}
 .nav-link {
   font-size: 0.9rem;
+  font-family: 'Barlow', sans-serif;
+}
+.nav-link:hover {
+  font-size: 0.91rem;
+  transition: .3s;
+}
+.nav-item {
+  padding: 0.3rem 2rem 0.1rem;
+}
+.nav-item:hover {
+  background-color: rgba(245, 245, 245, 0.918);
+  border-radius: 4px;
+  transition: .3s;
 }
 .notice {
-  padding: 0 1.2rem;
-}
-ul.navbar-nav {
-  margin-right: 2rem !important;
+  margin-left: 1rem;
 }
 .signup::after,
 .login::after {
@@ -209,12 +232,13 @@ ul.navbar-nav {
   color: rgba(0, 0, 0, 0.55);
 }
 .search {
-  padding: 0.2rem 0.4rem 0 0.1rem;
-  font-size: 0.7rem;
+  padding: 0.6rem 0.4rem 0 0.1rem;
   outline: none;
   border: none;
   background-color: #f8f9fa;
-  vertical-align: middle;
   cursor: pointer;
+}
+.search span {
+  font-size: 1.7rem;
 }
 </style>
