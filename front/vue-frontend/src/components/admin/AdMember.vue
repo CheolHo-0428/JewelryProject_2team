@@ -98,7 +98,7 @@
         </tr>
       </tbody>
     </table>
-
+    
     <div v-if="!isResign" class="page">
       <div class="box">
         <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
@@ -717,7 +717,6 @@ p {
   background-color: silver;
 }
 .memberButton {
-  border-radius: 6px;
   margin-top:15px;
   float:right;
   background:#555;
@@ -735,7 +734,6 @@ p {
   background:black;
   color:#fff;
 }
-
 /* 2차시안 디자인변경 */
 
 table {
@@ -867,7 +865,6 @@ section.notice {
 }
 
 .btn-dark {
-  border-radius:6px;
   background: #555;
   color: #fff;
 }

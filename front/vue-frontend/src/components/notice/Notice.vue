@@ -92,39 +92,41 @@
     </div>
   <!-- board list area -->
     <div id="board-list">
-      <div class="container">
-        <table class="board-table">
-          <thead>
-          <tr>
-              <th scope="col" class="th-num">번호</th>
-              <th scope="col" class="th-title">제목</th>
-              <th scope="col" class="th-date">등록일</th>
-              <th scope="col" class="th-writer">작성자</th>
-          </tr>
-          </thead>
-          <tbody v-if="!isSearch">
-            <tr v-for="(notice, i) in notices" :key="i">
-              <td class="tdNo" >{{total_elements - (page - 1)*10 - i}}</td>
-              <th class="tdTitle" @click="detail(notice.id)">{{notice.title}}</th>
-              <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
-              <td class="tdWriter">{{notice.writer}}</td>
-            </tr>
-          </tbody>
-          <tbody v-if="isSearch">
-            <tr v-for="(notice, i) in searchedData" :key="i">
-              <td class="tdNo" >{{total_elements - (page - 1)*10 - i}}</td>
-              <th class="tdTitle" @click="detail(notice.id)">{{notice.title}}</th>
-              <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
-              <td class="tdWriter">{{notice.writer}}</td>
-            </tr>
-          </tbody>
-        </table>
-        <p v-if="findRole === true"><router-link class="btn btn-dark" to="/regnotice">공지사항 등록</router-link></p>
-        <div class="container page">
-          <div class="container box">
-            <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
-            <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
-            <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
+        <div class="container">
+            <table class="board-table">
+                <thead>
+                <tr>
+                    <th scope="col" class="th-num">번호</th>
+                    <th scope="col" class="th-title">제목</th>
+                    <th scope="col" class="th-date">등록일</th>
+                    <th scope="col" class="th-writer">작성자</th>
+                </tr>
+                </thead>
+                <tbody v-if="!isSearch">
+                  <tr v-for="(notice, i) in notices" :key="i">
+                    <td class="tdNo" >{{total_elements - (page - 1)*10 - i}}</td>
+                    <th class="tdTitle" @click="detail(notice.id)">{{notice.title}}</th>
+                    <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
+                    <td class="tdWriter">{{notice.writer}}</td>
+                  </tr>
+                </tbody>
+                <tbody v-if="isSearch">
+                  <tr v-for="(notice, i) in searchedData" :key="i">
+                    <td class="tdNo" >{{total_elements - (page - 1)*10 - i}}</td>
+                    <th class="tdTitle" @click="detail(notice.id)">{{notice.title}}</th>
+                    <td class="tdDate" style="text-align:center;">{{notice.created_at.split('T')[0]}} {{notice.created_at.split('T')[1].split('.')[0]}}</td>
+                    <td class="tdWriter">{{notice.writer}}</td>
+                  </tr>
+                </tbody>
+            </table>
+            <p v-if="findRole === true"><router-link class="btn btn-dark" to="/regnotice">공지사항 등록</router-link></p>
+            <div class="container page">
+              <div class="box">
+                <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
+                <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
+                <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -342,6 +344,8 @@ p {
 a.btn.btn-dark{
   height: 40px;
   line-height: 38px;
+  width: 108px;
+  padding: 0;
 }
 .table {
   width: 750px;
