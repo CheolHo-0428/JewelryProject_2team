@@ -232,7 +232,7 @@ export default {
         frm.append('itemId', this.item_id)
         // console.log('**********************' + this.delegate_thumbnail_list)
         if (imageFile.files[0]) {
-          axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
+          await axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }

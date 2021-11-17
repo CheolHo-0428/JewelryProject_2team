@@ -241,7 +241,7 @@ public class ReviewBoardService extends
 		List<ReviewBoardReply> reviewBoardList = reviewBoard.getReviewBoardReplyList();
 		List<ReviewBoardReplyResponse> reviewBoardResponseList = reviewBoardList.stream()
 				.map(reply -> replyService.response(reply))
-				.sorted((a, b) -> (int)(b.id - a.id))
+				.sorted((a, b) -> (int)(a.id - b.id))
 				.collect(Collectors.toList());
 		
 		reviewBoardResponse.setReviewBoardReplyResponseList(reviewBoardResponseList);

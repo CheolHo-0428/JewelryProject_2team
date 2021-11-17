@@ -98,6 +98,7 @@
         </tr>
       </tbody>
     </table>
+    
     <div v-if="!isResign" class="page">
       <div class="box">
         <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>

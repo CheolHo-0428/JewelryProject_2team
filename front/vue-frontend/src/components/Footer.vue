@@ -32,7 +32,7 @@
               <h6 class="text-uppercase fw-bold mb-4">
                 Member
               </h6>
-              <p class="member">
+              <p class="member" style="min-width:13rem;">
                 <router-link to="https://github.com/CheolHo-0428" target="_blank" class="mem text-reset explane"><i class="fab fa-github"></i> 조철호</router-link>
                 &nbsp;<router-link to="https://github.com/Lee-YongJun" target="_blank" class="mem text-reset explane"><i class="fab fa-github"></i> 이용준</router-link>
                 &nbsp;<router-link to="https://github.com/eunnjin" target="_blank" class="mem text-reset explane"><i class="fab fa-github"></i> 박은진</router-link>

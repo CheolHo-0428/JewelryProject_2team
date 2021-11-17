@@ -255,7 +255,7 @@ public class QnaBoardService extends AABaseService<QnaBoardRequest, QnaBoardResp
 					QnaBoardReplyResponse replyRes = replyService.response(reply); 
 					return replyRes;
 				})
-				.sorted((a, b) -> (int)(b.id - a.id))
+				.sorted((a, b) -> (int)(a.id - b.id))
 				.collect(Collectors.toList());
 		
 		qnaBoardResponse.setQnaBoardReplyResponseList(replyResList);

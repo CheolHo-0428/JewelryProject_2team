@@ -42,35 +42,35 @@
       <tbody>
         <tr>
           <td><textarea v-model="inputReply" class="inputReply"></textarea></td>
-          <td><v-btn color="#F4F2E7" x-large class="v_btn" @click="regReply" >등록</v-btn></td>
+          <td><button class="btn2" @click="regReply">등록</button></td>
         </tr>
       </tbody>
     </table>
   </div>
 
   <div class="reply">
-    <table class="table">
-      <colgroup>
-        <col width="53%">
-        <col width="12%">
-        <col width="20%">
-        <col width="15%">
-      </colgroup>
-
-      <tbody>
-        <tr v-for="(reply, i) in response_list" :key="i">
-          <td class="cont"><v-textarea v-model="replyContent[i]" @input="reply.content = replyContent[i]" :readonly="modify[i]" :class="{'mod' : modify[i]}" auto-grow rows="1" row-height="18"></v-textarea></td>
-          <td class="s">{{reply.writer}}</td>
-          <td class="s">{{reply.updated_at.split('T')[0]}} {{reply.updated_at.split('T')[1].split('.')[0]}}</td>
-          <td>
-            <a @click="changeModify(i)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">수정</a>
-            <a @click="saveReply(i)" v-if="!modify[i]">적용</a>
-            <a @click="removeReply(reply.id)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">삭제</a>
-            <a @click="changeModify(i)" v-if="!modify[i]">취소</a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <ul>
+      <li class="reply_list" v-for="(reply, i) in response_list" :key="i">
+        <div class="user">
+          <div class="user-image">
+            <img src="https://ifh.cc/g/50ygP2.png" class="profile">
+          </div>
+          <div class="user-info">
+            <div style="padding-left:5px;">
+              <span class="name">{{reply.writer}}</span>
+              <span class="date">{{reply.updated_at.split('T')[0]}} {{reply.updated_at.split('T')[1].split('.')[0]}}</span> &nbsp;&nbsp;&nbsp;
+              <a @click="changeModify(i)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">수정</a>
+              <a @click="saveReply(i)" v-if="!modify[i]">적용</a>
+              <a @click="removeReply(reply.id)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">삭제</a>
+              <a @click="changeModify(i)" v-if="!modify[i]">취소</a>
+            </div>
+          </div>
+        </div>
+        <div class="reply_cont">
+          <v-textarea v-model="replyContent[i]" @input="reply.content = replyContent[i]" :readonly="modify[i]" :class="{'mod' : modify[i]}" auto-grow rows="1" row-height="18"></v-textarea>
+        </div>
+      </li>
+    </ul>
   </div>
 
   <div class="btnWrap">
@@ -339,8 +339,6 @@ export default {
             }
           ).then(function (response) {
             console.log(response)
-            this.modify = []
-            this.replyContent = []
           }).catch(function (error) {
             console.log(error)
           })
@@ -370,6 +368,8 @@ export default {
       await axios.get(`http://localhost:8000/jewelry/qnaBoard/${this.$store.state.item.qnaId}/replyInfo`)
         .then(res => {
           this.response_list = res.data.data.qna_board_response.qna_board_reply_response_list
+          this.modify = []
+          this.replyContent = []
           for (let i = 0; i < this.response_list.length; i++) {
             this.modify.push(true)
             this.replyContent.push(this.response_list[i].content)
@@ -403,16 +403,12 @@ input {
 }
 
 .inputReply {
-  min-height: 120px;
+  min-height: 90px;
   border: 1px solid black;
   border-radius: 10px;
 }
 .input {
   margin-bottom: 2rem;
-}
-.v_btn {
-  height: 70px !important;
-  font-weight: 700;
 }
 .input p {
   margin-top: 2.5rem;
@@ -434,35 +430,21 @@ textarea {
 .mod {
   outline: none;
 }
-.cont {
-  padding-left: 2rem !important;
-}
 
 .table td {
   padding: 0.5rem;
   vertical-align: middle;
 }
-.s {
-  font-size: small;
-}
 
 a {
   text-decoration: none;
-  color: black;
-  border: 1px solid black;
-  border-radius: 10px;
+  background: #fff;
+  color: #000;
   padding: 0.2rem 0.4rem;
   font-size: 0.8rem;
   font-weight: 700;
-  background-color: #fefff2;
-  box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5);
   margin-left: 0.3rem;
   cursor: pointer;
-}
-a:active {
-  box-shadow: 1px 0px 0 rgb(0,0,0,0.5);
-  position: relative;
-  top: 0.5px;
 }
 
 .tbAdd{border-top:1px solid #888;}
@@ -475,4 +457,44 @@ a:active {
 table{width:100%; border-collapse:collapse;}
 a{text-decoration:none;}
 .btn{padding:10px; background:#34445c; color:#fff;}
+
+.btn2 {
+  color: #000;
+  font-weight: 700;
+}
+
+.profile {
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+}
+ul {
+  list-style: none;
+  padding-left: 0 !important;
+}
+li {
+  width: 48rem;
+}
+.user {
+  display: flex;
+}
+.user-info {
+  height: fit-content;
+  margin: auto 1rem;
+}
+.reply_list {
+  margin-bottom: 3rem;
+  cursor: pointer;
+}
+.reply_cont {
+  margin-top: 1rem;
+}
+.date {
+  margin-left: 24rem;
+  font-size: 0.8rem;
+  color: rgb(99, 99, 99);
+}
+.name {
+  font-weight: 700;
+}
 </style>

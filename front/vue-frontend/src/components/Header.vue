@@ -54,12 +54,12 @@
               >
             </li>
             <li class="nav-item">
-              <router-link to="/ring" class="nav-link">RING</router-link>
-            </li>
-            <li class="nav-item">
               <router-link to="/earrings" class="nav-link"
                 >EARRINGS</router-link
               >
+            </li>
+            <li class="nav-item">
+              <router-link to="/ring" class="nav-link">RING</router-link>
             </li>
             <li class="nav-item">
               <router-link to="/bracelet" class="nav-link"
@@ -222,8 +222,7 @@ a {
 .notice {
   margin-left: 1rem;
 }
-.signup::after,
-.login::after {
+.signup::after {
   content: "|";
   float: right;
   display: block;
