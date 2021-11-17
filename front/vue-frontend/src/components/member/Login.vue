@@ -57,7 +57,7 @@
         </button>
       </div>
       <div class="search">
-        <router-link to="/searchid">아이디 찾기</router-link> &nbsp;
+        <router-link to="/searchid">아이디 찾기</router-link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <router-link to="/searchpw">비밀번호 찾기</router-link>
       </div>
       <div class="form-group">

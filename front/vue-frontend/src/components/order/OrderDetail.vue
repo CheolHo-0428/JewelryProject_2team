@@ -100,8 +100,8 @@
     </table>
 
     <div class="button">
-      <v-btn color="#FBEF97" x-large to="/orderlist">주문목록</v-btn>
-      <v-btn color="#D1CFC4" v-if="orderGroupInfo.order_product_state === '입금전'" x-large @click="ordercancle">주문취소</v-btn>
+      <router-link to="/orderlist" class="btn btn-dark btn2">주문목록</router-link>
+      <a v-if="orderGroupInfo.order_product_state === '입금전'" @click="ordercancle" class="btn btn-dark btn2">주문취소</a>
     </div>
   </div>
 </template>
@@ -247,7 +247,7 @@ p.top {
   width: 850px;
   border-top: 0.2rem solid black;
   border-bottom: 0.2rem solid black;
-  background-color: #fefff2;
+  background-color: #fff;
   margin-bottom: 5rem;
 }
 input {
@@ -273,7 +273,7 @@ input {
 }
 .info thead {
   border-bottom: 1px solid black;
-  background-color: #fefff2;
+  background-color: #e7e7e7;
 }
 .info thead th {
   padding: 1rem 0;
@@ -317,12 +317,44 @@ img {
   padding-top: 30px;
 }
 
-.button button,
-.button a {
-  border: 1px solid black;
-  margin: 0 0.6rem;
-  padding: 0.5rem 2rem;
-  font-weight: 700;
+.btn {
+  display: inline-block;
+  padding: 0 30px;
+  font-size: 15px;
+  font-weight: 400;
+  background: transparent;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
 }
-
+.btn {
+  background: #000;
+  color: #fff;
+  padding: 0.8rem 0;
+  width: 180px;
+  margin: 0 1rem;
+  font-size: 1.2rem;
+}
+.btn:hover {
+  background: #fff;
+  border-color: #000;
+  color: #000;
+}
 </style>

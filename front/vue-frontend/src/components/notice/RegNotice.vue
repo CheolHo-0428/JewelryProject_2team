@@ -131,7 +131,7 @@ p {
 .tbAdd th, .tbAdd td{border-bottom:1px solid #eee; padding:5px 0;}
 .tbAdd td{padding:10px 10px; box-sizing:border-box;}
 .tbAdd td input{width:100%; min-height:30px; box-sizing:border-box; padding:0 10px;}
-.tbAdd td textarea{width:100%; min-height:300px; padding:10px; box-sizing:border-box;}
+.tbAdd td textarea{width:100%; min-height:340px; padding:10px; box-sizing:border-box;}
 .btnWrap{text-align:center; margin:30px 0;}
 .btnWrap a{margin:0 10px;}
 table{width:100%; border-collapse:collapse;}

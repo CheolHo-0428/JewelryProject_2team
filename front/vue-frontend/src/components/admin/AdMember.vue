@@ -99,7 +99,6 @@
       </tbody>
     </table>
 
-
     <div v-if="!isResign" class="page">
       <div class="box">
         <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
@@ -736,7 +735,6 @@ p {
   background:black;
   color:#fff;
 }
-
 
 /* 2차시안 디자인변경 */
 

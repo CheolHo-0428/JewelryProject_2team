@@ -176,7 +176,7 @@
     </div>
 
     <div class="button">
-      <v-btn color="#FBEF97" x-large @click="order">결제하기</v-btn>
+      <a class="btn2 btn-dark" @click="order">구매하기</a>
     </div>
   </div>
 </template>
@@ -545,11 +545,45 @@ table {
   justify-content: center;
   margin-top: 2rem;
 }
-.button button {
-  border: 1px solid black;
-  padding: 2rem 3.5rem !important;
-  font-weight: 700;
+.btn2 {
+  display: inline-block;
+  padding: 0 30px;
+  font-size: 15px;
+  font-weight: 400;
+  background: transparent;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.btn2 {
+  background: #000;
+  color: #fff;
+  padding: 0.8rem 0;
+  width: 180px;
   font-size: 1.2rem;
+  text-decoration: none;
+}
+.btn2:hover {
+  background: #fff;
+  border-color: #000;
+  color: #000;
 }
 
 .group {
@@ -615,6 +649,7 @@ input{
   font-size: 0.7rem;
   padding: 0.1rem 0.4rem;
   cursor: pointer;
+  border-radius: 0 !important;
 }
 .addr input {
   font-size: 1rem;

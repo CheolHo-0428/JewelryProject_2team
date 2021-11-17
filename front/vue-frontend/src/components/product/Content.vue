@@ -24,6 +24,7 @@ export default {
           for (let i = 0; i < imageList.length; i++) {
             if (imageList[i].delegate_thumbnail === 'NO') {
               this.stored_file_name.push(imageList[i].stored_file_name)
+              console.log(this.stored_file_name)
             }
           }
         })

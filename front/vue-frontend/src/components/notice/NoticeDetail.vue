@@ -28,7 +28,7 @@
           </tr>
           <tr>
             <th>내용</th>
-            <td>
+            <td colspan="2">
               <textarea
                 :disabled="findRole === false"
                 v-model="content"
@@ -530,7 +530,7 @@ a:active {
 }
 .tbAdd td textarea {
   width: 100%;
-  min-height: 260px;
+  min-height: 300px;
   padding: 10px;
   box-sizing: border-box;
 }

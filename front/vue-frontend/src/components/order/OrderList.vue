@@ -170,7 +170,7 @@ th, td {
   text-align: center;
 }
 thead {
-  background-color:#fefff2;
+  background-color:#e7e7e7;
 }
 .tdNo,
 .tdTitle {
@@ -195,7 +195,7 @@ thead {
   margin: 0 0.5rem;
 }
 .page a.active {
-  background-color: #fde8b9;
+  background-color: silver;
   color: white;
 }
 .page a:hover:not(.active) {

@@ -294,7 +294,7 @@ export default {
               frm.append('deleteCheck', 'YES')
               frm.append('itemId', this.item_id)
               frm.append('file', imageFile.files[0])
-              axios.put('http://localhost:8000/jewelry/imageFile/updateImg', frm, {
+              await axios.put('http://localhost:8000/jewelry/imageFile/updateImg', frm, {
                 headers: {
                   'Content-Type': 'multipart/form-data'
                 }
@@ -304,7 +304,7 @@ export default {
                 console.log(error)
               })
             } else {
-              axios.delete(`http://localhost:8000/jewelry/imageFile/${this.id_list[i]}`, {
+              await axios.delete(`http://localhost:8000/jewelry/imageFile/${this.id_list[i]}`, {
                 data: {
                   id: this.id_list[i]
                 }
@@ -320,7 +320,7 @@ export default {
             frm.append('delegateThumbnail', this.delegate_thumbnail_list[i])
             frm.append('deleteCheck', 'NO')
             frm.append('itemId', this.item_id)
-            axios.put('http://localhost:8000/jewelry/imageFile/update', frm, {
+            await axios.put('http://localhost:8000/jewelry/imageFile/update', frm, {
             }).then((response) => {
               console.log(response)
             }).catch((error) => {
@@ -344,7 +344,7 @@ export default {
         //   frm.append('file', imageFile.files[i])
         // }
         if (imageFile.files[0]) {
-          axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
+          await axios.post('http://localhost:8000/jewelry/imageFile/regImg', frm, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
