@@ -282,7 +282,7 @@ public class NoticeBoardService extends
 								Header.OK(replyService.response(reply)).getData();
 						return replyRes;
 					})
-					.sorted((a, b) -> (int)(b.id - a.id))
+					.sorted((a, b) -> (int)(a.id - b.id))
 					.collect(Collectors.toList());
 		
 		noticeBoardResponse.setNoticeBoardReplyResponseList(replyResList);
