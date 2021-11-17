@@ -121,7 +121,7 @@
             </table>
             <p v-if="findRole === true"><router-link class="btn btn-dark" to="/regnotice">공지사항 등록</router-link></p>
             <div class="container page">
-              <div class="container box">
+              <div class="box">
                 <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
                 <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
                 <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
@@ -342,6 +342,8 @@ p {
 a.btn.btn-dark{
   height: 40px;
   line-height: 38px;
+  width: 108px;
+  padding: 0;
 }
 .table {
   width: 750px;
@@ -637,5 +639,4 @@ section.notice {
   width: 1px;
   height: 1px;
 }
-
 </style>
