@@ -683,6 +683,7 @@ input{
   line-height: 30px;
 }
 .addr input {
+  padding-left: 15px;
   font-size: 1rem;
 }
 .request {
