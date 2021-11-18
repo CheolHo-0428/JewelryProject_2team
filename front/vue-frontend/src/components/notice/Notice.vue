@@ -69,27 +69,27 @@
   </div> -->
 <section class="notice">
   <div class="page-title">
-        <div class="container">
-            <h3>공지사항</h3>
-        </div>
+    <div class="container">
+        <h3>공지사항</h3>
     </div>
-    <!-- board seach area -->
-    <div id="board-search">
-        <div class="container">
-            <div class="search-window">
-                <div class="search-wrap">
-                  <select name="member" class="op" @change="optionChange($event)">
-                    <option value="" selected>-- 선택하세요 --</option>
-                    <option value="writer">작성자</option>
-                    <option value="title">공지제목</option>
-                  </select>
-                  <label for="search" class="blind">공지사항 내용 검색</label>
-                  <input class="form-control me-2" @keyup.enter="selectData" type="search" v-model="keyword" aria-label="Search" placeholder="검색어를 입력해 주세요.">
-                  <button type="submit" class="btn btn-dark" @click="selectData">검색</button>
-                </div>
-            </div>
-        </div>
-    </div>
+  </div>
+  <!-- board seach area -->
+  <div id="board-search">
+      <div class="container">
+          <div class="search-window">
+              <div class="search-wrap">
+                <select name="member" class="op" @change="optionChange($event)">
+                  <option value="" selected>-- 선택하세요 --</option>
+                  <option value="writer">작성자</option>
+                  <option value="title">공지제목</option>
+                </select>
+                <label for="search" class="blind">공지사항 내용 검색</label>
+                <input class="form-control me-2" @keyup.enter="selectData" type="search" v-model="keyword" aria-label="Search" placeholder="검색어를 입력해 주세요.">
+                <button type="submit" class="btn btn-dark" @click="selectData">검색</button>
+              </div>
+          </div>
+      </div>
+  </div>
   <!-- board list area -->
     <div id="board-list">
         <div class="container">
