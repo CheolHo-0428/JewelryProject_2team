@@ -284,7 +284,7 @@ outline: none;
   border: 1px solid black;
   text-align:center;
   width: 311px;
-  height: 30px;  
+  height: 30px;
 }
 .totPrice {
   text-align: right;
