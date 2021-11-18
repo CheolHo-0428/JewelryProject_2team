@@ -17,7 +17,7 @@
     </v-carousel>
 
     <div class="category">
-      <p>NEW ITEMS</p>
+      <p>New Items</p>
     </div>
 
     <div class="boxs">
