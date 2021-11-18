@@ -129,8 +129,6 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
 </section>
 </template>
 
@@ -441,6 +439,7 @@ input {
 }
 .page a:hover:not(.active) {
   background-color: silver;
+  color:white;
 }
 .pageNum {
   cursor: pointer;

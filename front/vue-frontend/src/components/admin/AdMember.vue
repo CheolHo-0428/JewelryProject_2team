@@ -98,7 +98,6 @@
         </tr>
       </tbody>
     </table>
-    
     <div v-if="!isResign" class="page">
       <div class="box">
         <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
@@ -583,9 +582,6 @@ export default {
 </script>
 
 <style scoped>
-.tr_title{
-  background-color:#e7e7e7;
-}
 .pageNum{
   cursor:pointer;
 }
@@ -715,6 +711,7 @@ p {
 }
 .page a:hover:not(.active) {
   background-color: silver;
+  color:white;
 }
 .memberButton {
   margin-top:15px;
@@ -870,8 +867,8 @@ section.notice {
 }
 
 .btn-dark:hover, .btn-dark:focus {
-  background: #373737;
-  border-color: #373737;
+  background: #000;
+  border-color: #000;
   color: #fff;
   box-shadow: none;
 }

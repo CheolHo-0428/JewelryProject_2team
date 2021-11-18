@@ -131,8 +131,8 @@
       <!-- <span>체크리스트: {{ delegate_thumbnail_list }}</span> -->
     </div>
     <div class="button">
-      <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>
-      <v-btn color="#FBEF97" x-large @click="addItem">등록</v-btn>
+      <v-btn color="#000" style="color:white;" x-large @click="list">상품목록</v-btn>
+      <v-btn color="#000" style="color:white;" x-large @click="addItem">등록</v-btn>
     </div>
   </div>
 </template>
@@ -287,25 +287,25 @@ p.top {
   font-size: 0.8rem;
 }
 tr {
-  border-bottom: 1.5px solid gray;
   border-right: 1px solid black;
 }
 th {
   padding: 0.6rem 0;
   font-size: 0.85rem;
-  background-color: #fefff2;
+  background-color: #e7e7e7;
   border-right: 1px solid black;
   border-left: 1px solid black;
   vertical-align: middle;
 }
 .op {
-  border: 1px solid black;
+  border: 1px solid #e7e7e7;
   width: fit-content;
   font-size: 0.8rem;
   border-radius: 2px;
   padding: 0.2rem;
   background-color: white;
   text-align: center;
+  color:gray;
 }
 
 .button button {

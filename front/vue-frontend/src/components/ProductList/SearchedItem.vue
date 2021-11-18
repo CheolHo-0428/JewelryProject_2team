@@ -191,11 +191,12 @@ img:hover {
   margin: 0 0.5rem;
 }
 .page a.active {
-  background-color: #fde8b9;
+  background-color: #e7e7e7;
   color: white;
 }
 .page a:hover:not(.active) {
   background-color: silver;
+  color:white;
 }
 .pageNum {
   cursor: pointer;

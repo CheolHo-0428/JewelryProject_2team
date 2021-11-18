@@ -1,6 +1,6 @@
 <template>
   <div class="outer">
-    <p class="top">회원상세</p>
+    <p class="top">회원 상세정보</p>
     <table class="table">
       <colgroup>
         <col width="20%">
@@ -33,14 +33,14 @@
         </tr>
         <tr>
           <th scope="col">관리자 메모</th>
-          <td colspan="3"><textarea type="text" v-model="admin_message"></textarea></td>
+          <td colspan="3"><textarea type="text" v-model="admin_message" placeholder="메모를 입력하여 주세요"></textarea></td>
         </tr>
       </tbody>
     </table>
     <div class="button">
-      <v-btn color="#D1CFC4" x-large @click="list">회원목록</v-btn>
-      <v-btn color="#FBEF97" x-large @click="mod">저장</v-btn>
-      <v-btn color="#f27474" x-large @click="remove">삭제</v-btn>
+      <v-btn color="#000" style="color:white"  x-large @click="list">회원목록</v-btn>
+      <v-btn color="#000" style="color:white"  x-large @click="mod">저장</v-btn>
+      <v-btn color="#000" style="color:white"  x-large @click="remove">삭제</v-btn>
     </div>
   </div>
 </template>
@@ -193,11 +193,13 @@ p.top {
   float: left;
   margin-bottom: 2rem;
 }
+.table > :not(:first-child) {
+  border: 1px solid gray;
+}
 .table {
   width: 850px;
-  border-top: 0.2rem solid black;
-  border-bottom: 0.2rem solid black;
   margin-bottom: 5rem;
+  border:1px solid gray;
 }
 input {
   text-align: center;
@@ -205,24 +207,31 @@ input {
   font-size: 0.8rem;
   outline: none;
 }
-tr {
-  border-bottom: 1.5px solid gray;
+/* tr {
+  border-bottom: 1px solid gray;
   border-right: 1px solid black;
-}
+} */
 th {
   padding: 0.6rem 0;
   font-size: 0.85rem;
-  background-color: #fefff2;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+  background-color: #e7e7e7;
+  /* border-right: 1px solid black;
+  border-left: 1px solid black; */
   vertical-align: middle;
 }
 textarea {
   width: 100%;
   min-height: 5rem;
   font-size: 0.8rem;
+  color:black;
 }
-
+textarea::placeholder{
+  text-align:center;
+  color:#e7e7e7;
+  font-size:30px;
+  padding-top:20px;
+  font-weight:bold;
+}
 .button button {
   border: 1px solid black;
   margin: 0 0.6rem;

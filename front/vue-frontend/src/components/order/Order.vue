@@ -71,7 +71,7 @@
             v-validate="'required'"
             type="text"
             id="name"
-            class="name"
+            class="name recipient"
             minlength="3"
             maxlength="20"
             autocomplete="no"
@@ -81,21 +81,21 @@
       <p>
         <label>휴대폰<span class="essential">*</span></label>
         <span class="phone">
-          <input v-model="phone1" type="text" v-validate="'required'">- <input v-model="phone2" type="text" v-validate="'required'">- <input v-model="phone3" type="text" v-validate="'required'">
+          <input class="phone1" v-model="phone1" type="text" v-validate="'required'"> - <input v-model="phone2" type="text" v-validate="'required'" class="phone2"> - <input v-model="phone3" class="phone3" type="text" v-validate="'required'">
         </span>
       </p>
       <p>
         <label>배송주소<span class="essential">*</span></label>
         <span class="addr">
           <input class="post" type="text" placeholder="우편번호 입력" v-model="postCode" :disabled="'disabled'">
-          <a class="btn btn-secondary" @click="showApi">우편번호 검색</a> <br>
+          <a style="font-size:18px;" class="btn btn-secondary" @click="showApi">우편번호 검색</a> <br>
           <input type="text" class="text2 basic" v-model="address" placeholder="주소 입력" :disabled="'disabled'"><br>
           <input type="text" class="text2 detail" autocomplete="off" placeholder="상세 주소 입력" v-validate="'required'" v-model="detailAddress">
         </span>
       </p>
       <p>
         <label>예금자명<span class="essential">*</span></label>
-        <span><input class="name" type="text" v-model="depositor" v-validate="'required'"></span>
+        <span><input class="name depositor" type="text" v-model="depositor" v-validate="'required'"></span>
       </p>
       <p>
         <label>배송메시지</label>
@@ -476,6 +476,31 @@ export default {
 </script>
 
 <style scoped>
+.phone1{
+  width:180px;
+  height:50px;
+  color:gray;
+  border-radius:5px;
+}
+.phone2{
+  width:180px;
+  height:50px;
+  color:gray;
+  border-radius:5px;
+}
+.phone3{
+  width:180px;
+  height:50px;
+  color:gray;
+  border-radius:5px;
+}
+.recipient{
+  width:602px;
+  height:50px;
+  color:gray;
+  border-radius:5px;
+  margin-top:30px;
+}
 .outer {
   margin: 3rem auto;
   width: 52rem;
@@ -587,7 +612,7 @@ table {
 }
 
 .group {
-  font-size: 1rem;
+  font-size: 24px;
   margin: 4rem auto 1rem;
   border-bottom: 1px solid black;
   width: fit-content;
@@ -595,9 +620,9 @@ table {
 label{
   width:100px;
   display: table-cell;
-  border-right: 1px dashed #c6c6c6;
   padding: 10px 5px;
   font-size: 1rem;
+  vertical-align: middle;
 }
 form{
   display:table;
@@ -615,27 +640,45 @@ input{
   height:20px;
   margin:2px;
 }
+.depositor {
+  width:602px;
+  height:50px;
+  color:gray;
+  border-radius:5px;
+  border:1px solid #e7e7e7;
 
+}
 .essential {
   padding: 0;
   display: inline;
   color: red;
 }
 .post {
-  margin-left: -12rem;
+  width: 300px;
+  border: 1px solid gray;
+  height: 50px;
+  border-radius: 5px;
+  color:gray;
 }
 .text2{
   font-size: 0.8rem;
 }
 .text2.detail {
-  border: 1px solid gray;
-  padding: 0.8rem 0;
-  width:260px;
-  margin-left: -15rem;
-  font-size: 0.9rem;
+    border: 1px solid gray;
+    /* padding: 0.8rem 0; */
+    width: 602px;
+    /* margin-left: -15rem; */
+    /* font-size: 0.9rem; */
+    height: 50px;
+    color: gray;
+    border-radius: 5px;
 }
 .text2.basic {
-  min-width: 500px;
+    width: 602px;
+    color: gray;
+    border: 1px solid gray;
+    border-radius: 5px;
+    height: 50px;
 }
 .name,
 .phone input,
@@ -647,17 +690,22 @@ input{
 }
 .addr a {
   font-size: 0.7rem;
-  padding: 0.1rem 0.4rem;
   cursor: pointer;
-  border-radius: 0 !important;
+  width: 300px;
+  float: right;
+  height: 52px;
+  line-height: 36px;
+  font-weight:18px;
 }
 .addr input {
   font-size: 1rem;
 }
 .request {
-  width: 30rem;
-  font-size: 0.8rem;
-  padding: 1rem 0.2rem;
+    font-size: 0.8rem;
+    padding: 1rem 0.2rem;
+    height: 50px;
+    border-radius: 5px;
+    width: 602px;
 }
 .pay {
   font-size: 0.9rem;
@@ -665,10 +713,13 @@ input{
   color: #747272;
 }
 .bank {
-  border: 1px solid gray;
-  width: 12rem;
-  font-size: 0.8rem;
-  padding: 0.2rem;
-  text-align: center;
+    border: 1px solid gray;
+    font-size: 0.8rem;
+    padding: 0.2rem;
+    text-align: center;
+    width: 602px;
+    height: 50px;
+    color: gray;
+    border-radius: 5px;
 }
 </style>

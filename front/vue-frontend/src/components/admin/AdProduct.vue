@@ -106,7 +106,6 @@
   <div class="page-title">
         <div class="container">
             <h3>상품목록</h3>
-            <router-link class="btn btn-dark" to="/regproduct">상품등록</router-link>
         </div>
     </div>
 
@@ -171,7 +170,8 @@
                         <td>{{ item.name }}</td>
                         <td>{{ item.price }}</td>
                         <td>{{ item.stock }}</td>
-                        <td>{{ item.status }}</td>
+                        <td v-if="item.status=='REGISTERED'" style="color:blue">{{ item.status }}</td>
+                        <td v-if="item.status=='UNREGISTERED'" style="color:red">{{ item.status }}</td>
                         <td class="button"><a @click="detail(item.id)">상세보기</a></td>
                     </tr>
                   </tbody>
@@ -194,6 +194,7 @@
                   </tbody>
             </table>
           <div class="container page">
+            <router-link class="btn btn-dark reg" to="/regproduct"  style="float: right;border-radius: 0;color: white;height: 40px;line-height: 29px;">상품등록</router-link>
             <div class="box">
               <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
               <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
@@ -570,9 +571,9 @@ export default {
 </script>
 
 <style scoped>
-.tr_1{
+/* .tr_1{
   background: #e7e7e7;
-}
+} */
 .outer {
   width: 950px;
   margin: 4rem auto;
@@ -692,15 +693,22 @@ img {
   color: white;
 }
 .page a:hover:not(.active) {
-  background-color: silver;
+  background-color: gray;
+  color:white;
 }
 .pageNum {
   cursor: pointer;
 }
 .add {
   margin: 0;
-  width: 950px;
-  height: 50px;
+  width: 900px;
+}
+.reg {
+    float: right;
+    border-radius: 0;
+    color: white;
+    height: 40px;
+    line-height: 29px;
 }
 .btn-dark {
   float: right;

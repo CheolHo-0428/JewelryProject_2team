@@ -107,8 +107,8 @@
     </table>
 
     <div class="button">
-      <v-btn color="#D1CFC4" x-large @click="list">주문목록</v-btn>
-      <v-btn color="#FBEF97" x-large @click="save">저장</v-btn>
+      <v-btn color="#000" style="color:white;" x-large @click="list">주문목록</v-btn>
+      <v-btn color="#000" style="color:white;" x-large @click="save">저장</v-btn>
     </div>
   </div>
 </template>
@@ -306,6 +306,9 @@ p.top {
 .img, .content {
   height: 100px;
 }
+.table > :not(:first-child) {
+  border: 1px solid gray;
+}
 .img {
   width: 20%;
 }
@@ -324,13 +327,14 @@ img {
   padding-top: 30px;
 }
 .op {
-  border: 1px solid black;
+  border: 1px solid gray;
   width: fit-content;
   font-size: 0.8rem;
   border-radius: 2px;
   padding: 0.2rem 0.8rem;
   background-color: white;
   text-align: center;
+  color:gray;
 }
 
 .table {
@@ -352,7 +356,7 @@ input {
 .table th {
   padding: 0.6rem 0;
   font-size: 0.85rem;
-  background-color: #fefff2;
+  background-color: #e7e7e7;
   border-right: 1px solid black;
   border-left: 1px solid black;
   vertical-align: middle;
@@ -384,8 +388,8 @@ input {
   width: 850px;
 }
 .info thead {
-  border-bottom: 1px solid black;
-  background-color: #fefff2;
+  border-bottom: 1px solid #e7e7e7;
+  background-color: #e7e7e7;
 }
 .info thead th {
   padding: 1rem 0;
