@@ -478,28 +478,23 @@ export default {
 <style scoped>
 .phone1{
   width:180px;
-  height:50px;
+  height:43px;
   color:gray;
-  border-radius:5px;
 }
 .phone2{
   width:180px;
-  height:50px;
+  height:43px;
   color:gray;
-  border-radius:5px;
 }
 .phone3{
   width:180px;
-  height:50px;
+  height:43px;
   color:gray;
-  border-radius:5px;
 }
-.recipient{
+.recipient {
   width:602px;
-  height:50px;
+  height:43px;
   color:gray;
-  border-radius:5px;
-  margin-top:30px;
 }
 .outer {
   margin: 3rem auto;
@@ -612,6 +607,7 @@ table {
   margin: 4rem auto 1rem;
   border-bottom: 1px solid black;
   width: fit-content;
+  margin-bottom: 30px;
 }
 label{
   width:100px;
@@ -638,11 +634,9 @@ input{
 }
 .depositor {
   width:602px;
-  height:50px;
+  height:43px;
   color:gray;
-  border-radius:5px;
   border:1px solid #e7e7e7;
-
 }
 .essential {
   padding: 0;
@@ -652,8 +646,7 @@ input{
 .post {
   width: 300px;
   border: 1px solid gray;
-  height: 50px;
-  border-radius: 5px;
+  height: 43px;
   color:gray;
 }
 .text2{
@@ -665,16 +658,14 @@ input{
     width: 602px;
     /* margin-left: -15rem; */
     /* font-size: 0.9rem; */
-    height: 50px;
+    height: 43px;
     color: gray;
-    border-radius: 5px;
 }
 .text2.basic {
     width: 602px;
     color: gray;
     border: 1px solid gray;
-    border-radius: 5px;
-    height: 50px;
+    height: 43px;
 }
 .name,
 .phone input,
@@ -685,23 +676,20 @@ input{
   text-align: center;
 }
 .addr a {
-  font-size: 0.7rem;
   cursor: pointer;
   width: 300px;
   float: right;
-  height: 52px;
-  line-height: 36px;
-  font-weight:18px;
+  height: 46px;
+  line-height: 30px;
 }
 .addr input {
   font-size: 1rem;
 }
 .request {
-    font-size: 0.8rem;
-    padding: 1rem 0.2rem;
-    height: 50px;
-    border-radius: 5px;
-    width: 602px;
+  font-size: 0.8rem;
+  padding: 1rem 0.2rem;
+  height: 43px;
+  width: 602px;
 }
 .pay {
   font-size: 0.9rem;
@@ -709,13 +697,12 @@ input{
   color: #747272;
 }
 .bank {
-    border: 1px solid gray;
-    font-size: 0.8rem;
-    padding: 0.2rem;
-    text-align: center;
-    width: 602px;
-    height: 50px;
-    color: gray;
-    border-radius: 5px;
+  border: 1px solid gray;
+  font-size: 0.8rem;
+  padding: 0.2rem;
+  text-align: center;
+  width: 602px;
+  height: 43px;
+  color: gray;
 }
 </style>
