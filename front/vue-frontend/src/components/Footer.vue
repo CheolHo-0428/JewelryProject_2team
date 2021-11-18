@@ -52,9 +52,9 @@
               <p class="explane"><i class="fas fa-home me-3"></i>서울특별시 송파구 중대로 135</p>
               <p class="explane">
                 <i class="fas fa-envelope me-3"></i>
-                info@example.com
+                master@sw.or.kr
               </p>
-              <p class="explane"><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
+              <p class="explane"><i class="fas fa-phone me-3"></i> 02-2188-6900</p>
             </div>
           </div>
         </div>

@@ -1,104 +1,4 @@
 <template>
-  <!-- <div class="outer">
-    <p>주문목록</p>
-
-    <table class="table">
-      <colgroup>
-        <col width="20%">
-        <col width="80%">
-      </colgroup>
-      <tbody>
-        <tr>
-          <th scope="col">조건검색</th>
-          <td>
-            <div class="d-flex">
-              <select name="order" class="op" @change="optionChange($event)">
-                <option value="" selected>-- 선택하세요 --</option>
-                <option value="memberId">회원번호</option>
-                <option value="name">주문자명</option>
-                <option value="state">주문상태</option>
-              </select>
-              <input class="form-control me-2" @keyup.enter="selectDataSet" type="search" aria-label="Search" v-model="keyword">
-              <button class="search" type="submit">
-                <span class="material-icons-outlined" @click="selectDataSet">search</span>
-              </button>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <th scope="col">기간</th>
-          <td class="date">
-            <b-form-datepicker id="example-datepicker" placeholder="Choose a date" class="mb-2" v-model="date1"></b-form-datepicker>
-            <span class="range"> &nbsp; ~ &nbsp;</span>
-            <b-form-datepicker id="example-datepicker" placeholder="Choose a date" class="mb-2" v-model="date2"></b-form-datepicker>
-            <button class="search" type="submit">
-              <span class="material-icons-outlined" @click="selectDateTime">search</span>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <table class="list">
-      <colgroup>
-        <col width="20%">
-        <col width="13%">
-        <col width="11%">
-        <col width="13%">
-        <col width="15%">
-        <col width="15%">
-        <col width="13%">
-      </colgroup>
-
-      <thead>
-        <tr>
-          <th>주문일</th>
-          <th>주문번호</th>
-          <th>회원번호</th>
-          <th>주문방법</th>
-          <th>주문금액</th>
-          <th>주문상태</th>
-          <th></th>
-        </tr>
-      </thead>
-
-      <tbody v-if="!isSearch && !isDate">
-        <tr v-for="(order, i) in orders" :key="i">
-            <td v-if="order.created_at">{{order.created_at.split('T')[0]}} {{order.created_at.split('T')[1].split('.')[0]}}</td>
-            <td>{{order.id}}</td>
-            <td>{{order.member_id}}</td>
-            <td>무통장입금</td>
-            <td>{{order.total_price}}원</td>
-            <td>{{order.order_product_state}}</td>
-            <td class="button">
-              <a @click="orderDetail(order.id)">상세보기</a>
-            </td>
-        </tr>
-      </tbody>
-      <tbody v-if="isDate || isSearch">
-        <tr  v-for="(order, i) in searchedData" :key="i">
-            <td v-if="order.created_at">{{order.created_at.split('T')[0]}} {{order.created_at.split('T')[1].split('.')[0]}}</td>
-            <td>{{order.id}}</td>
-            <td>{{order.member_id}}</td>
-            <td>무통장입금</td>
-            <td>{{order.total_price}}원</td>
-            <td>{{order.order_product_state}}</td>
-            <td class="button">
-              <a @click="orderDetail(order.id)">상세보기</a>
-            </td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="page">
-      <div class="box">
-        <a @click="prevPage" class="arrow pageNum" v-if="prev">&laquo;</a>
-        <a @click="changePage(p)" v-for="(p, i) in page_list" class="pageNum" :key="i" :class="{'active' : page == p}">{{p}}</a>
-        <a @click="nextPage" class="arrow pageNum" v-if="next">&raquo;</a>
-      </div>
-    </div>
-
-  </div> -->
-
 <section class="notice">
   <div class="page-title">
         <div class="container">
@@ -146,7 +46,7 @@
                 <col width="13%">
               </colgroup>
                 <thead>
-                        <tr class="tr_1">
+                        <tr class="tr_1 trHead">
                           <th>주문일</th>
                           <th>주문번호</th>
                           <th>회원번호</th>
@@ -192,7 +92,6 @@
                 </div>
         </div>
     </div>
-
 </section>
 </template>
 
@@ -515,9 +414,6 @@ export default {
 </script>
 
 <style scoped>
-/* .tr_1{
-  background: #e7e7e7;
-} */
 .outer {
   width: 950px;
   margin: 4rem auto;
@@ -614,10 +510,8 @@ p {
   font-size: 0.8rem;
   font-weight: 550;
   background-color: #555;
-  /* box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5); */
 }
 .button a:active {
-  /* box-shadow: 1px 0px 0 rgb(0,0,0,0.5); */
   position: relative;
   top: 0.5px;
 }
@@ -716,7 +610,7 @@ section.notice {
 .board-table th {
   text-align: center;
 }
-.board-table tr:hover{
+.board-table tr:hover:not(.trHead) {
   background:#e7e7e7;
 }
 .board-table .th-num {

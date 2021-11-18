@@ -30,36 +30,12 @@
               <th scope="col">상품가격</th>
               <td><input type="number" class="input" placeholder="상품가격 입력" v-model="price"></td>
             </tr>
-            <!-- <tr>
-              <th scope="col">이미지</th>
-              <td class="img" colspan="3">
-                <v-file-input
-                  id="file" name="files"
-                  label="File input" style="width: 200px;"
-                  multiple="multiple" v-model="files"
-                  @click="isFileChange"
-                  >
-                </v-file-input>
-                <div v-if="isFile">
-                  <ol>
-                    <li v-for="(file, i) in files" :key="i" class="groupli">
-                      파일이름: {{ file.name }}&nbsp;&nbsp; || &nbsp;
-                      파일용량: {{ file.size * 0.001 }}kB &nbsp;&nbsp; || &nbsp;&nbsp;
-                      썸네일등록:
-                        <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
-                        <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO
-                    </li>
-                  </ol>
-                </div>
-              </td>
-            </tr> -->
-            <!-- ****************여기서부터 테스트**************** -->
             <tr>
               <th scope="col">이미지</th>
               <td class="img" colspan="3">
-                 <div class="main-container">
-                   <div class="room-deal-information-container">
-                     <div class="room-deal-information-title">이미지 등록</div>
+                <div class="main-container">
+                  <div class="room-deal-information-container">
+                    <div class="room-deal-information-title">이미지 등록</div>
                       <div class="room-picture-notice">
                         <ul class="room-write-wrapper" style="margin:0px">
                           <li style="text-align:left">가로 이미지를 권장합니다. (가로 사이즈 최소 800px)</li>
@@ -78,7 +54,6 @@
                             </div>
                             <div class="room-file-notice-item room-file-upload-button">
                               <div class="image-box">
-                                <!-- <label for="file" style="font-size:13px">이미지 등록</label> -->
                                 <v-file-input
                                   id="file" name="files"
                                   color="deep-purple accent-4"
@@ -107,28 +82,23 @@
                                       <td>{{ file.name }}</td>
                                       <td>{{ file.size * 0.001 }}kB</td>
                                       <td>
-                                        <!-- <input type="radio" v-bind:id="'imageInfo'+i" value="YES" v-model="delegate_thumbnail_list[i]"> YES
-                                        <input type="radio" v-bind:id="'imageInfo'+i" value="NO" v-model="delegate_thumbnail_list[i]"> NO -->
                                         <input type="checkbox" v-bind:id="'imageInfo'+i" v-model="true_false_list[i]">
                                       </td>
                                     </tr>
                                   </tbody>
                                 </table>
-                                <!-- <P>{{ true_false_list }}</P> -->
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                   </div>
-                 </div>
+                  </div>
+                </div>
               </td>
             </tr>
-            <!-- ****************여기까지 테스트**************** -->
           </tbody>
         </table>
       </form>
-      <!-- <span>체크리스트: {{ delegate_thumbnail_list }}</span> -->
     </div>
     <div class="button">
       <v-btn color="#000" style="color:white;" x-large @click="list">상품목록</v-btn>
@@ -261,153 +231,110 @@ export default {
 .outer {
   margin: 4rem auto;
   width: 53rem;
-  text-align: center;
+  text-align: center
 }
+
 p.top {
   font-weight: 700;
   font-size: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 3rem
 }
-.group {
-  float: left;
-  margin-bottom: 2rem;
-}
-.groupli {
-  float: left;
-}
+
 .table {
   width: 850px;
-  border-top: 0.2rem solid black;
-  border-bottom: 0.2rem solid black;
-  margin-bottom: 5rem;
+  border-top: .2rem solid #000;
+  border-bottom: .2rem solid #000;
+  margin-bottom: 5rem
 }
+
 .input {
   text-align: center;
   width: 100% !important;
-  font-size: 0.8rem;
+  font-size: .8rem
 }
+
 tr {
-  border-right: 1px solid black;
+  border-right: 1px solid #000
 }
+
 th {
-  padding: 0.6rem 0;
-  font-size: 0.85rem;
+  padding: .6rem 0;
+  font-size: .85rem;
   background-color: #e7e7e7;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
-  vertical-align: middle;
+  border-right: 1px solid #000;
+  border-left: 1px solid #000;
+  vertical-align: middle
 }
+
 .op {
   border: 1px solid #e7e7e7;
   width: fit-content;
-  font-size: 0.8rem;
+  font-size: .8rem;
   border-radius: 2px;
-  padding: 0.2rem;
-  background-color: white;
+  padding: .2rem;
+  background-color: #fff;
   text-align: center;
-  color:gray;
+  color: gray
 }
 
 .button button {
-  border: 1px solid black;
-  margin: 0 0.6rem;
-  padding: 0.5rem 2rem;
-  font-weight: 700;
+  border: 1px solid #000;
+  margin: 0 .6rem;
+  padding: .5rem 2rem;
+  font-weight: 700
 }
+
 .button {
-  margin-bottom: 2rem;
+  margin-bottom: 2rem
 }
+
 .main-container {
-  /* width: 1200px; */
   width: 650px;
-  /* height: 400px; */
   height: fit-content;
-  margin: 0 auto;
+  margin: 0 auto
 }
-
-/* 여기서부터 이미지테이블 css      */
 .room-deal-information-container {
-  /* margin-top: 50px; */
   margin-top: 10px;
-  color: #222222;
-  border: 1px solid #dddddd;
+  color: #222;
+  border: 1px solid #ddd
 }
-
 .room-deal-information-title {
   text-align: center;
-  /* font-size: 18px; */
   font-size: 15px;
   font-weight: bolder;
-  /* line-height: 60px; */
   line-height: 40px;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd
 }
-
-.room-deal-information-content-wrapper {
-  min-height: 50px;
-  display: flex;
-}
-
-.room-deal-informtaion-content-title {
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 150px;
-  background-color: #f9f9f9;
-}
-
-.room-deal-information-content {
-  width: 100%;
-  font-size: 14px;
-}
-
-.room-deal-option-selector {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-}
-
 .room-deal-option-item {
   width: 100px;
   height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  cursor: pointer;
+  cursor: pointer
 }
-
 .room-deal-option-item:last-child {
-  margin-left: 10px;
+  margin-left: 10px
 }
-
 .room-deal-option-notice {
   margin-left: auto;
   font-size: 14px;
-  color: #888888;
+  color: #888
 }
-
-.room-deal-option-item-deposit {
-  margin-left: 10px;
-}
-
 .room-deal-information-wrapper {
   display: flex;
-  flex-direction: column;
+  flex-direction: column
 }
-
 .room-deal-information-option {
   padding: 10px;
   display: flex;
-  align-items: center;
+  align-items: center
 }
-
 .room-deal-information-option:last-child {
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd
 }
-
 .room-deal-information-item-type {
   font-size: 13px;
   color: #fff;
@@ -417,137 +344,78 @@ th {
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 3px;
+  border-radius: 3px
 }
-
 .room-deal-information-item-wrapper {
   display: flex;
   align-items: center;
   margin-left: 10px;
   height: 46px;
-  width: 100%;
+  width: 100%
 }
-
 .room-deal-information-item-wrapper>input {
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   width: 140px;
   height: 100%;
   padding: 0 15px;
-  font-size: 15px;
+  font-size: 15px
 }
-
-.room-deal-inforamtion-won {
-  margin: 0 10px;
-}
-
 .room-deal-information-example {
-  color: #888888;
+  color: #888
 }
-
 .room-deal-information-option:not(:first-child) {
-  margin-top: 10px;
+  margin-top: 10px
 }
-
-.room-deal-inforamtion-divide {
-  font-size: 22px;
-  margin: 0 8px;
-  color: #222222;
-  font-weight: 100;
-}
-
-.room-deal-close-button-wrapper {
-  margin-left: auto;
-  cursor: pointer;
-}
-
-.room-deal-close-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  background-color: #666666;
-  color: rgb(220, 220, 220);
-}
-
-.room-deal-cliked {
-  background-color: rgb(235, 235, 235);
-  color: rgb(170, 170, 170);
-}
-
 .room-file-upload-example {
-  height: 100%;
+  height: 100%
 }
-
-.room-write-content-container {
-  border-top: 1px solid #dddddd;
-  min-height: 260px;
-}
-
 .room-picture-notice {
   font-size: 13px;
   margin: 20px;
-  /* padding: 20px 40px; */
   padding: 20px 20px;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd
 }
-
-.file-preview-content-container {
-  height: 100%;
-}
-
 .room-file-upload-wrapper {
   margin: 20px;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   background-color: #f4f4f4;
-  /* min-height: 350px; */
   min-height: 210px;
   font-size: 15px;
-  color: #888888;
+  color: #888;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 100%
 }
-
 .room-file-upload-example-container {
   display: flex;
   align-items: center;
-  justify-content: center;
-  /* height: 100%;
-width: 100%; */
+  justify-content: center
 }
-
 .room-file-image-example-wrapper {
   text-align: center;
-  font-size: 13px;
+  font-size: 13px
 }
-
 .room-file-notice-item {
   margin-top: 5px;
   text-align: center;
-  font-size: 13px;
+  font-size: 13px
 }
-
 .room-file-notice-item-red {
-  color: #ef4351;
+  color: #ef4351
 }
-
 .image-box {
-  /* margin-top: 30px; */
   padding-bottom: 20px;
-  text-align: center;
+  text-align: center
 }
-
-.image-box input[type='file'] {
+.image-box input[type=file] {
   position: absolute;
   width: 0;
   height: 0;
   padding: 0;
   overflow: hidden;
-  border: 0;
+  border: 0
 }
-
 .image-box label {
   display: inline-block;
   padding: 10px 20px;
@@ -556,78 +424,31 @@ width: 100%; */
   vertical-align: middle;
   font-size: 15px;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 5px
 }
-
-.file-preview-wrapper {
-  padding: 10px;
-  position: relative;
-}
-
-.file-preview-wrapper>img {
-  position: relative;
-  width: 190px;
-  height: 130px;
-  z-index: 10;
-}
-
-.file-close-button {
-  position: absolute;
-  /* align-items: center; */
-  line-height: 18px;
-  z-index: 99;
-  font-size: 18px;
-  right: 5px;
-  top: 10px;
-  color: #fff;
-  font-weight: bold;
-  background-color: #666666;
-  width: 20px;
-  height: 20px;
-  text-align: center;
-  cursor: pointer;
-}
-
-.file-preview-container {
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.file-preview-wrapper-upload {
-  margin: 10px;
-  padding-top: 20px;
-  background-color: #888888;
-  width: 190px;
-  height: 130px;
-}
-
 .room-write-button-wrapper {
   margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  color: #222222;
+  color: #222
 }
-
 .room-write-button-wrapper>div {
   width: 160px;
   height: 50px;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 15px;
-  cursor: pointer;
+  cursor: pointer
 }
-
 .room-write-button {
   margin-left: 15px;
   color: #fff;
-  background-color: #1564f9;
+  background-color: #1564f9
 }
-
 .room-write-button:hover {
-  opacity: 0.8;
+  opacity: .8
 }
 </style>

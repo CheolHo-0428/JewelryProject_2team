@@ -425,141 +425,149 @@ export default {
 p.top {
   font-weight: 700;
   font-size: 1.5rem;
-  margin: 3rem 0;
+  margin: 3rem 0
 }
 #reg {
   width: 800px;
   margin: 0 auto;
   text-align: center;
-  color: #2c3e50;
+  color: #2c3e50
 }
 img {
-  width: 14rem;
+  width: 14rem
 }
 .inputReply {
   min-height: 90px;
-  border: 1px solid black;
-  border-radius: 10px;
+  border: 1px solid #000;
+  border-radius: 10px
 }
 .input {
-  margin-bottom: 2rem;
+  margin-bottom: 2rem
 }
 .input p {
   margin-top: 2.5rem;
   text-align: left;
   cursor: pointer;
-  font-weight: 700;
+  font-weight: 700
 }
 .reply {
-  margin-bottom: 5rem;
+  margin-bottom: 5rem
 }
 .reply input {
   width: 100%;
-  height: 100%;
+  height: 100%
 }
 textarea {
-  width: 100%;
+  width: 100%
 }
 .mod {
-  outline: none;
+  outline: 0
 }
 .table td {
-  padding: 0.5rem;
-  vertical-align: middle;
+  padding: .5rem;
+  vertical-align: middle
 }
 a {
   text-decoration: none;
   background: #fff;
   color: #000;
-  padding: 0.2rem 0.4rem;
-  font-size: 0.8rem;
+  padding: .2rem .4rem;
+  font-size: .8rem;
   font-weight: 700;
-  margin-left: 0.3rem;
-  cursor: pointer;
+  margin-left: .3rem;
+  cursor: pointer
 }
 .tbAdd {
-  border-top: 1px solid #888;
+  border-top: 1px solid #888
 }
-.tbAdd th,
-.tbAdd td {
+.tbAdd td,
+.tbAdd th {
   border-bottom: 2px solid #eee;
-  padding: 5px 0;
+  padding: 5px 0
 }
 .tbAdd td {
   padding: 10px 10px;
-  box-sizing: border-box;
+  box-sizing: border-box
 }
 .tbAdd td input {
   width: 100%;
   min-height: 30px;
   box-sizing: border-box;
-  padding: 0 10px;
+  padding: 0 10px
 }
 .tbAdd td textarea {
   width: 100%;
   min-height: 300px;
   padding: 10px;
-  box-sizing: border-box;
+  box-sizing: border-box
 }
+
 .btnWrap {
   text-align: center;
-  padding-bottom: 50px;
+  padding-bottom: 50px
 }
 .btnWrap a {
-  margin: 0 10px;
+  margin: 0 10px
 }
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: collapse
 }
 a {
-  text-decoration: none;
+  text-decoration: none
 }
-.btn{padding:10px; background:#000; color:#fff; border-radius: 0;}
 
+.btn {
+  padding: 10px;
+  background: #000;
+  color: #fff;
+  border-radius: 0
+}
 .btn2 {
   color: #000;
-  font-weight: 700;
+  font-weight: 700
 }
-
 .profile {
   border-radius: 50%;
   width: 3rem;
-  height: 3rem;
+  height: 3rem
 }
 ul {
   list-style: none;
-  padding-left: 0 !important;
+  padding-left: 0 !important
 }
 li {
-  width: 48rem;
+  width: 48rem
 }
+
 .user {
-  display: flex;
+  display: flex
 }
 .user-info {
   height: fit-content;
-  margin: auto 1rem;
+  margin: auto 1rem
 }
+
 .reply_list {
   margin-bottom: 3rem;
-  cursor: pointer;
+  cursor: pointer
 }
 .reply_cont {
-  margin-top: 1rem;
+  margin-top: 1rem
 }
+
 .date {
   margin-left: 40%;
-  font-size: 0.8rem;
-  color: rgb(99, 99, 99);
+  font-size: .8rem;
+  color: #636363
 }
 .nDate {
-  margin-left: 57%;
+  margin-left: 57%
 }
 .name {
   font-weight: 700;
   width: 160px;
   display: inline-block;
-  text-align: left;
+  text-align: left
 }
 </style>

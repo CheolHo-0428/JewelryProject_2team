@@ -370,7 +370,7 @@ input {
   padding: 0.2rem 1.5rem;
   font-size: 0.8rem;
   font-weight: 700;
-  background-color: #fefff2;
+  background-color: #555;
   box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5);
   cursor: pointer;
 }
