@@ -41,7 +41,7 @@
       </tbody>
     </table>
     <div class="button remove">
-      <a @click="remove" class="btn btn-dark">선택상품 삭제</a>
+      <a @click="remove" class="btn btn-remove">선택상품 삭제</a>
     </div>
 
     <div class="bottom">
@@ -72,7 +72,7 @@
 
     <div class="button">
       <a class="btn btn-dark btn2" @click="order">구매하기</a>
-      <router-link to="/" class="btn btn-dark btn2">쇼핑 계속하기</router-link>
+      <router-link to="/" class="btn btn-dark btn3">쇼핑 계속하기</router-link>
     </div>
   </div>
 </template>
@@ -112,11 +112,15 @@ export default {
     selectAll () {
       for (let i = 0; i < this.carts.length; i++) {
         if (!this.allCheck) {
-          this.check[i] = this.carts[i].item_id
-          this.product_total += (this.prices[i] * this.carts[i].item_count)
+          if (!this.check[i]) {
+            this.check[i] = this.carts[i].item_id
+            this.product_total += (this.prices[i] * this.carts[i].item_count)
+          }
         } else {
-          this.check[i] = null
-          this.product_total -= (this.prices[i] * this.carts[i].item_count)
+          if (this.check[i] !== null) {
+            this.check[i] = null
+            this.product_total -= (this.prices[i] * this.carts[i].item_count)
+          }
         }
         this.order_total = this.product_total + 2500
       }
@@ -127,7 +131,7 @@ export default {
       this.names = []
       this.prices = []
       this.images = []
-      this.check = []
+      this.check.splice(0)
       return axios.get('http://localhost:8000/jewelry/cart/selectCart?member_id=' + this.$store.state.auth.user.id)
         .then(async res => {
           this.carts = res.data.data
@@ -138,6 +142,7 @@ export default {
                 this.names.push(res.data.data.item_response.name)
                 this.prices.push(res.data.data.item_response.price)
                 this.images.push(res.data.data.item_response.image_file_response_list)
+                this.check.push(null)
 
                 let tmp = res.data.data.item_response.image_file_response_list.findIndex(
                   (i) => i.delegate_thumbnail === 'YES'
@@ -185,6 +190,7 @@ export default {
     },
     async remove () {
       this.product_total = 0
+      this.order_total = 2500
       for (let i = 0; i < this.check.length; i++) {
         if (this.check[i]) {
           await axios
@@ -224,7 +230,7 @@ p {
   border-right: none;
 }
 .info thead {
-  border-bottom: 1px solid black;
+  border-bottom: 0.5px solid black;
 }
 .info thead th {
   padding: 0.1rem 0;
@@ -333,16 +339,15 @@ td {
   -o-transition: all 0.3s;
   transition: all 0.3s;
 }
-.btn-dark {
+.btn-remove {
   background: #fff;
-  border-color: #000;
   color: #000;
+  border-color: #000;
   padding: 0.4rem 1.2rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
-.btn-dark:hover, .btn-dark:focus {
+.btn-remove:hover {
   background: #000;
-  border-color: #fff;
   color: #fff;
 }
 .button.remove {
@@ -355,10 +360,16 @@ td {
   width: 180px;
   margin: 0 1rem;
   font-size: 1.2rem;
+  font-weight: 700;
 }
-.btn2:hover {
+.btn3 {
   background: #fff;
-  border-color: #000;
   color: #000;
+  border-color: #000;
+  padding: 0.8rem 0;
+  width: 180px;
+  margin: 0 1rem;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 </style>

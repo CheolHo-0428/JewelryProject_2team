@@ -19,17 +19,17 @@
           <tr>
             <td class="text">수량</td>
             <td>
-                <button type ="button" @click="minus" :disabled="status === 'UNREGISTERED'">-</button>
+                <button type ="button" @click="minus" :class="{disabled:status === 'UNREGISTERED'}">-</button>
                 <input type="text" readonly="readonly" :value="`${this.count}`">
-                <button type="button" @click="plus" :disabled="status === 'UNREGISTERED'">+</button>
+                <button type="button" @click="plus" :class="{disabled:status === 'UNREGISTERED'}">+</button>
             </td>
           </tr>
         </div>
         <div class="totPrice" :class="{unreg : status === 'UNREGISTERED'}">총 상품금액 - {{totalPrice}}원</div>
         <div class="totPrice" v-if="status === 'UNREGISTERED'" style="color:#DF0101;">일시품절</div>
         <div class="button">
-          <a class="btn btn-dark" @click="order" :disabled="status === 'UNREGISTERED'">구매하기</a>
-          <a v-if="currentUser" class="btn btn-dark" @click="cart" :disabled="status === 'UNREGISTERED'">장바구니</a>
+          <a class="btn btn-dark" @click="order" :class="{disabled:status === 'UNREGISTERED'}">BUY IT NOW</a>
+          <a v-if="currentUser" class="btn btn-dark btn2" @click="cart" :class="{disabled:status === 'UNREGISTERED'}">ADD TO CART</a>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@ export default {
         this.$swal.fire({
           icon: 'info',
           title: '장바구니에 넣으시겠습니까?',
-          text: 'yes를 누르시면 장바구니 페이지로 이동합니다.',
+          text: '장바구니 페이지로 이동합니다.',
           showCancelButton: true,
           confirmButtonText: 'Yes',
           confirmButtonColor: '#9de0f6',
@@ -261,24 +261,21 @@ img {
   outline: none;
   background-color: white;
   padding: 0 0.5rem;
-  border-radius: 2px;
-  border: 1.7px solid black;
+  border: 1px solid black;
   margin: 0 0.5rem;
   font-size: 0.9rem;
   font-weight: 700;
-  box-shadow: 1px 0.5px 0 rgb(0,0,0,0.5);
+  box-shadow: 0.5px 0.5px 0 rgb(0,0,0,0.5);
 }
 .count button:active {
-  box-shadow: 1px 0px 0 rgb(0,0,0,0.5);
+  box-shadow: 0.5px 0px 0 rgb(0,0,0,0.5);
   position: relative;
   top: 0.5px;
 }
 .count input {
   font-size: 0.9rem;
-  font-weight: 700;
-  border-radius: 2px;
   outline: none;
-  border: 1.7px solid black;
+  border: 1px solid black;
   text-align:center;
 }
 .totPrice {
@@ -296,7 +293,7 @@ img {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 700;
   background: transparent;
   text-align: center;
   white-space: nowrap;
@@ -326,10 +323,13 @@ img {
   margin: 0 1rem;
   font-size: 1.2rem;
 }
-.btn-dark:hover, .btn-dark:focus {
+.btn2 {
   background: #fff;
-  border-color: #000;
   color: #000;
+  border: #000 1px solid;
+  padding: 1rem 4rem;
+  margin: 0 1rem;
+  font-size: 1.2rem;
 }
 
 .tab {
@@ -344,5 +344,11 @@ img {
   cursor: pointer;
   transition: .5s;
   font-weight: 700;
+}
+
+.disabled {
+  pointer-events: none;
+  cursor: default;
+  background-color: silver;
 }
 </style>

@@ -34,8 +34,8 @@
     </div>
 
     <div class="button">
-      <v-btn color="#D1CFC4" x-large @click="detail">취소</v-btn>
-      <v-btn color="#FBEF97" x-large @click="save" :disabled="!password">리뷰등록</v-btn>
+      <a @click="detail" class="btn">취소</a>
+      <a @click="save" class="btn" :class="{disabled : !password}">리뷰등록</a>
     </div>
   </div>
 </template>
@@ -155,7 +155,7 @@ tr {
 th {
   padding: 0.6rem 0;
   font-size: 0.85rem;
-  background-color: #fefff2;
+  background-color: silver;
   border-right: 1px solid black;
   border-left: 1px solid black;
   vertical-align: middle;
@@ -178,14 +178,46 @@ textarea {
   border-radius: 4px;
 }
 
-.button button {
-  border: 1px solid black;
-  margin: 0 0.6rem;
-  padding: 0.5rem 2rem;
-  font-weight: 700;
-}
 .button {
   margin-bottom: 2rem;
 }
-
+.btn {
+  display: inline-block;
+  padding: 0 30px;
+  font-size: 15px;
+  font-weight: 400;
+  background: transparent;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  -webkit-transition: all 0.3s;
+  -moz-transition: all 0.3s;
+  -ms-transition: all 0.3s;
+  -o-transition: all 0.3s;
+  transition: all 0.3s;
+}
+.btn {
+  background: #000;
+  color: #fff;
+  padding: 0.4rem 1.2rem;
+  font-size: 1rem;
+  margin: 0 0.6rem;
+}
+.disabled {
+  pointer-events: none;
+  cursor: default;
+  background-color: silver;
+}
 </style>

@@ -56,7 +56,7 @@
             <img src="https://ifh.cc/g/50ygP2.png" class="profile">
           </div>
           <div class="user-info">
-            <div style="padding-left:5px;">
+            <div style="padding-left:5px;width:700px;">
               <span class="name">{{reply.writer}}</span>
               <span class="date" :class="{nDate : reply.writer !== $store.state.auth.user.account}">{{reply.updated_at.split('T')[0]}} {{reply.updated_at.split('T')[1].split('.')[0]}}</span> &nbsp;&nbsp;&nbsp;
               <a @click="changeModify(i)" v-if="modify[i] && (reply.writer === $store.state.auth.user.account)">수정</a>
@@ -397,7 +397,6 @@ p {
   width: 800px;
   margin: 0 auto;
   text-align: center;
-  color: #2c3e50;
 }
 .img {
   width: 200px;
@@ -464,11 +463,15 @@ a {
 .tbAdd td{padding:10px 10px; box-sizing:border-box;}
 .tbAdd td input{width:100%; min-height:30px; box-sizing:border-box; padding:0 10px;}
 .tbAdd td textarea{width:100%; min-height:200px; padding:10px; box-sizing:border-box;}
-.btnWrap{text-align:center; margin:30px 0;}
+.btnWrap{text-align:center; margin:30px 0; padding-bottom: 30px;}
 .btnWrap a{margin:0 10px;}
 table{width:100%; border-collapse:collapse;}
 a{text-decoration:none;}
-.btn{padding:10px; background:#34445c; color:#fff;}
+.btn{padding:10px; background:#555; color:#fff; border-radius: 0;}
+.btn:hover {
+  background-color: #000;
+  color: #fff;
+}
 
 .btn2 {
   color: #000;
@@ -502,14 +505,17 @@ li {
   margin-top: 1rem;
 }
 .date {
-  margin-left: 22.9rem;
+  margin-left: 40%;
   font-size: 0.8rem;
   color: rgb(99, 99, 99);
 }
 .nDate {
-  margin-left: 29rem;
+  margin-left: 57%;
 }
 .name {
   font-weight: 700;
+  width: 160px;
+  display: inline-block;
+  text-align: left;
 }
 </style>

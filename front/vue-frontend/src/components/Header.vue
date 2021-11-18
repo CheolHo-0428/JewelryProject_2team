@@ -17,10 +17,10 @@
               <router-link to="/login" class="nav-link">LOGIN</router-link>
             </li>
             <li v-if="currentUser" class="mypage">
-              <router-link to="/mypage" class="nav-link">MYPAGE</router-link>
+              <router-link to="/mypage" class="nav-link"><span class="material-icons-outlined">perm_identity</span></router-link>
             </li>
             <li v-if="currentUser && findRole" class="adminpage">
-              <router-link to="/adminpage" class="nav-link">MANAGE</router-link>
+              <router-link to="/adminpage" class="nav-link"><span class="material-icons-outlined">manage_accounts</span></router-link>
             </li>
             <li v-if="currentUser" class="name">
               <router-link to="/mypage" class="nav-link"
