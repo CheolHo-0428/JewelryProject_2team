@@ -515,9 +515,9 @@ export default {
 </script>
 
 <style scoped>
-.tr_1{
+/* .tr_1{
   background: #e7e7e7;
-}
+} */
 .outer {
   width: 950px;
   margin: 4rem auto;
@@ -645,6 +645,7 @@ p {
 }
 .page a:hover:not(.active) {
   background-color: silver;
+  color:white;
 }
 table {
   border-collapse: collapse;

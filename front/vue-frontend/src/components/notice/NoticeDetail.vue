@@ -482,7 +482,7 @@ a {
 }
 .tbAdd th,
 .tbAdd td {
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eee;
   padding: 5px 0;
 }
 .tbAdd td {

@@ -98,7 +98,7 @@
                                       <input type="checkbox" v-bind:id="'updateImageInfo'+i" v-model="del_true_false_list[i]">
                                     </td>
                                     <td>
-                                      <a @click="imgfun(i)" style="cursor:pointer; font-size:13px;">삭제</a>
+                                      <a @click="imgfun(i)" style="cursor:pointer; font-size:13px;color:red;">삭제</a>
                                     </td>
                                   </tr>
                                 </tbody>
@@ -186,9 +186,9 @@
       </form>
     </div>
     <div class="button">
-      <v-btn color="#D1CFC4" x-large @click="list">상품목록</v-btn>
-      <v-btn color="#FBEF97" x-large @click="mod">저장</v-btn>
-      <v-btn color="#f27474" x-large @click="remove">삭제</v-btn>
+      <v-btn color="#000" style="color:white" x-large @click="list">상품목록</v-btn>
+      <v-btn color="#000" style="color:white" x-large @click="mod">저장</v-btn>
+      <v-btn color="#000" style="color:white" x-large @click="remove">삭제</v-btn>
     </div>
   </div>
 </template>
@@ -471,29 +471,33 @@ p.top {
 }
 .table {
   width: 850px;
-  border-top: 0.2rem solid black;
-  border-bottom: 0.2rem solid black;
+  /* border-top: 0.2rem solid black;
+  border-bottom: 0.2rem solid black; */
   margin-bottom: 5rem;
 }
 input {
   text-align: center;
   width: 100%;
   font-size: 0.8rem;
+  height: 21px;
 }
 input.no {
   width: 5%;
   font-size: 0.8rem;
 }
 tr {
-  border-bottom: 1.5px solid gray;
-  border-right: 1px solid black;
+  border-bottom: 1px solid gray;
+  /* border-right: 1px solid gray; */
 }
+/* .table > :not(:first-child) {
+  border: 1px solid gray;
+} */
 th {
   padding: 0.6rem 0;
   font-size: 0.85rem;
-  background-color: #fefff2;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+  background-color: #e7e7e7;
+  /* border-right: 1px solid black;
+  border-left: 1px solid black; */
   vertical-align: middle;
 }
 td {
