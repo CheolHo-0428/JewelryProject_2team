@@ -689,11 +689,11 @@ img {
   margin: 0 0.5rem;
 }
 .page a.active {
-  background-color: silver;
+  background-color: #555;
   color: white;
 }
 .page a:hover:not(.active) {
-  background-color: gray;
+  background-color: #555;
   color:white;
 }
 .pageNum {

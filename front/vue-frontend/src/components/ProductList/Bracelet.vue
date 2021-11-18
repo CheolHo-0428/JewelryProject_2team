@@ -193,7 +193,7 @@ img:hover {
   color: white;
 }
 .page a:hover:not(.active) {
-  background-color: silver;
+  background-color: #555;
   color:white;
 }
 .pageNum {
