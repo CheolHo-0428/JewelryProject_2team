@@ -1,6 +1,8 @@
 <template>
   <div class="box">
-    <div v-for="(s, i) in stored_file_name" :key="i" class="img"><img :src="stored_file_name[i]" /></div>
+    <div v-for="(s, i) in stored_file_name" :key="i" class="img">
+      <img :src="stored_file_name[i]" />
+    </div>
   </div>
 </template>
 
@@ -16,8 +18,11 @@ export default {
   methods: {
     content () {
       this.stored_file_name = []
-      axios.get(`http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}/itemInfo`)
-        .then(res => {
+      axios
+        .get(
+          `http://localhost:8000/jewelry/item/${this.$store.state.item.itemId}/itemInfo`
+        )
+        .then((res) => {
           let info = res.data.data.item_response
           let imageList = info.image_file_response_list
 
@@ -28,7 +33,7 @@ export default {
             }
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     }

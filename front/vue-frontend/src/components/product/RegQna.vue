@@ -125,67 +125,62 @@ export default {
 </script>
 
 <style scoped>
-.outer {
-  margin: 4rem auto;
-  width: 50rem;
-  text-align: center;
-}
 p.top {
   font-weight: 700;
   font-size: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 3rem
 }
 
 .table {
   width: 50rem;
-  border-top: 0.2rem solid black;
-  border-bottom: 0.2rem solid black;
-  margin-bottom: 5rem;
+  border-top: .2rem solid #000;
+  border-bottom: .2rem solid #000;
+  margin-bottom: 5rem
 }
+
 input {
   text-align: center;
   width: 100% !important;
-  font-size: 0.8rem;
+  font-size: .8rem
 }
+
 tr {
   border-bottom: 1.5px solid gray;
-  border-right: 1px solid black;
+  border-right: 1px solid #000
 }
+
 th {
-  padding: 0.6rem 0;
-  font-size: 0.85rem;
+  padding: .6rem 0;
+  font-size: .85rem;
   background-color: silver;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
-  vertical-align: middle;
+  border-right: 1px solid #000;
+  border-left: 1px solid #000;
+  vertical-align: middle
 }
+
 textarea {
   width: 100%;
   min-height: 7rem;
-  font-size: 0.8rem;
+  font-size: .8rem
 }
 
-.check {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  padding-left: 6px;
-}
 #pwd {
-  border: 1px solid black;
+  border: 1px solid #000;
   width: 200px !important;
   margin-left: 20px;
-  border-radius: 4px;
+  border-radius: 4px
 }
 
 .button {
-  margin-bottom: 2rem;
+  margin-bottom: 2rem
 }
+
 .btn {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
   font-weight: 400;
-  background: transparent;
+  background: 0 0;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -201,22 +196,24 @@ textarea {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s
 }
+
 .btn {
   background: #000;
   color: #fff;
-  padding: 0.4rem 1.2rem;
+  padding: .4rem 1.2rem;
   font-size: 1rem;
-  margin: 0 0.6rem;
+  margin: 0 .6rem
 }
+
 .disabled {
   pointer-events: none;
   cursor: default;
-  background-color: silver;
+  background-color: silver
 }
 </style>

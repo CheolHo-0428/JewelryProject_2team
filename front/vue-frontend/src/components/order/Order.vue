@@ -683,7 +683,8 @@ input {
   border-radius: 0 !important
 }
 .addr input {
-  font-size: 1rem
+  padding-left: 15px;
+  font-size: 1rem;
 }
 .request {
   font-size: .8rem;
