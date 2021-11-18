@@ -137,7 +137,7 @@ ul {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 700;
   background: transparent;
   text-align: center;
   white-space: nowrap;
@@ -161,14 +161,16 @@ ul {
   transition: all 0.3s;
 }
 .btn-dark {
-  background: #000;
+  background: #555;
   color: #fff;
   padding: 0.4rem 1.2rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 .btn-dark:hover, .btn-dark:focus {
-  background: #fff;
-  border-color: #000;
-  color: #000;
+  background: #000;
+  color: #fff;
+}
+.name {
+  font-weight: 700;
 }
 </style>

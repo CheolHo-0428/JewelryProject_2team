@@ -3,7 +3,7 @@
     <p class="top">주문상세내역</p>
 
     <p class="group">주문 정보</p>
-    <table class="table">
+    <table class="table1">
       <colgroup>
         <col width="20%">
         <col width="30%">
@@ -27,7 +27,7 @@
     </table>
 
     <p class="group">배송지 정보</p>
-    <table class="table">
+    <table class="table1">
       <colgroup>
         <col width="20%">
         <col width="80%">
@@ -76,7 +76,7 @@
     </table>
 
     <p class="group">결제 정보</p>
-    <table class="table">
+    <table class="table1 t2">
       <colgroup>
         <col width="20%">
         <col width="30%">
@@ -100,7 +100,7 @@
     </table>
 
     <div class="button">
-      <router-link to="/orderlist" class="btn btn-dark btn2">주문목록</router-link>
+      <router-link to="/orderlist" class="btn btn-dark">주문목록</router-link>
       <a v-if="orderGroupInfo.order_product_state === '입금전'" @click="ordercancle" class="btn btn-dark btn2">주문취소</a>
     </div>
   </div>
@@ -243,10 +243,8 @@ p.top {
   float: left;
   font-weight: 700;
 }
-.table {
+.table1 {
   width: 850px;
-  border-top: 0.2rem solid black;
-  border-bottom: 0.2rem solid black;
   background-color: #fff;
   margin-bottom: 5rem;
 }
@@ -256,24 +254,31 @@ input {
   font-size: 0.8rem;
   outline: none;
 }
-.table tr {
-  border-bottom: 1.5px solid gray;
+.table1 tr {
+  border-bottom: 0.5px solid #000;
 }
-.table th {
+.table1 th {
   padding: 0.6rem 0;
   font-size: 0.85rem;
+}
+.table1 tbody {
+  border-top: 1.4px solid black;
+  border-bottom: 1.2px solid black;
+}
+.t2 tbody {
+  border-bottom: 1.3px solid black !important;
 }
 
 .info {
   margin: 1rem 0 3rem;
-  border: 2px solid black;
+  border: 1.3px solid #000;
   border-left: none;
   border-right: none;
   width: 850px;
 }
 .info thead {
-  border-bottom: 1px solid black;
-  background-color: #e7e7e7;
+  border-bottom: 0.5px solid #000;
+  border-top: 1.2px solid #000;
 }
 .info thead th {
   padding: 1rem 0;
@@ -284,7 +289,7 @@ input {
   vertical-align: middle;
 }
 .info tbody tr {
-  border-bottom: 0.5px solid black;
+  border-bottom: 0.5px solid #000;
 }
 
 .boxs {
@@ -294,7 +299,7 @@ input {
 .box {
   display: flex;
   margin: 2rem auto;
-  border-bottom: 0.15rem solid black;;
+  border-bottom: 0.5px solid #000;
 }
 .img, .content {
   height: 100px;
@@ -321,7 +326,7 @@ img {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 700;
   background: transparent;
   text-align: center;
   white-space: nowrap;
@@ -352,9 +357,13 @@ img {
   margin: 0 1rem;
   font-size: 1.2rem;
 }
-.btn:hover {
+.btn2 {
   background: #fff;
-  border-color: #000;
   color: #000;
+  border-color: #000;
+  padding: 0.8rem 0;
+  width: 180px;
+  margin: 0 1rem;
+  font-size: 1.2rem;
 }
 </style>

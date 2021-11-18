@@ -1,7 +1,7 @@
 <template>
   <div class="outer">
     <p>주문/결제</p>
-    <table border="1" class="info" v-if="!this.$store.state.order.isCart">
+    <table class="info" v-if="!this.$store.state.order.isCart">
       <colgroup>
         <col style="width:19%">
         <col style="width:33%">
@@ -31,7 +31,7 @@
       </tbody>
     </table>
 
-    <table border="1" class="info" v-if="this.$store.state.order.isCart">
+    <table class="info" v-if="this.$store.state.order.isCart">
       <colgroup>
         <col style="width:19%">
         <col style="width:33%">
@@ -492,7 +492,8 @@ p {
   border-right: none;
 }
 thead {
-  border-bottom: 1px solid black;
+  border-bottom: 0.5px solid black;
+  border-top: 0.5px solid black;
 }
 thead th {
   padding: 1rem 0;
@@ -549,7 +550,7 @@ table {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
-  font-weight: 400;
+  font-weight: 700;
   background: transparent;
   text-align: center;
   white-space: nowrap;
@@ -579,11 +580,6 @@ table {
   width: 180px;
   font-size: 1.2rem;
   text-decoration: none;
-}
-.btn2:hover {
-  background: #fff;
-  border-color: #000;
-  color: #000;
 }
 
 .group {
