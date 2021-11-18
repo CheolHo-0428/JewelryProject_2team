@@ -60,11 +60,6 @@
         <router-link to="/searchid">아이디 찾기</router-link> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <router-link to="/searchpw">비밀번호 찾기</router-link>
       </div>
-      <div class="form-group">
-        <!-- <div v-if="message" class="alert alert-danger" role="alert">
-            {{ message }}
-          </div> -->
-      </div>
     </div>
   </div>
 </template>

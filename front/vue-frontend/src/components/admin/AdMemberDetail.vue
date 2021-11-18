@@ -181,65 +181,53 @@ export default {
 .outer {
   margin: 4rem auto;
   width: 53rem;
-  text-align: center;
+  text-align: center
 }
 p.top {
   font-weight: 700;
   font-size: 1.5rem;
-  margin-bottom: 3rem;
+  margin-bottom: 3rem
 }
-
-.group {
-  float: left;
-  margin-bottom: 2rem;
-}
-.table > :not(:first-child) {
-  border: 1px solid gray;
+.table>:not(:first-child) {
+  border: 1px solid gray
 }
 .table {
   width: 850px;
   margin-bottom: 5rem;
-  border:1px solid gray;
+  border: 1px solid gray
 }
 input {
   text-align: center;
   width: 100% !important;
-  font-size: 0.8rem;
-  outline: none;
+  font-size: .8rem;
+  outline: 0
 }
-/* tr {
-  border-bottom: 1px solid gray;
-  border-right: 1px solid black;
-} */
 th {
-  padding: 0.6rem 0;
-  font-size: 0.85rem;
+  padding: .6rem 0;
+  font-size: .85rem;
   background-color: #e7e7e7;
-  /* border-right: 1px solid black;
-  border-left: 1px solid black; */
-  vertical-align: middle;
+  vertical-align: middle
 }
 textarea {
   width: 100%;
   min-height: 5rem;
-  font-size: 0.8rem;
-  color:black;
+  font-size: .8rem;
+  color: #000
 }
-textarea::placeholder{
-  text-align:center;
-  color:#e7e7e7;
-  font-size:30px;
-  padding-top:20px;
-  font-weight:bold;
+textarea::placeholder {
+  text-align: center;
+  color: #e7e7e7;
+  font-size: 30px;
+  padding-top: 20px;
+  font-weight: 700
 }
 .button button {
-  border: 1px solid black;
-  margin: 0 0.6rem;
-  padding: 0.5rem 2rem;
-  font-weight: 700;
+  border: 1px solid #000;
+  margin: 0 .6rem;
+  padding: .5rem 2rem;
+  font-weight: 700
 }
 .button {
-  margin-bottom: 2rem;
+  margin-bottom: 2rem
 }
-
 </style>

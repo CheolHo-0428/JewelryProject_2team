@@ -217,107 +217,101 @@ export default {
 .outer {
   margin: 3rem auto;
   width: 52rem;
-  text-align: center;
+  text-align: center
 }
 p {
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.5rem
 }
 
 .info {
   margin-top: 3rem;
   border-left: none;
-  border-right: none;
+  border-right: none
 }
 .info thead {
-  border-bottom: 0.5px solid black;
+  border-bottom: .5px solid #000
 }
 .info thead th {
-  padding: 0.1rem 0;
-  vertical-align: middle;
+  padding: .1rem 0;
+  vertical-align: middle
 }
 .info tbody td {
-  padding: 0.4rem 0;
-  vertical-align: middle;
+  padding: .4rem 0;
+  vertical-align: middle
 }
 .info tr {
-  border-bottom: 0.5px solid black;
+  border-bottom: .5px solid #000
 }
 
-.box, .bottom {
+.bottom {
   display: flex;
-  border-bottom: 1px solid black;;
+  border-bottom: 1px solid #000
 }
-.img, .content {
-  height: 100px;
+.img {
+  height: 100px
 }
 .check {
   width: 5%;
   text-align: center;
   padding-top: 15px;
-  padding-left: 5px;
+  padding-left: 5px
 }
 .check checkbox {
   width: 18px;
-  height: 18px;
+  height: 18px
 }
 .selectAll {
-  margin-left: 5px;
+  margin-left: 5px
 }
-
 img {
   width: 90px;
   height: 90px;
   background-size: cover;
-  margin: 0 auto;
+  margin: 0 auto
 }
-.count,
-.price {
+.count {
   width: 15%;
-  padding-top: 30px;
-}
-.content {
-  width: 38%;
-  padding-top: 30px;
+  padding-top: 30px
 }
 .countBtn {
-  color: black;
+  color: #000
 }
 
 .bottom {
   margin-top: 5rem;
-  border-top: 1px solid black;
-  padding: 36px 0;
+  border-top: 1px solid #000;
+  padding: 36px 0
 }
 .calc {
   width: 60%;
-  font-weight: 700;
+  font-weight: 700
 }
 .total {
   width: 40%;
-  font-weight: 700;
+  font-weight: 700
 }
 table {
-  width: 100%;
+  width: 100%
 }
 th {
-  padding-bottom: 1rem;
+  padding-bottom: 1rem
 }
 td {
-  color: #747272;
+  color: #747272
 }
 
 .button {
   display: flex;
   justify-content: center;
-  padding: 2rem 0;
+  padding: 2rem 0
 }
 .btn {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
   font-weight: 400;
-  background: transparent;
+  background: 0 0;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -333,39 +327,39 @@ td {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s
 }
 .btn-remove {
   background: #000;
   color: #fff;
   border-color: #000;
-  padding: 0.4rem 1.2rem;
-  font-size: 1rem;
+  padding: .4rem 1.2rem;
+  font-size: 1rem
 }
 .button.remove {
-  justify-content: right;
+  justify-content: right
 }
 .btn2 {
   background: #000;
   color: #fff;
-  padding: 0.8rem 0;
+  padding: .8rem 0;
   width: 180px;
   margin: 0 1rem;
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 700
 }
 .btn3 {
   background: #fff;
   color: #000;
   border-color: #000;
-  padding: 0.8rem 0;
+  padding: .8rem 0;
   width: 180px;
   margin: 0 1rem;
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 700
 }
 </style>

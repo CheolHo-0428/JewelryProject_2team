@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <div class="sideBanner"></div> -->
     <div class="topContent">
       <div class="topBox left">
         <div class="imageBox"><img :src="stored_thumbnail" /></div>
@@ -173,19 +172,6 @@ export default {
   },
   mounted () {
     window.scrollTo(0, 0)
-    // let floatPosition = parseInt($('.sideBanner').css('top'))
-
-    // // scroll 인식
-    // $(window).scroll(() => {
-    //   // 현재 스크롤 위치
-    //   let currentTop = $(window).scrollTop()
-    //   let bannerTop = currentTop + floatPosition + 'px'
-
-    //   // 이동 애니메이션
-    //   $('.sideBanner').stop().animate({
-    //     'top': bannerTop
-    //   }, 500)
-    // }).scroll()
   }
 }
 </script>
@@ -263,10 +249,8 @@ outline: none;
     padding: 0 0.5rem;
     border: 1px solid black;
     margin: 0 0.5rem;
-    /* font-size: 0.9rem; */
     font-weight: 700;
-    height: 35px;
-    /* vertical-align: middle; */
+    height: 30px;
     line-height: -35;
     width: 35px;
     border-radius: 43px;
@@ -285,12 +269,13 @@ outline: none;
   text-align:center;
   width: 311px;
   height: 30px;
+  border-radius: 2px;
 }
 .totPrice {
   text-align: right;
   font-weight: 700;
   font-size: 1.1rem;
-  margin: 2rem 3rem 0 0;
+  margin: 2rem 2rem 0 0;
 }
 .button {
   display: flex;

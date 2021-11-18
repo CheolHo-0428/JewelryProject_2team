@@ -20,12 +20,6 @@
         <p class="material-icons-outlined">list_alt</p>
         <p>고객들의 주문을 확인하고 <br> 관리할 수 있습니다</p>
       </div>
-      <!-- <div @click="adsales">
-        <p>SALES</p>
-        <p>매출관리</p>
-        <p class="material-icons-outlined">insights</p>
-        <p>원하시는 날짜의 매출을 <br> 확인하실 수 있습니다</p>
-      </div> -->
     </div>
   </div>
 </template>
