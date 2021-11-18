@@ -28,8 +28,6 @@ public class JwtUtils {   // jwtUtils는 사용자가 선언해야함
 	public String generateJwtToken(Authentication authentication) {							//토큰만들자!
 
 		MemberSecurity userPrincipal = (MemberSecurity) authentication.getPrincipal();
-
-		System.out.println("userPrincipal : " + userPrincipal);
 		
 		return Jwts.builder()
 				.setSubject((userPrincipal.getUsername()))
