@@ -103,7 +103,8 @@ export default {
               title: this.title,
               content: this.content,
               writer: this.$store.state.auth.user.account,
-              item_id: this.$store.state.item.itemId
+              item_id: this.$store.state.item.itemId,
+              password: this.password
             })
           }).then(res => {
             console.log(res)
@@ -135,7 +136,7 @@ p.top {
   width: 50rem;
   border-top: .2rem solid #000;
   border-bottom: .2rem solid #000;
-  margin-bottom: 5rem
+  margin-bottom: 2rem
 }
 
 input {
@@ -174,7 +175,9 @@ textarea {
 .button {
   margin-bottom: 2rem
 }
-
+.private{
+  margin-bottom:1rem
+}
 .btn {
   display: inline-block;
   padding: 0 30px;
@@ -215,5 +218,10 @@ textarea {
   pointer-events: none;
   cursor: default;
   background-color: silver
+}
+.outer{
+  margin: 4rem auto;
+  width:50rem;
+  text-align:center;
 }
 </style>

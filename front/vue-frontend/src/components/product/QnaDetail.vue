@@ -124,6 +124,8 @@ export default {
           autocorrect: 'off'
         }
       })
+      console.log(pwd)
+      console.log(this.password)
       if (pwd === this.password) {
         this.account = true
       } else {
@@ -359,7 +361,7 @@ export default {
           this.stored_file_name = qna.stored_file_name
           this.id = qna.id
           this.password = qna.password
-
+          console.log(password)
           this.account = false
         })
         .catch(err => {
