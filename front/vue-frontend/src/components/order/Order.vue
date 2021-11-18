@@ -109,7 +109,6 @@
             <option value = "카드">카드</option>
           </select>
         </span>
-        <!-- <span><input class="pay" type="text" value="무통장입금" readonly></span> -->
       </p>
       <p class="pay_bank">
         <label>결제은행<span class="essential">*</span></label>
@@ -476,102 +475,102 @@ export default {
 </script>
 
 <style scoped>
-.phone1{
-  width:180px;
-  height:43px;
-  color:gray;
+.phone1 {
+  width: 180px;
+  height: 43px;
+  color: gray
 }
-.phone2{
-  width:180px;
-  height:43px;
-  color:gray;
+.phone2 {
+  width: 180px;
+  height: 43px;
+  color: gray
 }
-.phone3{
-  width:180px;
-  height:43px;
-  color:gray;
+.phone3 {
+  width: 180px;
+  height: 43px;
+  color: gray
 }
 .recipient {
-  width:602px;
-  height:43px;
-  color:gray;
+  width: 602px;
+  height: 43px;
+  color: gray
 }
 .outer {
   margin: 3rem auto;
   width: 52rem;
-  text-align: center;
+  text-align: center
 }
 p {
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.5rem
 }
 
 .info {
   margin-top: 3rem;
   border-left: none;
-  border-right: none;
+  border-right: none
 }
 thead {
-  border-bottom: 0.5px solid black;
-  border-top: 0.5px solid black;
+  border-bottom: .5px solid #000;
+  border-top: .5px solid #000
 }
 thead th {
   padding: 1rem 0;
-  vertical-align: middle;
+  vertical-align: middle
 }
 tbody td {
   padding: 1rem 0;
-  vertical-align: middle;
-}
-.info tr {
-  border-bottom: 0.5px solid black;
+  vertical-align: middle
 }
 
+.info tr {
+  border-bottom: .5px solid #000
+}
 .bottom {
   display: flex;
   margin: 3rem;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #000
 }
 img {
   width: 90px;
   height: 90px;
   background-size: cover;
-  margin: 0 auto;
+  margin: 0 auto
 }
 
 .bottom {
   margin-top: 5rem;
-  border-top: 1px solid black;
-  padding: 36px 0;
+  border-top: 1px solid #000;
+  padding: 36px 0
 }
 .calc {
   width: 60%;
-  font-weight: 700;
+  font-weight: 700
 }
 .total {
   width: 40%;
-  font-weight: 700;
+  font-weight: 700
 }
 table {
-  width: 100%;
+  width: 100%
 }
 .bottom th {
-  padding-bottom: 0.7rem;
+  padding-bottom: .7rem
 }
 .bottom td {
-  color: #747272;
+  color: #747272
 }
 .button {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 2rem
 }
 .btn2 {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
   font-weight: 700;
-  background: transparent;
+  background: 0 0;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -587,123 +586,124 @@ table {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s
 }
 .btn2 {
   background: #000;
   color: #fff;
-  padding: 0.8rem 0;
+  padding: .8rem 0;
   width: 180px;
   font-size: 1.2rem;
-  text-decoration: none;
+  text-decoration: none
 }
-
 .group {
   font-size: 24px;
   margin: 4rem auto 1rem;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #000;
   width: fit-content;
-  margin-bottom: 30px;
+  margin-bottom: 30px
 }
-label{
-  width:100px;
+label {
+  width: 100px;
   display: table-cell;
   padding: 10px 5px;
   font-size: 1rem;
-  vertical-align: middle;
+  vertical-align: middle
 }
-form{
-  display:table;
+form {
+  display: table;
   border-collapse: collapse;
   margin: 0 auto;
-  width: 46rem;
+  width: 46rem
 }
-span{
+span {
   display: table-cell;
-  padding: 5px 0px 5px 20px;
-  vertical-align: middle;
+  padding: 5px 0 5px 20px;
+  vertical-align: middle
 }
-input{
-  width:100px;
-  height:20px;
-  margin:2px;
+input {
+  width: 100px;
+  height: 20px;
+  margin: 2px
 }
+
 .depositor {
-  width:602px;
-  height:43px;
-  color:gray;
-  border:1px solid #e7e7e7;
+  width: 602px;
+  height: 43px;
+  color: gray;
+  border: 1px solid #e7e7e7
 }
 .essential {
   padding: 0;
   display: inline;
-  color: red;
+  color: red
 }
 .post {
   width: 300px;
   border: 1px solid gray;
   height: 43px;
-  color:gray;
+  color: gray
 }
-.text2{
-  font-size: 0.8rem;
+
+.text2 {
+  font-size: .8rem
 }
 .text2.detail {
-    border: 1px solid gray;
-    /* padding: 0.8rem 0; */
-    width: 602px;
-    /* margin-left: -15rem; */
-    /* font-size: 0.9rem; */
-    height: 43px;
-    color: gray;
+  border: 1px solid gray;
+  width: 602px;
+  height: 43px;
+  color: gray
 }
 .text2.basic {
-    width: 602px;
-    color: gray;
-    border: 1px solid gray;
-    height: 43px;
+  width: 602px;
+  color: gray;
+  border: 1px solid gray;
+  height: 43px
 }
+
 .name,
 .phone input,
 .request {
-  padding: 0.8rem 0;
+  padding: .8rem 0;
   border: 1px solid gray;
-  font-size: 0.8rem;
-  text-align: center;
+  font-size: .8rem;
+  text-align: center
 }
 .addr a {
   cursor: pointer;
   width: 300px;
   float: right;
-  height: 46px;
+  height: 43px;
+  margin-top: 2px;
   line-height: 30px;
+  border-radius: 0 !important
 }
 .addr input {
   padding-left: 15px;
   font-size: 1rem;
 }
 .request {
-  font-size: 0.8rem;
-  padding: 1rem 0.2rem;
+  font-size: .8rem;
+  padding: 1rem .2rem;
   height: 43px;
-  width: 602px;
+  width: 602px
 }
 .pay {
-  font-size: 0.9rem;
-  outline: none;
-  color: #747272;
+  font-size: .9rem;
+  outline: 0;
+  color: #747272
 }
 .bank {
   border: 1px solid gray;
-  font-size: 0.8rem;
-  padding: 0.2rem;
+  font-size: .8rem;
+  padding: .2rem;
   text-align: center;
   width: 602px;
   height: 43px;
-  color: gray;
+  color: gray
 }
 </style>

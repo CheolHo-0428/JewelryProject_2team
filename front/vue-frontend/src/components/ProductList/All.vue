@@ -214,29 +214,26 @@ export default {
 </script>
 
 <style scoped>
-
 .category {
   text-align: center;
-  margin-top: 4rem;
+  margin-top: 4rem
 }
 .category p {
   font-weight: 700;
   font-size: 1.4rem;
   margin-bottom: 1rem;
-  text-decoration-line: underline;
+  text-decoration-line: underline
 }
-
 .unreg {
-  color: #747272;
+  color: #747272
 }
-
 .boxs {
   margin-bottom: 4rem !important;
   text-align: center;
   width: fit-content;
   max-width: 1340px;
   min-width: 1110px;
-  margin: 0 auto;
+  margin: 0 auto
 }
 .cat {
   text-align: left;
@@ -245,32 +242,32 @@ export default {
   margin: 3rem 0 -1rem;
   font-size: larger;
   text-decoration-line: underline;
-  text-decoration-color: rgb(238, 222, 129);
+  text-decoration-color: #eede81
 }
 .box {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: center
 }
 .list {
-  width: 25%;
+  width: 25%
 }
 img {
   width: 230px;
   height: 230px;
   margin: 2rem auto 1rem;
   background-size: cover;
-  cursor: pointer;
+  cursor: pointer
 }
 img:hover {
-  transform:scale(1.01);
-  transition: 0.2s;
+  transform: scale(1.01);
+  transition: .2s
 }
 .product p {
-  margin-bottom: 0;
+  margin-bottom: 0
 }
 .name {
   font-weight: 700;
-  cursor: pointer;
+  cursor: pointer
 }
 </style>

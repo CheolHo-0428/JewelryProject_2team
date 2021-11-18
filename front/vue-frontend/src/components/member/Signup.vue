@@ -22,7 +22,6 @@
             />
           </span>
           <div v-if="submitted && errors.has('name')" class="errorMessage">
-            <!-- {{ errors.first("name") }} -->
             이름은 3~20자 사이로 입력해주세요
           </div>
           <span>{{ errors[0] }}</span>
@@ -382,20 +381,20 @@ export default {
 
 <style scoped>
 .outer {
-  margin: 5rem 0 0 28%;
+  margin: 5rem 0 0 28%
 }
 p {
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: 1.5rem
 }
 #content {
   width: 45vw;
-  margin-top: 3rem;
+  margin-top: 3rem
 }
 h3 {
   margin: 19px 0 8px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 700
 }
 .box {
   display: block;
@@ -405,13 +404,13 @@ h3 {
   padding: 10px 14px 10px 14px;
   box-sizing: border-box;
   background: #fff;
-  position: relative;
+  position: relative
 }
 .int_mobile {
-  width: 33.3% !important;
+  width: 33.3% !important
 }
 .phone {
-  display: flex;
+  display: flex
 }
 .int {
   display: block;
@@ -420,36 +419,26 @@ h3 {
   height: 29px;
   border: none;
   background: #fff;
-  font-size: 15px;
+  font-size: 15px
 }
 input {
   font-family: Dotum, "돋움", Helvetica, sans-serif;
-  outline: none;
+  outline: 0
 }
 select {
-  width: 100% !important;
+  width: 100% !important
 }
 .box.int_id {
-  padding-right: 110px;
+  padding-right: 110px
 }
 .box.int_pass {
-  padding-right: 40px;
+  padding-right: 40px
 }
 .box.int_pass_check {
-  padding-right: 40px;
+  padding-right: 40px
 }
-.step_url {
-  /*@naver.com*/
-  position: absolute;
-  top: 16px;
-  right: 13px;
-  font-size: 15px;
-  color: #8e8e8e;
-}
-
-/* 버튼 */
 .btn_area {
-  margin: 30px 0 91px;
+  margin: 30px 0 91px
 }
 #btnJoin {
   width: 100%;
@@ -460,47 +449,48 @@ select {
   background-color: #b4b9be;
   font-size: 20px;
   font-weight: 700;
-  font-family: Dotum, "돋움", Helvetica, sans-serif;
+  font-family: Dotum, "돋움", Helvetica, sans-serif
 }
 #btnJoin:hover {
-  background-color: black;
+  background-color: #000
 }
 .errorMessage {
   font-size: 12px;
   line-height: 42px;
-  font-weight: bold;
+  font-weight: 700;
   color: #ff003e;
   vertical-align: middle;
-  float: right;
+  float: right
 }
 input::placeholder {
-  color: rgb(201, 196, 196);
+  color: #c9c4c4;
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 700
 }
 .ht51 {
   height: 51px;
+  border-radius: 0
 }
 .w_33 {
-  width: 33.3%;
+  width: 33.3%
 }
 .option_disable {
-  color: rgb(201, 196, 196);
-  font-weight: bold;
+  color: #c9c4c4;
+  font-weight: 700
 }
 .form-select {
-  color: black;
-  font-weight: bold;
+  color: #000;
+  font-weight: 700
 }
 .int_email,
 .int_id,
-.phone,
-.int_name {
-  color: black;
-  font-weight: bold;
+.int_name,
+.phone {
+  color: #000;
+  font-weight: 700
 }
 .clear {
-  clear: both;
+  clear: both
 }
 #btnAddr {
   width: 50%;
@@ -513,36 +503,34 @@ input::placeholder {
   font-family: Dotum, "돋움", Helvetica, sans-serif;
   font-size: 14px;
   height: 51px;
-  line-height: 1px;
-  border-radius: 5px;
+  line-height: 1px
 }
 #btnAddr:hover {
-  background-color: black;
+  background-color: #000
 }
 .addr {
-  width: 100%;
+  width: 100%
 }
 .addr1 {
-  color: black;
-  font-weight: bold;
+  color: #000;
+  font-weight: 700;
   width: 50%;
   float: left;
-  height: 51px;
-  border-radius: 5px;
+  height: 51px
 }
 .addr2 {
-  color: black;
-  font-weight: bold;
+  color: #000;
+  font-weight: 700;
   margin-top: -85px;
-  margin-bottom: 7px;
+  margin-bottom: 7px
 }
 .addr3 {
-  color: black;
-  font-weight: bold;
+  color: #000;
+  font-weight: 700
 }
 .form-select {
-  outline: none !important;
+  outline: 0 !important;
   box-shadow: none;
-  border-color: #b4b9be;
+  border-color: #b4b9be
 }
 </style>

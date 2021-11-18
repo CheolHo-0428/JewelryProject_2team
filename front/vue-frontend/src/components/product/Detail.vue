@@ -1,6 +1,5 @@
 <template>
   <div>
-    <!-- <div class="sideBanner"></div> -->
     <div class="topContent">
       <div class="topBox left">
         <div class="imageBox"><img :src="stored_thumbnail" /></div>
@@ -295,18 +294,18 @@ img {
   font-size: 0.9rem;
 }
 .count button {
-  outline: 0;
-  background-color: #fff;
-  padding: 0 0.5rem;
-  border: 1px solid #000;
-  margin: 0 0.5rem;
-  font-weight: 700;
-  height: 35px;
-  line-height: -35;
-  width: 35px;
-  border-radius: 43px;
-  -webkit-box-shadow: 0.5px 0.5px 0 rgb(0 0 0 / 50%);
-  box-shadow: 0.5px 0.5px 0 rgb(0 0 0 / 50%);
+    outline: none;
+    background-color: white;
+    padding: 0 0.5rem;
+    border: 1px solid black;
+    margin: 0 0.5rem;
+    font-weight: 700;
+    height: 30px;
+    line-height: -35;
+    width: 35px;
+    border-radius: 43px;
+    -webkit-box-shadow: 0.5px 0.5px 0 rgb(0 0 0 / 50%);
+    box-shadow: 0.5px 0.5px 0 rgb(0 0 0 / 50%);
 }
 .count button:active {
   box-shadow: 0.5px 0 0 rgb(0, 0, 0, 0.5);
@@ -320,12 +319,13 @@ img {
   text-align: center;
   width: 311px;
   height: 30px;
+  border-radius: 2px;
 }
 .totPrice {
   text-align: right;
   font-weight: 700;
   font-size: 1.1rem;
-  margin: 2rem 3rem 0 0;
+  margin: 2rem 2rem 0 0;
 }
 .button {
   display: flex;
