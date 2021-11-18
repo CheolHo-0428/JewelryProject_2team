@@ -258,14 +258,20 @@ img {
   font-size: 0.9rem;
 }
 .count button {
-  outline: none;
-  background-color: white;
-  padding: 0 0.5rem;
-  border: 1px solid black;
-  margin: 0 0.5rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  box-shadow: 0.5px 0.5px 0 rgb(0,0,0,0.5);
+outline: none;
+    background-color: white;
+    padding: 0 0.5rem;
+    border: 1px solid black;
+    margin: 0 0.5rem;
+    /* font-size: 0.9rem; */
+    font-weight: 700;
+    height: 35px;
+    /* vertical-align: middle; */
+    line-height: -35;
+    width: 35px;
+    border-radius: 43px;
+    -webkit-box-shadow: 0.5px 0.5px 0 rgb(0 0 0 / 50%);
+    box-shadow: 0.5px 0.5px 0 rgb(0 0 0 / 50%);
 }
 .count button:active {
   box-shadow: 0.5px 0px 0 rgb(0,0,0,0.5);
@@ -277,6 +283,8 @@ img {
   outline: none;
   border: 1px solid black;
   text-align:center;
+  width: 311px;
+  height: 30px;  
 }
 .totPrice {
   text-align: right;
