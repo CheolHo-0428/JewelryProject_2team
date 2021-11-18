@@ -66,79 +66,58 @@ export default {
 </script>
 
 <style scoped>
-.outer {
-  margin: 3rem 0;
-}
-
 .profile {
   border-radius: 50%;
   width: 3rem;
-  height: 3rem;
-}
-ul {
-  list-style: none;
-}
-.user {
-  display: flex;
-}
-.user-info {
-  height: fit-content;
-  margin: auto 1rem;
-}
-.review_list {
-  margin-bottom: 3rem;
-  cursor: pointer;
-}
-.title {
-  margin-top: 1rem;
+  height: 3rem
 }
 
-.box {
-  display: flex;
-  margin: 2rem;
-  border-bottom: 1px solid black;;
-  width: 50rem;
+ul {
+  list-style: none
 }
-.num, .content {
-  height: 40px;
+
+.user {
+  display: flex
 }
-.writer,
-.date {
-  width : 12%;
+
+.user-info {
+  height: fit-content;
+  margin: auto 1rem
 }
-.num {
-  width: 10%;
+
+.review_list {
+  margin-bottom: 3rem;
+  cursor: pointer
+}
+
+.title {
+  margin-top: 1rem
+}
+
+.date,
+.writer {
+  width: 12%
+}
+
+.date,
+.writer {
   text-align: center;
-}
-.content {
-  width: 66%;
-  word-break: break-all;
-  padding-top: 10px;
-  overflow: hidden;
-  text-align: center;
-  cursor: pointer;
-}
-.content:hover {
-  font-size: 1.02rem;
-}
-.writer,
-.date {
-  text-align: center;
-  font-size: 0.7rem;
-  padding-top: 10px;
+  font-size: .7rem;
+  padding-top: 10px
 }
 
 .button {
   display: flex;
   justify-content: right;
-  margin: 2rem 2rem 0 0;
+  margin: 2rem 2rem 0 0
 }
+
 .btn {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
   font-weight: 700;
-  background: transparent;
+  background: 0 0;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -154,23 +133,27 @@ ul {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s
 }
+
 .btn-dark {
   background: #555;
   color: #fff;
-  padding: 0.4rem 1.2rem;
-  font-size: 1rem;
+  padding: .4rem 1.2rem;
+  font-size: 1rem
 }
-.btn-dark:hover, .btn-dark:focus {
+
+.btn-dark:focus,
+.btn-dark:hover {
   background: #000;
-  color: #fff;
+  color: #fff
 }
+
 .name {
-  font-weight: 700;
+  font-weight: 700
 }
 </style>

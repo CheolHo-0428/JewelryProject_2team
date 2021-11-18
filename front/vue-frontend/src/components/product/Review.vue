@@ -70,96 +70,82 @@ export default {
 
 <style scoped>
 .outer {
-  margin: 3rem 0;
+  margin: 3rem 0
 }
 
 .profile {
   border-radius: 50%;
   width: 3rem;
-  height: 3rem;
-}
-ul {
-  list-style: none;
-}
-.user {
-  display: flex;
-}
-.user-info {
-  height: fit-content;
-  margin: auto 1rem;
-}
-.review_list {
-  margin-bottom: 3rem;
-  cursor: pointer;
-}
-.title {
-  margin-top: 1rem;
+  height: 3rem
 }
 
-.box {
-  display: flex;
-  margin: 0.6rem;
-  border: 1.5px solid black;
-  border-radius: 2px;
+ul {
+  list-style: none
 }
-.img, .content {
+
+.user {
+  display: flex
+}
+
+.user-info {
   height: fit-content;
-  margin: auto 0;
+  margin: auto 1rem
 }
-.innerBox {
-  width : 24%;
-  height: fit-content;
-  margin: auto 0;
+
+.review_list {
+  margin-bottom: 3rem;
+  cursor: pointer
 }
+
+.title {
+  margin-top: 1rem
+}
+
 .img {
-  width: 16%;
+  height: fit-content;
+  margin: auto 0
 }
+
+.img {
+  width: 16%
+}
+
 .img img {
   width: 150px;
   height: 150px;
   background-size: cover;
-  margin: 1rem;
+  margin: 1rem
 }
+
 .img div {
   width: 90px;
   background-size: cover;
-  margin-left: 10px;
+  margin-left: 10px
 }
-.content {
-  width: 51%;
-  word-break: break-all;
-  overflow: hidden;
-  cursor: pointer;
+
+.date,
+.writer {
+  margin: 10px 0
 }
-.content:hover {
-  font-size: 1.02rem;
-}
-.innerBox div {
-  height: 20%;
-  text-align: center;
-  font-size: 0.7rem;
-}
-.writer,
-.date {
-  margin: 10px 0;
-}
+
 .date {
   margin-left: 1.2rem;
-  font-size: 0.8rem;
-  color: rgb(99, 99, 99);
+  font-size: .8rem;
+  color: #636363
 }
 
 .button {
   display: flex;
   justify-content: right;
-  margin: 2rem 2rem 0 0;
+  margin: 2rem 2rem 0 0
 }
+
 .btn {
   display: inline-block;
   padding: 0 30px;
   font-size: 15px;
   font-weight: 700;
-  background: transparent;
+  background: 0 0;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -175,23 +161,27 @@ ul {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-  -webkit-transition: all 0.3s;
-  -moz-transition: all 0.3s;
-  -ms-transition: all 0.3s;
-  -o-transition: all 0.3s;
-  transition: all 0.3s;
+  -webkit-transition: all .3s;
+  -moz-transition: all .3s;
+  -ms-transition: all .3s;
+  -o-transition: all .3s;
+  transition: all .3s
 }
+
 .btn-dark {
   background: #555;
   color: #fff;
-  padding: 0.4rem 1.2rem;
-  font-size: 1rem;
+  padding: .4rem 1.2rem;
+  font-size: 1rem
 }
-.btn-dark:hover, .btn-dark:focus {
+
+.btn-dark:focus,
+.btn-dark:hover {
   background: #000;
-  color: #fff;
+  color: #fff
 }
+
 .name {
-  font-weight: 700;
+  font-weight: 700
 }
 </style>
