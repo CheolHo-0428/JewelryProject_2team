@@ -340,15 +340,11 @@ td {
   transition: all 0.3s;
 }
 .btn-remove {
-  background: #fff;
-  color: #000;
+  background: #000;
+  color: #fff;
   border-color: #000;
   padding: 0.4rem 1.2rem;
   font-size: 1rem;
-}
-.btn-remove:hover {
-  background: #000;
-  color: #fff;
 }
 .button.remove {
   justify-content: right;

@@ -224,7 +224,6 @@ export default {
   font-size: 1.4rem;
   margin-bottom: 1rem;
   text-decoration-line: underline;
-  font-family: 'Open Sans Condensed', sans-serif;
 }
 
 .unreg {
@@ -273,6 +272,5 @@ img:hover {
 .name {
   font-weight: 700;
   cursor: pointer;
-  font-family: 'Barlow', sans-serif;
 }
 </style>

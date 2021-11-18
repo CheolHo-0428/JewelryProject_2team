@@ -136,5 +136,5 @@ p {
 .btnWrap a{margin:0 10px;}
 table{width:100%; border-collapse:collapse;}
 a{text-decoration:none;}
-.btn{padding:10px; background:#34445c; color:#fff;}
+.btn{padding:10px; background:#000; color:#fff; border-radius: 0;}
 </style>

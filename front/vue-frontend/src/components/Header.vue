@@ -11,10 +11,10 @@
           </form>
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li v-if="!currentUser" class="signup">
-              <router-link to="/signup" class="nav-link">SIGNUP</router-link>
+              <router-link to="/signup" class="nav-link top">SIGNUP</router-link>
             </li>
             <li v-if="!currentUser" class="login">
-              <router-link to="/login" class="nav-link">LOGIN</router-link>
+              <router-link to="/login" class="nav-link top">LOGIN</router-link>
             </li>
             <li v-if="currentUser" class="mypage">
               <router-link to="/mypage" class="nav-link"><span class="material-icons-outlined">perm_identity</span></router-link>
@@ -23,11 +23,11 @@
               <router-link to="/adminpage" class="nav-link"><span class="material-icons-outlined">manage_accounts</span></router-link>
             </li>
             <li v-if="currentUser" class="name">
-              <router-link to="/mypage" class="nav-link"
+              <router-link to="/mypage" class="nav-link top"
                 >{{ currentUser.account }}님</router-link
               >
             </li>
-            <li v-if="currentUser" class="logout">
+            <li v-if="currentUser" class="logout top">
               <a class="nav-link" href @click.prevent="logOut">LOGOUT</a>
             </li>
           </ul>
@@ -169,6 +169,12 @@ export default {
 .headerTop form {
   margin-left: 2.4rem;
 }
+.top {
+  margin-top: 4px;
+}
+.material-icons-outlined {
+  font-size: 30px !important;
+}
 a {
   cursor: pointer;
 }
@@ -208,7 +214,6 @@ a {
   font-family: 'Barlow', sans-serif;
 }
 .nav-link:hover {
-  font-size: 0.91rem;
   transition: .3s;
 }
 .nav-item {
