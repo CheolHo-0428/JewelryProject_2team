@@ -22,14 +22,6 @@ public class LoginUserAuditorAware implements AuditorAware<String> {
             return Optional.of(username);
         }
         return Optional.empty();
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        if (null == authentication || !authentication.isAuthenticated()) {
-//            return null;
-//        }
-//        Object user = authentication.getPrincipal();
-//        System.out.println("----------------------- " + user.toString());
-//        
-//        return Optional.of("");
     }
 }
 

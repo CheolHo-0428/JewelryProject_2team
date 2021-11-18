@@ -60,16 +60,12 @@ public class CartController extends AABaseController<CartRequest, CartResponse, 
 		
 		Header<CartRequest> result = new Header<CartRequest>();
 		if(cartRepository.existsByMemberIdAndItemId(request.getMemberId(),request.getItemId())==false){
-			System.out.println("requestMemberId"+request.getMemberId());
-			System.out.println("request.getItemId"+request.getItemId());
 			result.setData(request);
 			return baseService.create(result);
 		}else {
 			Optional<Cart> cart = cartRepository.findByMemberIdAndItemId(request.getMemberId(),request.getItemId());
 			request.setId(cart.get().getId());
-			System.out.println("cartGetId"+cart.get().getId());
 			request.setItemCount(cart.get().getItemCount()+request.getItemCount());
-			System.out.println("cart++"+cart.get().getItemCount()+request.getItemCount());
 			result.setData(request);
 			return cartService.update(result);
 		}

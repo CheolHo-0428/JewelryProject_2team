@@ -53,21 +53,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	private String parseJwt(HttpServletRequest request) {  //로그인 정보에 대한 Token을 “Bearer”라는 접두사를 달았고, 접두사를 제외한 나머지 정보를 가져옴
 		String headerAuth = request.getHeader("Authorization");
 		
-		System.out.println("headerAuth : " + headerAuth);
-		
 		if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-			
-			System.out.println("headerAuth : " + headerAuth);
-			System.out.println(headerAuth.startsWith("Bearer "));
-			
-			System.out.println(headerAuth.substring(7, headerAuth.length()));
-			
 			return headerAuth.substring(7, headerAuth.length());  // 클라이언트로부터 받은 토큰을 파싱하기 전에 먼저 앞 7글자, "Bearer "를 떼어야함- 업계 표준임
 		}else {
-			
 			return null;
 		}
-
-//		return headerAuth.substring(7, headerAuth.length());
 	}
 }
