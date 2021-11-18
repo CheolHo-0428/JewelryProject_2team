@@ -6,8 +6,8 @@
   <h3 align="center">쥬얼리 쇼핑몰 GGULUCK💎</h3> 
 
   <p align="center">
-<!--     <a href="https://eunnjin.github.io/JewelryProject_2team/">🏠https://eunnjin.github.io/JewelryProject_2team/</a> -->
-    <a href="https://github.com/eunnjin/JewelryProject_2team">
+<!--     <a href="https://github.com/CheolHo-0428/JewelryProject_2team">🏠https://github.com/CheolHo-0428/JewelryProject_2team/</a> -->
+    <a href="https://github.com/CheolHo-0428/JewelryProject_2team">
         <strong>Explore the docs »</strong>
     </a>
     <br />
