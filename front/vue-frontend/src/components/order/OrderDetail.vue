@@ -76,7 +76,7 @@
     </table>
 
     <p class="group">결제 정보</p>
-    <table class="table1 t2">
+    <table v-if="this.orderGroupInfo.pay_method === 'BANK_TRANSFER'" class="table1 t2">
       <colgroup>
         <col width="20%">
         <col width="30%">
@@ -98,7 +98,28 @@
         </tr>
       </tbody>
     </table>
-
+    <table v-if="this.orderGroupInfo.pay_method === 'CARD'" class="table1 t2">
+      <colgroup>
+        <col width="20%">
+        <col width="30%">
+        <col width="20%">
+        <col width="30%">
+      </colgroup>
+      <tbody>
+        <tr>
+          <th scope="col">주문방법</th>
+          <td><input type="text" readonly value="카드"></td>
+          <!-- <th scope="col">결제계좌</th>
+          <td><input type="text" readonly :value="bank"></td> -->
+        </tr>
+        <tr>
+          <th scope="col">총 주문금액</th>
+          <td><input type="text" readonly :value="orderGroupInfo.total_price +'원'"></td>
+          <th scope="col">예금자명</th>
+          <td><input type="text" :value="orderGroupInfo.depositor" readonly></td>
+        </tr>
+      </tbody>
+    </table>
     <div class="button">
       <router-link to="/orderlist" class="btn btn-dark">주문목록</router-link>
       <a v-if="orderGroupInfo.order_product_state === '입금전'" @click="ordercancle" class="btn btn-dark btn2">주문취소</a>

@@ -361,7 +361,6 @@ export default {
           this.stored_file_name = qna.stored_file_name
           this.id = qna.id
           this.password = qna.password
-          console.log(password)
           this.account = false
         })
         .catch(err => {

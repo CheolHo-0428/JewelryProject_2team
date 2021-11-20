@@ -46,11 +46,17 @@
           <th scope="col">주문일자</th>
           <td><input type="text" v-if="orderGroupInfo.created_at" :value="orderGroupInfo.created_at.split('T')[0]" style="outline:none;" readonly></td>
         </tr>
-        <tr>
+        <tr v-if="orderGroupInfo.pay_method === 'BANK_TRANSFER'">
           <th scope="col">결제방법</th>
           <td><input type="text" value="무통장입금" style="outline:none;" readonly></td>
           <th scope="col">결제계좌</th>
           <td><input type="text" :value="this.bank" style="outline:none;" readonly></td>
+        </tr>
+        <tr v-if="orderGroupInfo.pay_method === 'CARD'">
+          <th scope="col">결제방법</th>
+          <td><input type="text" value="카드" style="outline:none; text-align:center;" readonly></td>
+          <!-- <th scope="col">결제계좌</th>
+          <td><input type="text" :value="this.bank" style="outline:none;" readonly></td> -->
         </tr>
         <tr>
           <th scope="col">입금자명</th>
@@ -68,6 +74,7 @@
               <option value="READY" :selected="orderGroupInfo.order_product_state === 'READY'">배송준비중</option>
               <option value="SHIPPING" :selected="orderGroupInfo.order_product_state === 'SHIPPING'">배송중</option>
               <option value="COMPLETE" :selected="orderGroupInfo.order_product_state === 'COMPLETE'">배송완료</option>
+              <option value="CARD" :selected="orderGroupInfo.order_product_state === 'CARD'">카드결제</option>
             </select>
           </td>
         </tr>

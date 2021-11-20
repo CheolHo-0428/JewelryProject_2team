@@ -31,6 +31,19 @@ public class OrderDetailService extends
 	@Override
 	public Header<OrderDetailResponse> create(Header<OrderDetailRequest> request) {
 		OrderDetailRequest orderDetailRequest = request.getData();
+		if(request.getData().getOrderProductState() != null) {
+			OrderDetail orderDetail = OrderDetail.builder()
+					.orderCount(orderDetailRequest.getOrderCount())
+					.orderPrice(orderDetailRequest.getOrderPrice())
+					.orderProductState(OrderProductState.CARD)
+					.orderGroup(orderGroupRepo.getOne(orderDetailRequest.getOrderGroupId()))
+					.item(itemRepo.getOne(orderDetailRequest.getItemId()))
+					.build();
+			
+			OrderDetail newOrderDetail = baseRepo.save(orderDetail);
+			OrderDetailResponse orderDetailResponse = response(newOrderDetail);
+			return Header.OK(orderDetailResponse);	
+		}else {
 		OrderDetail orderDetail = OrderDetail.builder()
 				.orderCount(orderDetailRequest.getOrderCount())
 				.orderPrice(orderDetailRequest.getOrderPrice())
@@ -42,6 +55,7 @@ public class OrderDetailService extends
 		OrderDetail newOrderDetail = baseRepo.save(orderDetail);
 		OrderDetailResponse orderDetailResponse = response(newOrderDetail);
 		return Header.OK(orderDetailResponse);
+		}
 	}
 
 	@Override
