@@ -434,7 +434,7 @@ p.top {
   color: #2c3e50
 }
 img {
-  width: 14rem
+  width: 22rem
 }
 .inputReply {
   min-height: 90px;

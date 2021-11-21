@@ -295,10 +295,10 @@ export default {
       const payMethod = $('#pay_method option:selected').val()
       if (payMethod === '카드') {
         $('.pay_bank').hide()
-        this.cardOk = 'true'
+        this.cardOk = true
       } else if (payMethod === '무통장입금') {
         $('.pay_bank').show()
-        this.cardOk = 'false'
+        this.cardOk = false
       }
     },
     order () {
