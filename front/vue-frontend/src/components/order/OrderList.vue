@@ -92,6 +92,7 @@ export default {
             else if (this.orders[i].order_product_state === 'READY') this.orders[i].order_product_state = '배송준비중'
             else if (this.orders[i].order_product_state === 'SHIPPING') this.orders[i].order_product_state = '배송중'
             else if (this.orders[i].order_product_state === 'COMPLETE') this.orders[i].order_product_state = '배송완료'
+            else if (this.orders[i].order_product_state === 'CARD') this.orders[i].order_product_state = ''
           }
 
           this.page = res.data.pagination.current_page + 1
