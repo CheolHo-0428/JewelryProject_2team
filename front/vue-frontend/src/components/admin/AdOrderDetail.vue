@@ -115,6 +115,7 @@
 
     <div class="button">
       <v-btn color="#000" style="color:white;" x-large @click="list">주문목록</v-btn>
+      <v-btn color="#000" style="color:white;" x-large @click="cancle">주문취소</v-btn>
       <v-btn color="#000" style="color:white;" x-large @click="save">저장</v-btn>
     </div>
   </div>
@@ -138,12 +139,61 @@ export default {
       recipient: '',
       request: '',
       option: '',
-      stored_thumbnail: []
+      stored_thumbnail: [],
+      orderCount: [],
+      itemId: []
     }
   },
   methods: {
     optionChange (event) {
       this.option = event.target.value
+    },
+    cancle () {
+      this.$swal.fire({
+        icon: 'warning',
+        title: '주문 취소시 되돌릴 수 없습니다.',
+        text: '주문을 취소하시겠습니까?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        confirmButtonColor: '#FE9A2E',
+        cancelButtonColor: '#BDBDBD',
+        cancelButtonText: 'No'
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          for (let i = 0; i < this.detailId.length; i++) {
+            await axios
+              .delete(`http://localhost:8000/jewelry/orderDetail/${this.detailId[i]}`, {
+              })
+              .then(function (response) {
+                console.log(response)
+              })
+              .catch(function (error) {
+                console.log(error)
+              })
+            axios
+              .put('http://localhost:8000/jewelry/item/update/stockplus', {
+                id: this.itemId[i],
+                stock: this.orderCount[i]
+              })
+              .then((res) => {
+                console.log(res)
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+          }
+          await axios
+            .delete(`http://localhost:8000/jewelry/orderGroup/${this.orderGroupInfo.id}`, {
+            })
+            .then(function (response) {
+              console.log(response)
+            })
+            .catch(function (error) {
+              console.log(error)
+            })
+          await this.$router.push('/adorder')
+        }
+      })
     },
     list () {
       this.$swal.fire({
@@ -239,6 +289,8 @@ export default {
 
           for (let i = 0; i < this.orderDetailInfo.length; i++) {
             this.detailId.push(this.orderDetailInfo[i].id)
+            this.itemId.push(this.orderDetailInfo[i].item_id)
+            this.orderCount.push(this.orderDetailInfo[i].order_count)
 
             await axios.get('http://localhost:8000/jewelry/item/' + this.orderDetailInfo[i].item_id + '/itemInfo')
               .then(res => {

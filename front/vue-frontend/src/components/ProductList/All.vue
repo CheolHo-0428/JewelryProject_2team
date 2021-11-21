@@ -196,19 +196,6 @@ export default {
   },
   mounted () {
     window.scrollTo(0, 0)
-    let floatPosition = parseInt($('.sideBanner').css('top'))
-
-    // scroll 인식
-    $(window).scroll(() => {
-      // 현재 스크롤 위치
-      let currentTop = $(window).scrollTop()
-      let bannerTop = currentTop + floatPosition + 'px'
-
-      // 이동 애니메이션
-      $('.sideBanner').stop().animate({
-        'top': bannerTop
-      }, 500)
-    }).scroll()
   }
 }
 </script>
