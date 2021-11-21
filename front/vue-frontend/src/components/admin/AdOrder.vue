@@ -61,7 +61,8 @@
             <td v-if="order.created_at">{{order.created_at.split('T')[0]}} {{order.created_at.split('T')[1].split('.')[0]}}</td>
             <td>{{order.id}}</td>
             <td>{{order.member_id}}</td>
-            <td>무통장입금</td>
+            <td v-if="order.pay_method !== 'CARD'">무통장입금</td>
+            <td v-if="order.pay_method === 'CARD'">카드</td>
             <td>{{order.total_price}}원</td>
             <td>{{order.order_product_state}}</td>
             <td class="button">
@@ -188,7 +189,6 @@ export default {
       }
     },
     orderList () {
-      console.log('orderList')
       this.isSearch = false
       return axios.get(this.urlPage)
         .then(res => {
