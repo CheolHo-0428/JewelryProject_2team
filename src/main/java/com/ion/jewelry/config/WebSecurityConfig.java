@@ -1,6 +1,7 @@
 package com.ion.jewelry.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import com.ion.jewelry.jwt.AuthEntryPointJwt;
 import com.ion.jewelry.jwt.AuthTokenFilter;
 import com.ion.jewelry.service.MemberDetailsServiceImpl;
@@ -63,17 +65,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
+//	@Override
+//	protected void configure(HttpSecurity http) throws Exception {
+//		http.cors().and().csrf().disable()   // rest api이므로 csrf 보안이 필요없으므로 disable처리
+//			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+//			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()   // jwt token으로 인증할것이므로 세션필요없음
+//			.authorizeRequests()
+//			.antMatchers("/jewelry/**").permitAll()	
+//			.antMatchers("/jewelry/auth/**").permitAll()
+//			.antMatchers("/jewelry/member/**").permitAll()
+//			.anyRequest().authenticated();
+//
+//		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+//	}
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable()   // rest api이므로 csrf 보안이 필요없으므로 disable처리
-			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()   // jwt token으로 인증할것이므로 세션필요없음
-			.authorizeRequests()
-			.antMatchers("/jewelry/**").permitAll()	
-			.antMatchers("/jewelry/auth/**").permitAll()
-			.antMatchers("/jewelry/member/**").permitAll()
-			.anyRequest().authenticated();
-
-		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+	    http.cors().and().csrf().ignoringRequestMatchers(PathRequest.toStaticResources().atCommonLocations()).disable()   // rest api이므로 csrf 보안이 필요없으므로 disable처리
+	     .exceptionHandling().authenticationEntryPoint(unauthorizedHandler)
+	     .and()
+	     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()   // jwt token으로 인증할것이므로 세션필요없음
+	     .authorizeRequests()
+	     .antMatchers("/**").permitAll()
+	     .antMatchers("/jewelry/**").permitAll()   
+	     .antMatchers("/jewelry/auth/**").permitAll()
+	     .antMatchers("/jewelry/member/**").permitAll()
+	         .anyRequest().authenticated();
+	
+	    http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }
