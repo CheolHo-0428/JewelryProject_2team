@@ -34,7 +34,7 @@ public class ResignMemberController extends
 	@Override
 	@GetMapping("/paging")
 	public Header<List<ResignMemberResponse>> pagingRead(
-			@PageableDefault(sort = "id", direction = Direction.ASC, size = 10)
+			@PageableDefault(sort = "id", direction = Direction.DESC, size = 10)
 			Pageable pageable) {
 		log.info("페이징 데이터: {}", pageable);
 		return baseService.pagingRead(pageable);
