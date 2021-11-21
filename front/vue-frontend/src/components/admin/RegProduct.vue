@@ -196,7 +196,8 @@ export default {
           } else {
             this.delegate_thumbnail_list.push('NO')
           }
-          frm.append('file', imageFile.files[i])
+          await console.log(imageFile.files[i])
+          await frm.append('file', imageFile.files[i])
         }
         frm.append('delegateThumbnail', this.delegate_thumbnail_list)
         frm.append('itemId', this.item_id)
