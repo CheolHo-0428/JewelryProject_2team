@@ -38,7 +38,7 @@ public class MemberController extends AABaseController<MemberRequest, MemberResp
 	@Override
 	@GetMapping("/paging") // http://localhost:8000//jewelry/member/paging?page=0
 	public Header<List<MemberResponse>> pagingRead(
-			@PageableDefault(sort = "id", direction = Sort.Direction.ASC, size = 10) Pageable pageable) {
+			@PageableDefault(sort = "id", direction = Sort.Direction.DESC, size = 10) Pageable pageable) {
 		log.info("{}", pageable);
 		return baseService.pagingRead(pageable);
 	}

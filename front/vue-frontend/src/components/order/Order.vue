@@ -470,6 +470,7 @@ export default {
             if (rsp.success) {
               console.log(rsp)
               if (!this.$store.state.order.isCart) {
+                console.log('카트아닐때')
                 axios({
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
@@ -504,6 +505,45 @@ export default {
                 }).catch(error => {
                   console.log(error)
                 })
+              }else {
+                console.log('카트일때')
+            axios({
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              url: 'http://localhost:8000/jewelry/orderGroup/reg',
+              data: JSON.stringify({
+                resipient: this.recipient,
+                depositor: this.depositor,
+                post_code: this.postCode,
+                address: this.address,
+                detail_address: this.detailAddress,
+                delivery_message: this.request,
+                pay_account: null,
+                phone: this.phone1 + '-' + this.phone2 + '-' + this.phone3,
+                total_price: this.totalCart + 2500,
+                total_count: this.totalCount,
+                member_id: this.$store.state.auth.user.id
+              })
+            }).then(res => {
+              console.log(res)
+              let n = this.$store.state.order.cartId.length
+              for (let i = 0; i < n; i++) {
+                axios
+                  .put('http://localhost:8000/jewelry/item/update/stockminus', {
+                    id: this.$store.state.order.citemId[i],
+                    stock: this.$store.state.order.ccount[i]
+                  })
+                  .then((res) => {
+                    console.log(res)
+                  })
+                  .catch((error) => {
+                    console.log(error)
+                  })
+              }
+              this.$router.push('/order_')
+            }).catch(error => {
+              console.log(error)
+            })                
               }
             } else {
               // 결제 실패 시 로직,
